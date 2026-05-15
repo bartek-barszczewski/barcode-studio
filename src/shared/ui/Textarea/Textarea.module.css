@@ -1,0 +1,16 @@
+.textarea {
+  width: 100%;
+  min-height: 7rem;
+  resize: vertical;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--text);
+  padding: 0.75rem 0.85rem;
+  line-height: 1.5;
+  box-shadow: 0 1px 0 rgba(10, 15, 13, 0.02);
+}
+
+.textarea::placeholder {
+  color: var(--muted);
+}

@@ -1,0 +1,36 @@
+:root {
+  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Arial, sans-serif;
+  --font-numeric: "Segoe UI", Roboto, Arial, sans-serif;
+
+  --bg: #ffffff;
+  --surface: #ffffff;
+  --surface-soft: #f7f9f9;
+
+  --text: #0a0f0d;
+  --muted: #66706d;
+  --border: #e5ebea;
+
+  --primary: #3cbbb1;
+  --primary-soft: #e7f8f6;
+
+  --secondary: #2a1e5c;
+  --secondary-soft: #eeeaf9;
+
+  --accent: #ee4266;
+  --accent-soft: #fde8ee;
+
+  --success: #0ead69;
+  --success-soft: #e7f7f0;
+
+  --neutral: #c4cbca;
+
+  --shadow: 0 10px 30px rgba(10, 15, 13, 0.06);
+  --shadow-strong: 0 18px 50px rgba(10, 15, 13, 0.08);
+
+  --radius-sm: 12px;
+  --radius-md: 18px;
+  --radius-lg: 24px;
+
+  --container: 1600px;
+}

@@ -1,0 +1,77 @@
+.dropzone {
+  display: grid;
+  place-items: center;
+  gap: 0.7rem;
+  min-height: 10rem;
+  border: 1px dashed var(--neutral);
+  border-radius: var(--radius-md);
+  background: var(--surface-soft);
+  padding: 1.25rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.dropzone:hover {
+  border-color: var(--primary);
+  background: var(--primary-soft);
+}
+
+.dropzone.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+  background: var(--surface-soft);
+}
+
+.hiddenInput {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.iconCluster {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  color: var(--primary);
+}
+
+.typeIcon,
+.uploadIcon {
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 999px;
+  background: var(--primary-soft);
+}
+
+.typeIcon svg,
+.uploadIcon svg {
+  width: 1.125rem;
+  height: 1.125rem;
+}
+
+.copy {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.title {
+  margin: 0;
+  font-weight: 800;
+}
+
+.description {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.88rem;
+}

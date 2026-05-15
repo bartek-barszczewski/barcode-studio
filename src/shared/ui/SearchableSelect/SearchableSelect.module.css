@@ -1,0 +1,71 @@
+.root {
+  position: relative;
+}
+
+.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.control {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  box-shadow: 0 1px 0 rgba(10, 15, 13, 0.02);
+}
+
+.input {
+  width: 100%;
+  min-height: 2.65rem;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  padding: 0.65rem 0.85rem;
+}
+
+.input::placeholder {
+  color: var(--muted);
+}
+
+.list {
+  position: absolute;
+  z-index: 10;
+  top: calc(100% + 0.35rem);
+  left: 0;
+  right: 0;
+  max-height: 14rem;
+  overflow: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  padding: 0.35rem;
+}
+
+.item {
+  display: grid;
+  gap: 0.15rem;
+  border-radius: calc(var(--radius-sm) - 4px);
+  padding: 0.65rem 0.7rem;
+  cursor: pointer;
+}
+
+.item[data-selected='true'] {
+  background: var(--primary-soft);
+}
+
+.label {
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.description,
+.empty {
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.empty {
+  padding: 0.7rem;
+}

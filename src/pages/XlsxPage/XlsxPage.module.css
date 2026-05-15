@@ -1,0 +1,263 @@
+.page {
+  display: grid;
+  grid-template-columns: clamp(440px, 35vw, 520px) minmax(0, 1fr);
+  gap: 12px;
+  align-items: stretch; /* Stretch right column to match left column's total panel height */
+  width: 100%;
+  padding-block: 14px;
+  /* height: auto is implicit, page grows with content */
+}
+
+.leftColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+
+.leftColumn > section,
+.rightColumn > section {
+  padding: clamp(0.8rem, 1.4vw, 0.95rem);
+}
+
+.leftColumn > section > header,
+.rightColumn > section > header {
+  margin-bottom: 0.7rem;
+}
+
+.leftColumn > section > div:last-child,
+.rightColumn > section > div:last-child {
+  gap: 0.75rem;
+}
+
+.rightColumn {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 0; /* Allow column to shrink/not overflow */
+  overflow: hidden;
+}
+
+.rightColumn > section {
+  flex: 1; /* Stretch Panel to match left side height */
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.previewPanel {
+  height: 100%;
+  min-height: 0;
+}
+
+/* Force the internal content of the Panel to follow flex behavior */
+.rightColumn section > div:last-child {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.controls > label {
+  min-height: 7rem;
+  gap: 0.55rem;
+  padding: 0.95rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.instruction {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.4;
+  padding: 4px 0;
+}
+
+.error {
+  color: var(--accent);
+  font-size: 13px;
+  padding: 10px;
+  background: var(--accent-soft);
+  border-radius: var(--radius-sm);
+}
+
+.success {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--success);
+  font-size: 13px;
+  padding: 10px;
+  background: var(--success-soft);
+  border-radius: var(--radius-sm);
+  font-weight: 500;
+}
+
+.previewContainer {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 10px;
+  min-height: 0;
+  overflow: hidden; /* Prevent container itself from scrolling, let children scroll */
+}
+
+.previewPlaceholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  min-height: 260px;
+  border: 2px dashed var(--border);
+  border-radius: var(--radius-md);
+  color: var(--muted);
+  font-size: 15px;
+}
+
+.settingsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.actionsRow {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.actionButton {
+  width: 100%;
+  justify-content: center;
+}
+
+.actionButton::before {
+  content: '';
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  flex: 0 0 auto;
+  background-color: currentColor;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  -webkit-mask-size: contain;
+}
+
+.actionButton:first-child::before {
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m7 21 3-3'/%3E%3Cpath d='M3 7h18'/%3E%3Cpath d='M17 3v4'/%3E%3Cpath d='m14 7 1 14'/%3E%3Cpath d='M6 7 5 21'/%3E%3Cpath d='M12 7v14'/%3E%3Cpath d='M19 7c0 10-8 14-8 14'/%3E%3C/svg%3E");
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m7 21 3-3'/%3E%3Cpath d='M3 7h18'/%3E%3Cpath d='M17 3v4'/%3E%3Cpath d='m14 7 1 14'/%3E%3Cpath d='M6 7 5 21'/%3E%3Cpath d='M12 7v14'/%3E%3Cpath d='M19 7c0 10-8 14-8 14'/%3E%3C/svg%3E");
+}
+
+.actionButton:last-child::before {
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4'/%3E%3Cpolyline points='7 10 12 15 17 10'/%3E%3Cline x1='12' x2='12' y1='15' y2='3'/%3E%3C/svg%3E");
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4'/%3E%3Cpolyline points='7 10 12 15 17 10'/%3E%3Cline x1='12' x2='12' y1='15' y2='3'/%3E%3C/svg%3E");
+}
+
+.settingsGrid label {
+  font-size: 0.8rem;
+  line-height: 1.2;
+}
+
+.settingsGrid input,
+.settingsGrid select {
+  min-height: 2.15rem;
+  padding: 0.45rem 0.65rem;
+  font-size: 0.9rem;
+}
+
+.colorFields {
+  display: flex;
+  gap: 8px;
+}
+
+.colorFields > div {
+  flex: 1;
+}
+
+.placementMatrix {
+  display: grid;
+  grid-template-columns: repeat(3, 40px);
+  grid-template-rows: repeat(3, 40px);
+  gap: 8px;
+  justify-content: center;
+  margin-block: 8px;
+}
+
+.matrixButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border);
+  background: var(--bg-soft);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.2s;
+  color: var(--text-muted);
+  padding: 0;
+}
+
+.matrixButton:hover:not(:disabled) {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.matrixButton.active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: white;
+}
+
+.matrixButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.matrixCenter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--muted);
+  background: var(--bg-alt);
+}
+
+@media (max-width: 1200px) {
+  .settingsGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 900px) {
+  .page {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+
+  .rightColumn {
+    overflow: visible;
+  }
+
+  .actionsRow {
+    grid-template-columns: 1fr;
+  }
+}

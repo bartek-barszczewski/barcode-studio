@@ -1,0 +1,154 @@
+.page {
+  display: grid;
+  grid-template-columns: clamp(500px, 40vw, 600px) minmax(0, 1fr);
+  gap: 12px;
+  align-items: start;
+  width: 100%;
+  padding-block: 14px;
+}
+
+.leftColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+
+.leftColumn > section,
+.rightColumn > section {
+  padding: clamp(0.8rem, 1.4vw, 0.95rem);
+}
+
+.rightColumn {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.rightColumn > section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.rightColumn section > div:last-child {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.error {
+  color: var(--accent);
+  font-size: 13px;
+  padding: 10px;
+  background: var(--accent-soft);
+  border-radius: var(--radius-sm);
+}
+
+.success {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--success);
+  font-size: 13px;
+  padding: 10px;
+  background: var(--success-soft);
+  border-radius: var(--radius-sm);
+  font-weight: 500;
+}
+
+.previewPlaceholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  min-height: 260px;
+  border: 2px dashed var(--border);
+  border-radius: var(--radius-md);
+  color: var(--muted);
+  font-size: 15px;
+}
+
+.settingsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.actionsRow {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.colorFields {
+  display: flex;
+  gap: 8px;
+}
+
+.colorFields > div {
+  flex: 1;
+}
+
+.printButton {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  border: 1px solid var(--border) !important;
+  font-weight: 600 !important;
+}
+
+.printButton:hover {
+  background-color: #f8f9fa !important;
+  border-color: #000000 !important;
+}
+
+.bottomFields {
+  grid-column: span 3;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+@media (max-width: 1200px) {
+  .settingsGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 900px) {
+  .page {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+
+  .rightColumn {
+    overflow: visible;
+  }
+
+  .actionsRow {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,291 @@
+{
+  "navigation": {
+    "ariaLabel": "Główna nawigacja",
+    "brand": "Barcode Studio",
+    "generator": "Generator",
+    "xlsx": "XLSX",
+    "docx": "DOCX",
+    "help": "Pomoc",
+    "languageToggle": "Zmień język"
+  },
+  "barcode": {
+    "types": {
+      "CODE128": "Code 128",
+      "EAN13": "EAN-13",
+      "EAN8": "EAN-8",
+      "UPCA": "UPC-A",
+      "UPCE": "UPC-E",
+      "CODE39": "Code 39",
+      "CODE93": "Code 93",
+      "CODABAR": "Codabar",
+      "ITF": "Interleaved 2 of 5 (ITF)",
+      "DATAMATRIX": "Data Matrix",
+      "PDF417": "PDF417",
+      "AZTEC": "Aztec Code",
+      "PHARMACODE": "Pharmacode",
+      "QR": "QR Code"
+    },
+    "validation": {
+      "required": "Wartość nie może być pusta.",
+      "ean13Digits": "EAN-13 może zawierać tylko cyfry.",
+      "ean13Length": "EAN-13 wymaga dokładnie 13 cyfr.",
+      "ean8Digits": "EAN-8 może zawierać tylko cyfry.",
+      "ean8Length": "EAN-8 wymaga dokładnie 8 cyfr.",
+      "upcaDigits": "UPC-A może zawierać tylko cyfry.",
+      "upcaLength": "UPC-A wymaga 11 lub 12 cyfr.",
+      "upceDigits": "UPC-E może zawierać tylko cyfry.",
+      "upceLength": "UPC-E wymaga od 6 do 8 cyfr.",
+      "code39Invalid": "Code 39 obsługuje tylko cyfry, wielkie litery i znaki: - . $ / + % oraz spację.",
+      "codabarInvalid": "Codabar musi zaczynać się i kończyć literą A, B, C lub D oraz zawierać cyfry lub znaki: - $ : / . +",
+      "itfDigits": "ITF wymaga tylko cyfr.",
+      "itfEven": "ITF wymaga parzystej liczby cyfr.",
+      "pharmacodeDigits": "Pharmacode wymaga tylko cyfr.",
+      "pharmacodeRange": "Pharmacode musi być liczbą z zakresu od 3 do 131070.",
+      "unsupportedType": "Nieobsługiwany typ kodu kreskowego.",
+      "generationFailed": "Nie udało się wygenerować kodu dla podanych danych.",
+      "renderFailed": "Błąd generowania kodu.",
+      "invalid": "Nieprawidłowa wartość kodu."
+    }
+  },
+  "generator": {
+    "panelTitle": "Pojedynczy kod",
+    "panelDescription": "Wpisz dane, wybierz typ kodu i ustaw wygląd.",
+    "fields": {
+      "type": "Typ kodu",
+      "value": "Dane do zakodowania",
+      "format": "Format",
+      "rotation": "Obrót",
+      "barColor": "Kolor kodu",
+      "backgroundColor": "Tło",
+      "height": "Wysokość",
+      "margin": "Margines",
+      "barWidth": "Grubość kreski",
+      "fontSize": "Rozmiar napisu",
+      "scale": "Skala",
+      "text": "Tekst pod kodem"
+    },
+    "placeholders": {
+      "type": "Wybierz typ kodu",
+      "value": "Wpisz albo wklej wartość"
+    },
+    "textOptions": {
+      "show": "Pokaż pod kodem",
+      "hide": "Nie pokazuj"
+    },
+    "actions": {
+      "generate": "Generuj",
+      "generating": "Generowanie...",
+      "capture": "Zrzut kodu",
+      "downloadSvg": "Pobierz SVG",
+      "downloadPng": "Pobierz PNG",
+      "print": "Drukuj"
+    },
+    "preview": {
+      "title": "Podgląd",
+      "description": "Wygenerowany kod pojawi się tutaj.",
+      "toolbarLabel": "Akcje podglądu"
+    },
+    "exportErrors": {
+      "svg": "Nie udało się pobrać pliku SVG.",
+      "png": "Nie udało się pobrać pliku PNG.",
+      "capture": "Nie udało się wykonać zrzutu kodu.",
+      "print": "Nie udało się otworzyć podglądu wydruku."
+    }
+  },
+  "barcodePreview": {
+    "ariaLabel": "Podgląd kodu",
+    "empty": "Podgląd pojawi się po wygenerowaniu kodu.",
+    "metadata": {
+      "type": "Typ:",
+      "format": "Format:",
+      "status": "Status:"
+    },
+    "status": {
+      "ready": "Gotowy",
+      "error": "Błąd",
+      "empty": "Brak"
+    }
+  },
+  "searchableSelect": {
+    "placeholder": "Szukaj...",
+    "empty": "Brak wyników."
+  },
+  "dropzone": {
+    "defaultTitle": "Upuść plik tutaj",
+    "defaultDescription": "Obsługa przesyłania zostanie dodana później."
+  },
+  "xlsx": {
+    "title": "XLSX",
+    "description": "Załaduj arkusz, zaznacz dane i wygeneruj nowy plik z kodami.",
+    "batch": {
+      "title": "XLSX Batch",
+      "description": "Załaduj arkusz i skonfiguruj kolumny.",
+      "instruction": "Wybierz plik .xlsx, aby rozpocząć proces wsadowy."
+    },
+    "dropzone": {
+      "selectFile": "Wybierz plik XLSX",
+      "changeFile": "Kliknij, aby zmienić plik",
+      "dropOrClick": "Przeciągnij i upuść lub kliknij"
+    },
+    "appearance": {
+      "title": "Wygląd kodu",
+      "description": "Ustawienia wizualne generowanych kodów."
+    },
+    "actions": {
+      "clear": "Wyczyść"
+    },
+    "preview": {
+      "title": "Podgląd arkusza",
+      "titleWithSheet": "Podgląd: {{sheetName}}",
+      "header": "Podgląd pokazuje pierwsze 1000 wierszy. Kliknij kolumnę z danymi, potem pustą kolumnę docelową.",
+      "placeholder": "Załaduj plik .xlsx, aby zobaczyć podgląd."
+    },
+    "success": {
+      "generated": "Pomyślnie wygenerowano {{count}} kodów."
+    },
+    "errors": {
+      "onlyXlsx": "Zaakceptowane są tylko pliki .xlsx.",
+      "loadFailed": "Błąd podczas wczytywania pliku.",
+      "generateFailed": "Błąd podczas generowania pliku.",
+      "unknown": "Nieznany błąd.",
+      "occupiedCellShort": "Komórka zajęta",
+      "sheetMissingInFile": "Nie można znaleźć arkusza w pliku.",
+      "sheetNotFound": "Arkusz \"{{sheetName}}\" nie został znaleziony.",
+      "noDataInColumn": "Brak danych w wybranej kolumnie.",
+      "invalidAppearance": "Nieprawidłowe ustawienia wyglądu.",
+      "sameColumns": "Kolumna danych i kolumna docelowa nie mogą być takie same.",
+      "targetColumnMustBeEmpty": "Kolumna docelowa musi być pusta dla wybranych wierszy.",
+      "occupiedCellsList": "Zajęte komórki: {{cells}}",
+      "noSheets": "Brak arkuszy w pliku.",
+      "targetCellNotEmpty": "Komórka w kolumnie docelowej (wiersz {{rowNumber}}) nie jest pusta."
+    }
+  },
+  "docx": {
+    "title": "DOCX",
+    "description": "Załaduj dokument, wskaż dane w podglądzie i wygeneruj nowy DOCX.",
+    "dropzoneTitle": "Przeciągnij plik DOCX albo wybierz z dysku",
+    "dropzoneDescription": "Wszystkie linie tekstu z dokumentu zostaną przetworzone.",
+    "previewTitle": "Podgląd",
+    "previewPlaceholder": "Podgląd dokumentu pojawi się tutaj",
+    "dropzone": {
+      "selectFile": "Wybierz plik DOCX",
+      "changeFile": "Kliknij, aby zmienić plik",
+      "dropOrClick": "Przeciągnij i upuść lub kliknij"
+    },
+    "preview": {
+      "noLines": "Nie znaleziono linii tekstu w dokumencie.",
+      "textColumn": "Tekst",
+      "placeholder": "Załaduj plik .docx, aby zobaczyć podgląd."
+    },
+    "errors": {
+      "onlyDocx": "Akceptowane są tylko pliki .docx.",
+      "loadFailed": "Błąd podczas ładowania pliku.",
+      "generateFailed": "Błąd podczas generowania pliku."
+    },
+    "success": {
+      "generated": "Pomyślnie wygenerowano {{count}} kodów."
+    },
+    "actions": {
+      "print": "Drukuj"
+    }
+  },
+  "help": {
+    "title": "Centrum Pomocy i Dokumentacja",
+    "description": "Kompletny przewodnik po funkcjach Barcode Studio. Dowiedz się jak optymalnie przygotować pliki i generować kody.",
+    "sections": {
+      "generator": {
+        "title": "Generator Pojedynczy",
+        "body": "Narzędzie do tworzenia precyzyjnych kodów. Możesz pobrać je jako SVG (wektorowe) lub PNG (rastrowe). SVG jest zalecane do profesjonalnego druku, ponieważ nie traci jakości przy skalowaniu."
+      },
+      "xlsx": {
+        "title": "Praca z Arkuszami (XLSX)",
+        "workflow": {
+          "title": "Instrukcja krok po kroku:",
+          "step1": "1. Wgraj plik .xlsx w sekcji XLSX.",
+          "step2": "2. Kliknij kolumnę, która zawiera dane (np. numery EAN).",
+          "step3": "3. Kliknij pustą kolumnę, w której mają pojawić się kody.",
+          "step4": "4. Kliknij 'Generuj' – aplikacja wstawi obrazy kodów bezpośrednio do komórek."
+        }
+      },
+      "docx": {
+        "title": "Edytor Dokumentów (DOCX)",
+        "workflow": {
+          "title": "Zaawansowane funkcje edytora:",
+          "step1": "• Przeciąganie: Chwyć za ikonę uchwytu po lewej, aby zmienić kolejność bloków.",
+          "step2": "• Formatowanie: Zaznacz tekst, aby zmienić jego kolor, rozmiar lub pogrubienie.",
+          "step3": "• Barkody: Każda linia tekstu automatycznie generuje odpowiadający jej kod pod spodem."
+        }
+      },
+      "printing": {
+        "title": "Zasady Drukowania",
+        "body": "Aby uzyskać najlepszą jakość:\n1. W oknie drukowania przeglądarki wyłącz 'Nagłówki i stopki'.\n2. Ustaw 'Marginesy' na 'Brak' lub 'Minimalne', jeśli dokument DOCX ma własne marginesy.\n3. Skala powinna wynosić 100%, aby zachować wymiary A4."
+      },
+      "troubleshooting": {
+        "title": "Rozwiązywanie Problemów",
+        "eanError": "Błąd EAN-13/8: Te kody wymagają cyfr. Ostatnia cyfra kontrolna zostanie obliczona automatycznie, jeśli podasz o jedną za mało.",
+        "invisibleCode": "Kod jest niewidoczny? Sprawdź czy kolor kodu nie jest taki sam jak tło."
+      },
+      "standards": {
+        "title": "Standardy i Wymagania",
+        "intro": "Każdy standard kodu kreskowego ma specyficzne wymagania co do rodzaju i długości danych.",
+        "types": {
+          "CODE128": {
+            "name": "Code 128",
+            "desc": "Najbardziej uniwersalny standard. Obsługuje wszystkie znaki ASCII (litery, cyfry, symbole). Idealny do logistyki i etykiet wewnętrznych."
+          },
+          "EAN13": {
+            "name": "EAN-13 / EAN-8",
+            "desc": "Standard handlowy. Wymaga tylko cyfr. EAN-13 (12-13 cyfr), EAN-8 (7-8 cyfr). Ostatnia cyfra to suma kontrolna."
+          },
+          "QR": {
+            "name": "QR Code / Data Matrix",
+            "desc": "Kody 2D. Mogą przechowywać ogromne ilości danych, w tym linki URL i długie teksty. Odporne na uszkodzenia."
+          },
+          "CODE39": {
+            "name": "Code 39",
+            "desc": "Obsługuje wielkie litery, cyfry i kilka znaków specjalnych (- . $ / + % spacja). Często używany w przemyśle motoryzacyjnym."
+          },
+          "ITF": {
+            "name": "ITF (Interleaved 2 of 5)",
+            "desc": "Tylko cyfry, musi być ich parzysta liczba. Bardzo gęsty kod numeryczny."
+          },
+          "CODE93": {
+            "name": "Code 93",
+            "desc": "Zwiększona gęstość w porównaniu do Code 39. Obsługuje pełny zestaw znaków ASCII."
+          },
+          "UPC": {
+            "name": "UPC-A / UPC-E",
+            "desc": "Standardy amerykańskie. UPC-A (11-12 cyfr), UPC-E (6-8 cyfr). Używane głównie w handlu detalicznym w USA i Kanadzie."
+          },
+          "CODABAR": {
+            "name": "Codabar",
+            "desc": "Używany w bibliotekach i bankach krwi. Musi zaczynać się i kończyć literą A, B, C lub D."
+          },
+          "PHARMACODE": {
+            "name": "Pharmacode",
+            "desc": "Specjalistyczny kod dla przemysłu farmaceutycznego. Obsługuje tylko liczby całkowite od 3 do 131070."
+          },
+          "DATAMATRIX": {
+            "name": "Data Matrix",
+            "desc": "Bardzo mały i gęsty kod 2D. Powszechny w przemyśle elektronicznym i medycznym."
+          },
+          "PDF417": {
+            "name": "PDF417",
+            "desc": "Liniowy kod 2D używany na dokumentach tożsamości i biletach. Może przechowywać duże ilości tekstu."
+          },
+          "AZTEC": {
+            "name": "Aztec Code",
+            "desc": "Kod 2D o wysokiej gęstości, przypominający QR. Powszechnie stosowany w biletach kolejowych i lotniczych."
+          }
+        }
+      },
+      "faq": {
+        "title": "Często Zadawane Pytania",
+        "q1": "Czy moje dane są bezpieczne?",
+        "a1": "Tak, całe przetwarzanie odbywa się lokalnie w Twojej przeglądarce. Żadne pliki ani dane nie są wysyłane na serwer.",
+        "q2": "Dlaczego nie mogę wgrać pliku .xls?",
+        "a2": "Wspieramy tylko nowoczesny format .xlsx. Starsze pliki .xls należy najpierw zapisać jako .xlsx w programie Excel."
+      }
+    }
+  }
+}

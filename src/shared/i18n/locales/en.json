@@ -1,0 +1,291 @@
+{
+  "navigation": {
+    "ariaLabel": "Main navigation",
+    "brand": "Barcode Studio",
+    "generator": "Generator",
+    "xlsx": "XLSX",
+    "docx": "DOCX",
+    "help": "Help",
+    "languageToggle": "Change language"
+  },
+  "barcode": {
+    "types": {
+      "CODE128": "Code 128",
+      "EAN13": "EAN-13",
+      "EAN8": "EAN-8",
+      "UPCA": "UPC-A",
+      "UPCE": "UPC-E",
+      "CODE39": "Code 39",
+      "CODE93": "Code 93",
+      "CODABAR": "Codabar",
+      "ITF": "Interleaved 2 of 5 (ITF)",
+      "DATAMATRIX": "Data Matrix",
+      "PDF417": "PDF417",
+      "AZTEC": "Aztec Code",
+      "PHARMACODE": "Pharmacode",
+      "QR": "QR Code"
+    },
+    "validation": {
+      "required": "Value cannot be empty.",
+      "ean13Digits": "EAN-13 can contain digits only.",
+      "ean13Length": "EAN-13 requires exactly 13 digits.",
+      "ean8Digits": "EAN-8 can contain digits only.",
+      "ean8Length": "EAN-8 requires exactly 8 digits.",
+      "upcaDigits": "UPC-A can contain digits only.",
+      "upcaLength": "UPC-A requires 11 or 12 digits.",
+      "upceDigits": "UPC-E can contain digits only.",
+      "upceLength": "UPC-E requires from 6 to 8 digits.",
+      "code39Invalid": "Code 39 supports only digits, uppercase letters and characters: - . $ / + % and space.",
+      "codabarInvalid": "Codabar must start and end with A, B, C or D and contain digits or characters: - $ : / . +",
+      "itfDigits": "ITF requires only digits.",
+      "itfEven": "ITF requires an even number of digits.",
+      "pharmacodeDigits": "Pharmacode requires only digits.",
+      "pharmacodeRange": "Pharmacode must be a number from 3 to 131070.",
+      "unsupportedType": "Unsupported barcode type.",
+      "generationFailed": "Could not generate barcode for the given data.",
+      "renderFailed": "Barcode generation error.",
+      "invalid": "Invalid barcode value."
+    }
+  },
+  "generator": {
+    "panelTitle": "Single code",
+    "panelDescription": "Enter data, choose a barcode type, and adjust the look.",
+    "fields": {
+      "type": "Barcode type",
+      "value": "Data to encode",
+      "format": "Format",
+      "rotation": "Rotation",
+      "barColor": "Code color",
+      "backgroundColor": "Background",
+      "height": "Height",
+      "margin": "Margin",
+      "barWidth": "Bar width",
+      "fontSize": "Text size",
+      "scale": "Scale",
+      "text": "Text under barcode"
+    },
+    "placeholders": {
+      "type": "Choose barcode type",
+      "value": "Enter or paste a value"
+    },
+    "textOptions": {
+      "show": "Show under barcode",
+      "hide": "Do not show"
+    },
+    "actions": {
+      "generate": "Generate",
+      "generating": "Generating...",
+      "capture": "Capture code",
+      "downloadSvg": "Download SVG",
+      "downloadPng": "Download PNG",
+      "print": "Print"
+    },
+    "preview": {
+      "title": "Preview",
+      "description": "The generated code will appear here.",
+      "toolbarLabel": "Preview actions"
+    },
+    "exportErrors": {
+      "svg": "Could not download the SVG file.",
+      "png": "Could not download the PNG file.",
+      "capture": "Could not capture the code.",
+      "print": "Could not open the print view."
+    }
+  },
+  "barcodePreview": {
+    "ariaLabel": "Barcode preview",
+    "empty": "The preview will appear after generating a code.",
+    "metadata": {
+      "type": "Type:",
+      "format": "Format:",
+      "status": "Status:"
+    },
+    "status": {
+      "ready": "Ready",
+      "error": "Error",
+      "empty": "None"
+    }
+  },
+  "searchableSelect": {
+    "placeholder": "Search...",
+    "empty": "No results found."
+  },
+  "dropzone": {
+    "defaultTitle": "Drop file here",
+    "defaultDescription": "Upload handling will be added later."
+  },
+  "xlsx": {
+    "title": "XLSX",
+    "description": "Load a spreadsheet, select data, and generate a new file with codes.",
+    "batch": {
+      "title": "XLSX Batch",
+      "description": "Load a sheet and configure the columns.",
+      "instruction": "Choose an .xlsx file to start the batch process."
+    },
+    "dropzone": {
+      "selectFile": "Choose XLSX file",
+      "changeFile": "Click to change file",
+      "dropOrClick": "Drag and drop or click"
+    },
+    "appearance": {
+      "title": "Barcode look",
+      "description": "Visual settings for generated codes."
+    },
+    "actions": {
+      "clear": "Clear"
+    },
+    "preview": {
+      "title": "Sheet preview",
+      "titleWithSheet": "Preview: {{sheetName}}",
+      "header": "The preview shows the first 1000 rows. Click the data column, then an empty target column.",
+      "placeholder": "Load an .xlsx file to see the preview."
+    },
+    "success": {
+      "generated": "Successfully generated {{count}} codes."
+    },
+    "errors": {
+      "onlyXlsx": "Only .xlsx files are accepted.",
+      "loadFailed": "Error while loading the file.",
+      "generateFailed": "Error while generating the file.",
+      "unknown": "Unknown error.",
+      "occupiedCellShort": "Cell occupied",
+      "sheetMissingInFile": "Could not find the sheet in the file.",
+      "sheetNotFound": "Sheet \"{{sheetName}}\" was not found.",
+      "noDataInColumn": "No data in the selected column.",
+      "invalidAppearance": "Invalid appearance settings.",
+      "sameColumns": "The source column and target column cannot be the same.",
+      "targetColumnMustBeEmpty": "The target column must be empty for the selected rows.",
+      "occupiedCellsList": "Occupied cells: {{cells}}",
+      "noSheets": "No sheets in the file.",
+      "targetCellNotEmpty": "The target column cell (row {{rowNumber}}) is not empty."
+    }
+  },
+  "docx": {
+    "title": "DOCX",
+    "description": "Load a document, point to data in the preview, and generate a new DOCX.",
+    "dropzoneTitle": "Drag a DOCX file here or choose one from disk",
+    "dropzoneDescription": "All text lines from the document will be processed.",
+    "previewTitle": "Preview",
+    "previewPlaceholder": "Document preview will appear here",
+    "dropzone": {
+      "selectFile": "Choose DOCX file",
+      "changeFile": "Click to change file",
+      "dropOrClick": "Drag and drop or click"
+    },
+    "preview": {
+      "noLines": "No text lines found in the document.",
+      "textColumn": "Text",
+      "placeholder": "Load a .docx file to see the preview."
+    },
+    "errors": {
+      "onlyDocx": "Only .docx files are accepted.",
+      "loadFailed": "Error while loading the file.",
+      "generateFailed": "Error while generating the file."
+    },
+    "success": {
+      "generated": "Successfully generated {{count}} barcodes."
+    },
+    "actions": {
+      "print": "Print"
+    }
+  },
+  "help": {
+    "title": "Help Center & Documentation",
+    "description": "Complete guide to Barcode Studio features. Learn how to optimally prepare files and generate codes.",
+    "sections": {
+      "generator": {
+        "title": "Single Generator",
+        "body": "A tool for creating precise codes. You can download them as SVG (vector) or PNG (raster). SVG is recommended for professional printing as it doesn't lose quality when scaled."
+      },
+      "xlsx": {
+        "title": "Sheet Processing (XLSX)",
+        "workflow": {
+          "title": "Step-by-step instruction:",
+          "step1": "1. Upload a .xlsx file in the XLSX section.",
+          "step2": "2. Click the column that contains the data (e.g., EAN numbers).",
+          "step3": "3. Click an empty column where the codes should appear.",
+          "step4": "4. Click 'Generate' – the app will insert barcode images directly into the cells."
+        }
+      },
+      "docx": {
+        "title": "Document Editor (DOCX)",
+        "workflow": {
+          "title": "Advanced editor features:",
+          "step1": "• Dragging: Grab the handle icon on the left to reorder blocks.",
+          "step2": "• Formatting: Select text to change its color, size, or weight.",
+          "step3": "• Barcodes: Each line of text automatically generates its corresponding barcode underneath."
+        }
+      },
+      "printing": {
+        "title": "Printing Rules",
+        "body": "For best quality:\n1. In the browser print window, disable 'Headers and footers'.\n2. Set 'Margins' to 'None' or 'Minimum' if the DOCX document has its own margins.\n3. Scale should be 100% to maintain A4 dimensions."
+      },
+      "troubleshooting": {
+        "title": "Troubleshooting",
+        "eanError": "EAN-13/8 Error: These codes require digits only. The last check digit will be calculated automatically if you provide one less than required.",
+        "invisibleCode": "Code is invisible? Check if the code color is the same as the background."
+      },
+      "standards": {
+        "title": "Standards and Requirements",
+        "intro": "Each barcode standard has specific requirements for the type and length of data.",
+        "types": {
+          "CODE128": {
+            "name": "Code 128",
+            "desc": "The most universal standard. Supports all ASCII characters (letters, numbers, symbols). Ideal for logistics and internal labels."
+          },
+          "EAN13": {
+            "name": "EAN-13 / EAN-8",
+            "desc": "Retail standard. Requires digits only. EAN-13 (12-13 digits), EAN-8 (7-8 digits). The last digit is a checksum."
+          },
+          "QR": {
+            "name": "QR Code / Data Matrix",
+            "desc": "2D codes. Can store huge amounts of data, including URLs and long texts. Highly damage-resistant."
+          },
+          "CODE39": {
+            "name": "Code 39",
+            "desc": "Supports uppercase letters, digits, and a few special characters (- . $ / + % space). Frequently used in the automotive industry."
+          },
+          "ITF": {
+            "name": "ITF (Interleaved 2 of 5)",
+            "desc": "Digits only, must be an even number of them. A very dense numeric code."
+          },
+          "CODE93": {
+            "name": "Code 93",
+            "desc": "Increased density compared to Code 39. Supports the full ASCII character set."
+          },
+          "UPC": {
+            "name": "UPC-A / UPC-E",
+            "desc": "US standards. UPC-A (11-12 digits), UPC-E (6-8 digits). Primarily used in retail in the USA and Canada."
+          },
+          "CODABAR": {
+            "name": "Codabar",
+            "desc": "Used in libraries and blood banks. Must start and end with the letters A, B, C, or D."
+          },
+          "PHARMACODE": {
+            "name": "Pharmacode",
+            "desc": "Specialized code for the pharmaceutical industry. Supports only integers from 3 to 131070."
+          },
+          "DATAMATRIX": {
+            "name": "Data Matrix",
+            "desc": "A very small and dense 2D code. Common in the electronics and medical industries."
+          },
+          "PDF417": {
+            "name": "PDF417",
+            "desc": "A linear 2D code used on identity documents and tickets. Can store large amounts of text."
+          },
+          "AZTEC": {
+            "name": "Aztec Code",
+            "desc": "A high-density 2D code resembling QR. Commonly used in railway and airline tickets."
+          }
+        }
+      },
+      "faq": {
+        "title": "Frequently Asked Questions",
+        "q1": "Is my data safe?",
+        "a1": "Yes, all processing happens locally in your browser. No files or data are sent to a server.",
+        "q2": "Why can't I upload a .xls file?",
+        "a2": "We only support the modern .xlsx format. Older .xls files must first be saved as .xlsx in Excel."
+      }
+    }
+  }
+}

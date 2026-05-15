@@ -1,0 +1,84 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.5rem;
+  gap: 0.5rem;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  padding: 0.65rem 1rem;
+  cursor: pointer;
+  font-weight: 700;
+  line-height: 1;
+  text-decoration: none;
+  transition:
+    background-color 140ms ease,
+    border-color 140ms ease,
+    color 140ms ease,
+    box-shadow 140ms ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.hasProgress {
+  pointer-events: none;
+}
+
+.progressBar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.15);
+  transition: width 0.2s ease;
+  z-index: 1;
+}
+
+.secondary .progressBar {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.content {
+  position: relative;
+  z-index: 2;
+}
+
+.button svg {
+  width: 1rem;
+  height: 1rem;
+  flex: 0 0 auto;
+}
+
+.button:hover:not(:disabled) {
+  box-shadow: var(--shadow);
+}
+
+.button:disabled {
+  cursor: not-allowed;
+  opacity: 0.58;
+}
+
+.primary {
+  background: var(--primary);
+  color: var(--surface);
+}
+
+.secondary {
+  background: var(--secondary);
+  color: var(--surface);
+}
+
+.ghost {
+  background: var(--surface);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+.accent {
+  background: var(--accent);
+  color: var(--surface);
+}
+
+.fullWidth {
+  width: 100%;
+}
