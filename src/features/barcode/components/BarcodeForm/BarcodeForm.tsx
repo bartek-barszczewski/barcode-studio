@@ -13,13 +13,20 @@ const MAX_BARCODE_SCALE = 2.5
 
 export type BarcodeFormProps = {
   formState: BarcodeFormState
+  showPreviewFrame?: boolean
   updateField: <Key extends keyof BarcodeFormState>(
     key: Key,
     value: BarcodeFormState[Key],
   ) => void
+  updateShowPreviewFrame?: (showPreviewFrame: boolean) => void
 }
 
-export function BarcodeForm({ formState, updateField }: BarcodeFormProps) {
+export function BarcodeForm({
+  formState,
+  showPreviewFrame,
+  updateField,
+  updateShowPreviewFrame,
+}: BarcodeFormProps) {
   const { t } = useTranslation()
 
   const barcodeTypeOptions = BARCODE_TYPE_OPTIONS.map((option) => ({
@@ -47,6 +54,19 @@ export function BarcodeForm({ formState, updateField }: BarcodeFormProps) {
           value={formState.value}
         />
       </Field>
+
+      {updateShowPreviewFrame && (
+        <label className={styles.previewFrameToggle}>
+          <input
+            checked={Boolean(showPreviewFrame)}
+            onChange={(event) =>
+              updateShowPreviewFrame(event.target.checked)
+            }
+            type="checkbox"
+          />
+          <span>{t('generator.previewFrameToggle')}</span>
+        </label>
+      )}
 
       <div className={styles.fieldGrid}>
         <Field label={t('generator.fields.rotation')} htmlFor="barcode-rotation">

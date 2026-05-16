@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Download } from 'lucide-react'
 import styles from './GeneratorPage.module.css'
@@ -8,15 +9,12 @@ import {
   downloadPngFromSvg,
   downloadSvg,
 } from '../../features/barcode/export/barcodeExport'
-import type { BarcodeFormState } from '../../features/barcode/types/barcode'
 import { Button } from '../../shared/ui/Button/Button'
 import { Panel } from '../../shared/ui/Panel/Panel'
 
-const getPreviewFontSize = (settings: BarcodeFormState) =>
-  settings.type === 'QR' ? Math.min(settings.fontSize, 12) : settings.fontSize
-
 export function GeneratorPage() {
   const { t } = useTranslation()
+  const [showPreviewFrame, setShowPreviewFrame] = useState(true)
   const {
     formState,
     previewState,
@@ -61,7 +59,12 @@ export function GeneratorPage() {
         description={t('generator.panelDescription')}
         className={styles.controlsPanel}
       >
-        <BarcodeForm formState={formState} updateField={updateField} />
+        <BarcodeForm
+          formState={formState}
+          showPreviewFrame={showPreviewFrame}
+          updateField={updateField}
+          updateShowPreviewFrame={setShowPreviewFrame}
+        />
       </Panel>
 
       <Panel
@@ -101,12 +104,10 @@ export function GeneratorPage() {
         <div className={styles.previewBox}>
           <BarcodePreview
             error={previewState.error}
-            fontSize={getPreviewFontSize(previewSettings)}
             rotation={previewSettings.rotation}
-            showText={previewSettings.type === 'QR' && previewSettings.showText}
+            showPreviewFrame={showPreviewFrame}
             svg={previewState.svg}
             typeLabel={t(`barcode.types.${previewSettings.type}`)}
-            value={previewSettings.value}
           />
         </div>
       </Panel>

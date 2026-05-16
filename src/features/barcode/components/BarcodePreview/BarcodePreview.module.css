@@ -33,8 +33,25 @@
   display: grid;
   justify-items: center;
   gap: 0.75rem;
+  position: relative;
+  padding: 1rem;
   transform-origin: center;
   will-change: transform;
+}
+
+.withFrame {
+  --preview-corner-color: #b5c0cb;
+  --preview-corner-size: 2.5rem;
+  --preview-corner-width: 2px;
+  background:
+    linear-gradient(var(--preview-corner-color), var(--preview-corner-color)) left top / var(--preview-corner-size) var(--preview-corner-width) no-repeat,
+    linear-gradient(var(--preview-corner-color), var(--preview-corner-color)) left top / var(--preview-corner-width) var(--preview-corner-size) no-repeat,
+    linear-gradient(var(--preview-corner-color), var(--preview-corner-color)) right top / var(--preview-corner-size) var(--preview-corner-width) no-repeat,
+    linear-gradient(var(--preview-corner-color), var(--preview-corner-color)) right top / var(--preview-corner-width) var(--preview-corner-size) no-repeat,
+    linear-gradient(var(--preview-corner-color), var(--preview-corner-color)) left bottom / var(--preview-corner-size) var(--preview-corner-width) no-repeat,
+    linear-gradient(var(--preview-corner-color), var(--preview-corner-color)) left bottom / var(--preview-corner-width) var(--preview-corner-size) no-repeat,
+    linear-gradient(var(--preview-corner-color), var(--preview-corner-color)) right bottom / var(--preview-corner-size) var(--preview-corner-width) no-repeat,
+    linear-gradient(var(--preview-corner-color), var(--preview-corner-color)) right bottom / var(--preview-corner-width) var(--preview-corner-size) no-repeat;
 }
 
 .svg {
@@ -47,20 +64,6 @@
   width: 100%;
   height: auto;
   max-width: 100%;
-}
-
-.value {
-  max-width: min(100%, 28rem);
-  color: #0a0f0d;
-  font-family: var(--font-numeric);
-  font-variant-numeric: lining-nums tabular-nums;
-  font-feature-settings:
-    "lnum" 1,
-    "tnum" 1;
-  letter-spacing: 0.16em;
-  line-height: 1.35;
-  overflow-wrap: anywhere;
-  text-align: center;
 }
 
 .state {

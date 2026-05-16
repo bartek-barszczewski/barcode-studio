@@ -1,17 +1,22 @@
 .appShell {
-  min-height: 100svh;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   background:
     radial-gradient(circle at 20% 10%, var(--primary-soft), transparent 28rem),
     linear-gradient(135deg, var(--bg) 0%, var(--surface-soft) 48%, var(--primary-soft) 100%);
   color: var(--text);
+  overflow: hidden;
 }
 
 .content {
-  width: min(100%, var(--container));
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  width: 100%;
+  min-height: 0;
   margin: 0 auto;
-  padding: clamp(1.4rem, 4vw, 2.6rem) clamp(1rem, 4vw, 3rem)
-    clamp(2rem, 7vw, 5rem);
+  padding: clamp(0.5rem, 1vw, 1rem);
   box-sizing: border-box;
+  overflow: hidden;
 }

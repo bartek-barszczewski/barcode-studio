@@ -1,17 +1,22 @@
 .page {
   display: grid;
-  grid-template-columns: clamp(440px, 35vw, 520px) minmax(0, 1fr);
-  gap: 12px;
-  align-items: stretch; /* Stretch right column to match left column's total panel height */
+  grid-template-columns: clamp(420px, 30vw, 560px) minmax(0, 1fr);
+  gap: clamp(0.7rem, 1vw, 1rem);
+  align-items: stretch;
+  flex: 1;
   width: 100%;
-  padding-block: 14px;
-  /* height: auto is implicit, page grows with content */
+  height: min(42rem, calc(100svh - 6.5rem));
+  min-height: 0;
+  min-width: 0;
+  padding-block: 0;
 }
 
 .leftColumn {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: clamp(0.7rem, 1vw, 1rem);
+  height: 100%;
+  min-height: 0;
   min-width: 0;
 }
 
@@ -30,16 +35,37 @@
   gap: 0.75rem;
 }
 
+.uploadPanel {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.uploadPanel > div:last-child,
+.uploadPanel .controls {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.uploadPanel .controls > label {
+  flex: 1;
+  min-height: 8.5rem;
+}
+
 .rightColumn {
   min-width: 0;
   display: flex;
   flex-direction: column;
-  min-height: 0; /* Allow column to shrink/not overflow */
+  height: 100%;
+  min-height: 0;
   overflow: hidden;
 }
 
 .rightColumn > section {
-  flex: 1; /* Stretch Panel to match left side height */
+  flex: 1;
   display: flex;
   flex-direction: column;
   min-height: 0;
@@ -140,6 +166,7 @@
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 10px;
+  flex: 0 0 auto;
 }
 
 .actionButton {
@@ -251,9 +278,20 @@
   .page {
     grid-template-columns: 1fr;
     align-items: start;
+    height: auto;
+    min-height: 0;
+  }
+
+  .leftColumn {
+    height: auto;
+  }
+
+  .uploadPanel {
+    flex: none;
   }
 
   .rightColumn {
+    height: auto;
     overflow: visible;
   }
 

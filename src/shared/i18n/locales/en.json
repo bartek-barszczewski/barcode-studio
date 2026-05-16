@@ -80,13 +80,14 @@
       "downloadPng": "Download PNG",
       "print": "Print"
     },
-    "preview": {
-      "title": "Preview",
-      "description": "The generated code will appear here.",
-      "toolbarLabel": "Preview actions"
-    },
-    "exportErrors": {
-      "svg": "Could not download the SVG file.",
+      "preview": {
+        "title": "Preview",
+        "description": "The generated code will appear here.",
+        "toolbarLabel": "Preview actions"
+      },
+      "previewFrameToggle": "Enable frame preview",
+      "exportErrors": {
+        "svg": "Could not download the SVG file.",
       "png": "Could not download the PNG file.",
       "capture": "Could not capture the code.",
       "print": "Could not open the print view."
@@ -210,10 +211,10 @@
       "docx": {
         "title": "Document Editor (DOCX)",
         "workflow": {
-          "title": "Advanced editor features:",
-          "step1": "• Dragging: Grab the handle icon on the left to reorder blocks.",
-          "step2": "• Formatting: Select text to change its color, size, or weight.",
-          "step3": "• Barcodes: Each line of text automatically generates its corresponding barcode underneath."
+          "title": "Working with a DOCX document:",
+          "step1": "1. Choose the barcode type, then upload a .docx file with text values to encode.",
+          "step2": "2. Adjust the barcode appearance: height, bar width, scale, margins, colors, and text visibility.",
+          "step3": "3. Check the preview, print it, or click 'Generate' to download a new DOCX file with barcodes."
         }
       },
       "printing": {

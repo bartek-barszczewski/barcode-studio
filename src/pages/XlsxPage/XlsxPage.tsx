@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ArrowDown, ArrowDownLeft, ArrowDownRight, ArrowLeft, ArrowRight, ArrowUp, ArrowUpLeft, ArrowUpRight, CheckCircle2, FileSpreadsheet, Type } from 'lucide-react';
 import { saveAs } from 'file-saver';
@@ -30,9 +30,7 @@ export function XlsxPage() {
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [progress, setProgress] = useState<{ current: number; total: number } | null>(null);
-  const [previewPanelHeight, setPreviewPanelHeight] = useState<number | null>(null);
   const [barcodeType, setBarcodeType] = useState<BarcodeType>('CODE128');
-  const leftColumnRef = useRef<HTMLDivElement | null>(null);
   const [selectedColumns, setSelectedColumns] = useState<SelectedColumns>({
     sourceColumnIndex: null,
     targetColumnIndex: null,
@@ -64,39 +62,6 @@ export function XlsxPage() {
       barcodeStyle.margin <= 80
     );
   }, [barcodeStyle]);
-
-  useEffect(() => {
-    const leftColumn = leftColumnRef.current;
-    if (!leftColumn || typeof window === 'undefined') {
-      return;
-    }
-
-    const updatePreviewPanelHeight = () => {
-      if (window.innerWidth <= 900) {
-        setPreviewPanelHeight(null);
-        return;
-      }
-
-      const nextHeight = Math.ceil(leftColumn.getBoundingClientRect().height);
-      setPreviewPanelHeight((currentHeight) =>
-        currentHeight === nextHeight ? currentHeight : nextHeight,
-      );
-    };
-
-    updatePreviewPanelHeight();
-
-    const resizeObserver = new ResizeObserver(() => {
-      updatePreviewPanelHeight();
-    });
-
-    resizeObserver.observe(leftColumn);
-    window.addEventListener('resize', updatePreviewPanelHeight);
-
-    return () => {
-      resizeObserver.disconnect();
-      window.removeEventListener('resize', updatePreviewPanelHeight);
-    };
-  }, []);
 
   const handleFileSelect = async (files: File[]) => {
     if (files.length === 0) return;
@@ -317,28 +282,18 @@ export function XlsxPage() {
 
   const hasSourceData = sourceRowsWithData.length > 0;
 
-  const sameColumnsError =
-    selectedColumns.sourceColumnIndex !== null &&
-    selectedColumns.targetColumnIndex !== null &&
-    selectedColumns.sourceColumnIndex === selectedColumns.targetColumnIndex &&
-    (selectedColumns.placement === 'left' || selectedColumns.placement === 'right');
-
   const isValidToGenerate = useMemo(() => {
     return (
       selectedColumns.sourceColumnIndex !== null &&
       selectedColumns.targetColumnIndex !== null &&
-      !sameColumnsError &&
       invalidSourceCount === 0 &&
       hasSourceData &&
-      occupiedTargetCells.length === 0 &&
       isSettingsValid
     );
   }, [
     selectedColumns,
-    sameColumnsError,
     invalidSourceCount,
     hasSourceData,
-    occupiedTargetCells,
     isSettingsValid,
   ]);
 
@@ -423,15 +378,14 @@ export function XlsxPage() {
     setSelectedColumns(prev => ({ ...prev, placement }));
   };
 
-  const rightColumnStyle =
-    previewPanelHeight === null
-      ? undefined
-      : { height: `${previewPanelHeight}px`, maxHeight: `${previewPanelHeight}px` };
-
   return (
     <div className={styles.page}>
-      <div className={styles.leftColumn} ref={leftColumnRef}>
-        <Panel title={t('xlsx.batch.title')} description={t('xlsx.batch.description')}>
+      <div className={styles.leftColumn}>
+        <Panel
+          className={styles.uploadPanel}
+          title={t('xlsx.batch.title')}
+          description={t('xlsx.batch.description')}
+        >
           <div className={styles.controls}>
             <div className={styles.field}>
               <label className={styles.label}>{t('generator.fields.type')}</label>
@@ -689,7 +643,7 @@ export function XlsxPage() {
               }
               className={styles.actionButton}
             >
-              {t('xlsx.actions.clear')}
+              {t('xlsx.actions.deselect')}
             </Button>
             <Button
               variant="primary"
@@ -707,22 +661,9 @@ export function XlsxPage() {
             </Button>
           </div>
         )}
-
-        {sameColumnsError && <div className={styles.error}>{t('xlsx.errors.sameColumns')}</div>}
-
-        {occupiedTargetCells.length > 0 && (
-          <div className={styles.error}>
-            <strong>{t('xlsx.errors.targetColumnMustBeEmpty')}</strong>
-            <div style={{ marginTop: '8px', fontSize: '13px' }}>
-              {t('xlsx.errors.occupiedCellsList', {
-                cells: occupiedTargetCells.join(', '),
-              })}
-            </div>
-          </div>
-        )}
       </div>
 
-      <div className={styles.rightColumn} style={rightColumnStyle}>
+      <div className={styles.rightColumn}>
         <Panel
           className={styles.previewPanel}
           fullHeight

@@ -29,9 +29,31 @@ const BWIP_JS_FORMATS: Partial<Record<BarcodeType, string>> = {
 
 const MIN_QR_SIZE = 240
 const BWIP_MAX_TEXT_SIZE = 25
+const TEXT_WIDTH_RATIO = 0.92
+const ESTIMATED_TEXT_CHAR_WIDTH = 0.58
+const MIN_FITTED_FONT_RATIO = 0.55
 
 const getRenderScale = (scale: number) =>
   Number.isFinite(scale) && scale > 0 ? scale : 1
+
+const formatSvgNumber = (value: number) =>
+  Number.parseFloat(value.toFixed(3)).toString()
+
+const parseSvgNumberAttribute = (svg: string, attribute: 'width' | 'height') => {
+  const match = svg.match(new RegExp(`${attribute}="([0-9.]+)`))
+  if (!match) return null
+
+  const value = Number.parseFloat(match[1])
+  return Number.isFinite(value) && value > 0 ? value : null
+}
+
+const escapeSvgText = (value: string) =>
+  value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&apos;')
 
 const assertSvgColor = (color: string, fieldName: string) => {
   if (!HEX_COLOR_PATTERN.test(color)) {
@@ -50,25 +72,43 @@ const injectTextToSvg = (svg: string, input: BarcodeFormState): string => {
 
   const [minX, minY, width, height] = parts.map(parseFloat)
   const scale = getRenderScale(input.scale)
-  
-  // Calculate spacing based on font size
-  const fontSize = input.fontSize * scale
-  const spacing = 8 * scale
-  const extraHeight = fontSize + spacing
-  
+  const renderedWidth = parseSvgNumberAttribute(svg, 'width') ?? width
+  const renderedHeight = parseSvgNumberAttribute(svg, 'height') ?? height
+  const unitsPerPixelX = width / renderedWidth
+  const unitsPerPixelY = height / renderedHeight
+  const maxTextWidth = width * TEXT_WIDTH_RATIO
+  const desiredFontSize = input.fontSize * scale * unitsPerPixelX
+  const estimatedTextWidth =
+    input.value.length * desiredFontSize * ESTIMATED_TEXT_CHAR_WIDTH
+  const fittedFontSize =
+    estimatedTextWidth > maxTextWidth && input.value.length > 0
+      ? Math.max(
+          maxTextWidth / (input.value.length * ESTIMATED_TEXT_CHAR_WIDTH),
+          desiredFontSize * MIN_FITTED_FONT_RATIO,
+        )
+      : desiredFontSize
+  const textLength =
+    estimatedTextWidth > maxTextWidth
+      ? ` textLength="${formatSvgNumber(maxTextWidth)}" lengthAdjust="spacingAndGlyphs"`
+      : ''
+  const spacing = 8 * scale * unitsPerPixelY
+  const extraHeight = fittedFontSize * 1.25 + spacing
+  const extraRenderedHeight = extraHeight / unitsPerPixelY
   const newHeight = height + extraHeight
-  const newViewBox = `${minX} ${minY} ${width} ${newHeight}`
-  
+  const newViewBox = [minX, minY, width, newHeight]
+    .map(formatSvgNumber)
+    .join(' ')
   const textX = minX + width / 2
-  const textY = minY + height + fontSize // Position text below the original height
-  
-  const textElement = `<text x="${textX}" y="${textY}" fill="${input.barColor}" font-family="Arial, sans-serif" font-size="${fontSize}" text-anchor="middle">${input.value}</text>`
-  
-  // Update viewBox and height/width if they exist as absolute values
+  const textY = minY + height + spacing + fittedFontSize
+  const textElement = `<text x="${formatSvgNumber(textX)}" y="${formatSvgNumber(textY)}" fill="${input.barColor}" font-family="Arial, sans-serif" font-size="${formatSvgNumber(fittedFontSize)}" text-anchor="middle"${textLength}>${escapeSvgText(input.value)}</text>`
+
   let updatedSvg = svg.replace(/viewBox="[^"]+"/, `viewBox="${newViewBox}"`)
-  
-  // Update explicit width/height if they are numbers (common in some libs)
-  updatedSvg = updatedSvg.replace(/(<svg[^>]+height=")(\d+\.?\d*)/, (_, p1, p2) => p1 + (parseFloat(p2) + extraHeight))
+
+  updatedSvg = updatedSvg.replace(
+    /(<svg[^>]+height=")(\d+\.?\d*)/,
+    (_, p1, p2) =>
+      p1 + formatSvgNumber(Number.parseFloat(p2) + extraRenderedHeight),
+  )
 
   return updatedSvg.replace('</svg>', `${textElement}</svg>`)
 }

@@ -80,13 +80,14 @@
       "downloadPng": "Pobierz PNG",
       "print": "Drukuj"
     },
-    "preview": {
-      "title": "Podgląd",
-      "description": "Wygenerowany kod pojawi się tutaj.",
-      "toolbarLabel": "Akcje podglądu"
-    },
-    "exportErrors": {
-      "svg": "Nie udało się pobrać pliku SVG.",
+      "preview": {
+        "title": "Podgląd",
+        "description": "Wygenerowany kod pojawi się tutaj.",
+        "toolbarLabel": "Akcje podglądu"
+      },
+      "previewFrameToggle": "Włącz podgląd ramki",
+      "exportErrors": {
+        "svg": "Nie udało się pobrać pliku SVG.",
       "png": "Nie udało się pobrać pliku PNG.",
       "capture": "Nie udało się wykonać zrzutu kodu.",
       "print": "Nie udało się otworzyć podglądu wydruku."
@@ -132,7 +133,7 @@
       "description": "Ustawienia wizualne generowanych kodów."
     },
     "actions": {
-      "clear": "Wyczyść"
+      "deselect": "Odznacz"
     },
     "preview": {
       "title": "Podgląd arkusza",
@@ -186,7 +187,8 @@
       "generated": "Pomyślnie wygenerowano {{count}} kodów."
     },
     "actions": {
-      "print": "Drukuj"
+      "print": "Drukuj",
+      "deselect": "Odznacz"
     }
   },
   "help": {
@@ -210,10 +212,10 @@
       "docx": {
         "title": "Edytor Dokumentów (DOCX)",
         "workflow": {
-          "title": "Zaawansowane funkcje edytora:",
-          "step1": "• Przeciąganie: Chwyć za ikonę uchwytu po lewej, aby zmienić kolejność bloków.",
-          "step2": "• Formatowanie: Zaznacz tekst, aby zmienić jego kolor, rozmiar lub pogrubienie.",
-          "step3": "• Barkody: Każda linia tekstu automatycznie generuje odpowiadający jej kod pod spodem."
+          "title": "Praca z dokumentem DOCX:",
+          "step1": "1. Wybierz typ kodu, a następnie wgraj plik .docx z tekstami do zakodowania.",
+          "step2": "2. Ustaw wygląd kodów: wysokość, grubość kreski, skalę, marginesy, kolory i widoczność tekstu.",
+          "step3": "3. Sprawdź podgląd, wydrukuj go albo kliknij 'Generuj', aby pobrać nowy plik DOCX z kodami."
         }
       },
       "printing": {

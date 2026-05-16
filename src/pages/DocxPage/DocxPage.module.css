@@ -1,115 +1,135 @@
 .page {
   display: grid;
-  grid-template-columns: clamp(500px, 40vw, 600px) minmax(0, 1fr);
-  gap: 12px;
-  align-items: start;
+  grid-template-columns: 460px minmax(0, 1fr);
+  gap: 0.75rem;
+  height: calc(100vh - 4.5rem); /* Slightly more space */
   width: 100%;
-  padding-block: 14px;
+  overflow: hidden;
+  box-sizing: border-box;
+  padding: 0.25rem;
 }
 
 .leftColumn {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  min-width: 0;
-}
-
-.leftColumn > section,
-.rightColumn > section {
-  padding: clamp(0.8rem, 1.4vw, 0.95rem);
-}
-
-.rightColumn {
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
+  gap: 0.5rem;
+  height: 100%;
   min-height: 0;
   overflow: hidden;
 }
 
-.rightColumn > section {
-  flex: 1;
+.rightColumn {
   display: flex;
   flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Panel overrides for DocxPage */
+.leftColumn > section {
+  padding: 0.75rem !important;
+  flex-shrink: 0;
+}
+
+.leftColumn > section > header {
+  margin-bottom: 0.4rem;
+}
+
+.uploadPanel {
+  flex: 0 0 auto;
+}
+
+.uploadPanel .controls {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+/* Appearance Settings Panel - MAKE IT FLEXIBLE TO NOT PUSH BUTTONS */
+.leftColumn > section:nth-of-type(2) {
+  flex: 1 1 auto;
   min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
-.rightColumn section > div:last-child {
+.leftColumn > section:nth-of-type(2) > div:last-child {
   flex: 1;
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
-}
-
-.controls {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.field {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.label {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--text);
-}
-
-.error {
-  color: var(--accent);
-  font-size: 13px;
-  padding: 10px;
-  background: var(--accent-soft);
-  border-radius: var(--radius-sm);
-}
-
-.success {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: var(--success);
-  font-size: 13px;
-  padding: 10px;
-  background: var(--success-soft);
-  border-radius: var(--radius-sm);
-  font-weight: 500;
-}
-
-.previewPlaceholder {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex: 1;
-  min-height: 260px;
-  border: 2px dashed var(--border);
-  border-radius: var(--radius-md);
-  color: var(--muted);
-  font-size: 15px;
+  overflow: hidden;
 }
 
 .settingsGrid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 10px;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.4rem 0.5rem;
+  align-items: end;
+}
+
+.colorFields, 
+.bottomFields {
+  display: contents;
+}
+
+.settingsGrid > div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.settingsGrid input,
+.settingsGrid select,
+.printButton {
+  height: 1.85rem !important;
+  font-size: 0.85rem;
+}
+
+.label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 700;
 }
 
 .actionsRow {
+  flex: 0 0 auto;
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+  padding: 0.25rem 0;
 }
 
-.colorFields {
-  display: flex;
-  gap: 8px;
+.actionButton {
+  height: 2.25rem;
+  font-weight: 700;
+  width: 100%;
+  justify-content: center;
 }
 
-.colorFields > div {
-  flex: 1;
+.actionButton::before {
+  content: '';
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  flex: 0 0 auto;
+  background-color: currentColor;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  -webkit-mask-size: contain;
+  margin-right: 0.5rem;
+}
+
+.actionButton:first-child::before {
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m7 21 3-3'/%3E%3Cpath d='M3 7h18'/%3E%3Cpath d='M17 3v4'/%3E%3Cpath d='m14 7 1 14'/%3E%3Cpath d='M6 7 5 21'/%3E%3Cpath d='M12 7v14'/%3E%3Cpath d='M19 7c0 10-8 14-8 14'/%3E%3C/svg%3E");
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m7 21 3-3'/%3E%3Cpath d='M3 7h18'/%3E%3Cpath d='M17 3v4'/%3E%3Cpath d='m14 7 1 14'/%3E%3Cpath d='M6 7 5 21'/%3E%3Cpath d='M12 7v14'/%3E%3Cpath d='M19 7c0 10-8 14-8 14'/%3E%3C/svg%3E");
+}
+
+.actionButton:last-child::before {
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4'/%3E%3Cpolyline points='7 10 12 15 17 10'/%3E%3Cline x1='12' x2='12' y1='15' y2='3'/%3E%3C/svg%3E");
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4'/%3E%3Cpolyline points='7 10 12 15 17 10'/%3E%3Cline x1='12' x2='12' y1='15' y2='3'/%3E%3C/svg%3E");
 }
 
 .printButton {
@@ -124,31 +144,58 @@
   border-color: #000000 !important;
 }
 
-.bottomFields {
-  grid-column: span 3;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-top: 4px;
+/* Dropzone styling - compacted */
+.uploadPanel .controls > label {
+  padding-block: 0.75rem;
+}
+
+.error {
+  color: var(--accent);
+  font-size: 11px;
+  padding: 4px 8px;
+  background: var(--accent-soft);
+  border-radius: var(--radius-sm);
+}
+
+.success {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--success);
+  font-size: 11px;
+  padding: 4px 8px;
+  background: var(--success-soft);
+  border-radius: var(--radius-sm);
+  font-weight: 500;
+}
+
+.previewPlaceholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  min-height: 200px;
+  border: 2px dashed var(--border);
+  border-radius: var(--radius-md);
+  color: var(--muted);
+  font-size: 15px;
 }
 
 @media (max-width: 1200px) {
-  .settingsGrid {
-    grid-template-columns: 1fr 1fr;
+  .page {
+    grid-template-columns: 400px minmax(0, 1fr);
   }
 }
 
 @media (max-width: 900px) {
   .page {
     grid-template-columns: 1fr;
-    align-items: start;
-  }
-
-  .rightColumn {
+    height: auto;
     overflow: visible;
   }
 
-  .actionsRow {
-    grid-template-columns: 1fr;
+  .leftColumn, .rightColumn {
+    height: auto;
+    overflow: visible;
   }
 }

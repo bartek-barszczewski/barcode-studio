@@ -5,20 +5,16 @@ import styles from './BarcodePreview.module.css'
 
 type BarcodePreviewProps = {
   svg: string | null
-  value: string
-  showText: boolean
   rotation: BarcodeRotation
-  fontSize: number
+  showPreviewFrame?: boolean
   error?: string | null
   typeLabel?: string
 }
 
 export function BarcodePreview({
   svg,
-  value,
-  showText,
   rotation,
-  fontSize,
+  showPreviewFrame = true,
   error = null,
   typeLabel = 'Code 128',
 }: BarcodePreviewProps) {
@@ -40,7 +36,7 @@ export function BarcodePreview({
         <div className={styles.captureViewport}>
           <div className={styles.captureTarget} id="capture-target">
             <div
-              className={styles.artwork}
+              className={`${styles.artwork} ${showPreviewFrame ? styles.withFrame : ''}`}
               style={{ transform: `rotate(${rotation}deg)` }}
             >
               <div
@@ -48,11 +44,6 @@ export function BarcodePreview({
                 className={styles.svg}
                 dangerouslySetInnerHTML={{ __html: svg }}
               />
-              {showText && (
-                <div className={styles.value} style={{ fontSize }}>
-                  {value}
-                </div>
-              )}
             </div>
           </div>
         </div>
