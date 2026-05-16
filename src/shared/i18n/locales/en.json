@@ -342,6 +342,16 @@
       "ready": "Ready",
       "empty": "Empty",
       "invalid": "Invalid"
+    },
+    "sidebar": {
+      "title": "Barcode Settings",
+      "editing": "Editing barcode #{{index}}",
+      "sections": {
+        "data": "Data & Content",
+        "barcode": "Barcode Standard",
+        "appearance": "Appearance & Dimensions",
+        "text": "Text & Labels"
+      }
     }
   }
 }
