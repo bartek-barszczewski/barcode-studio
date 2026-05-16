@@ -1,5 +1,11 @@
 import { BARCODE_TYPE_LABELS } from '../constants/barcodeTypes'
+import { VALIDATION_MESSAGE_KEYS } from '../constants/validationMessages'
 import type { BarcodeType, ValidationResult } from '../types/barcode'
+
+export const getTranslationKeyForMessage = (message?: string | null): string => {
+  if (!message) return 'barcode.validation.invalid'
+  return VALIDATION_MESSAGE_KEYS[message] ?? 'barcode.validation.invalid'
+}
 
 const DIGITS_ONLY_PATTERN = /^\d+$/
 const CODE39_PATTERN = /^[0-9A-Z\-.$ /+%]+$/

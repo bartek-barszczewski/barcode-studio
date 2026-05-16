@@ -1,12 +1,11 @@
 .appShell {
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   background:
     radial-gradient(circle at 20% 10%, var(--primary-soft), transparent 28rem),
     linear-gradient(135deg, var(--bg) 0%, var(--surface-soft) 48%, var(--primary-soft) 100%);
   color: var(--text);
-  overflow: hidden;
 }
 
 .content {
@@ -14,9 +13,7 @@
   flex: 1;
   flex-direction: column;
   width: 100%;
-  min-height: 0;
   margin: 0 auto;
   padding: clamp(0.5rem, 1vw, 1rem);
   box-sizing: border-box;
-  overflow: hidden;
 }

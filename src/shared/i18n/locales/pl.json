@@ -5,6 +5,7 @@
     "generator": "Generator",
     "xlsx": "XLSX",
     "docx": "DOCX",
+    "barcodeSet": "Zestaw kodów",
     "help": "Pomoc",
     "languageToggle": "Zmień język"
   },
@@ -66,7 +67,7 @@
     },
     "placeholders": {
       "type": "Wybierz typ kodu",
-      "value": "Wpisz albo wklej wartość"
+      "value": "Np. 12345678"
     },
     "textOptions": {
       "show": "Pokaż pod kodem",
@@ -287,6 +288,59 @@
         "a1": "Tak, całe przetwarzanie odbywa się lokalnie w Twojej przeglądarce. Żadne pliki ani dane nie są wysyłane na serwer.",
         "q2": "Dlaczego nie mogę wgrać pliku .xls?",
         "a2": "Wspieramy tylko nowoczesny format .xlsx. Starsze pliki .xls należy najpierw zapisać jako .xlsx w programie Excel."
+      }
+    }
+  },
+  "barcodeSet": {
+    "title": "Zestaw kodów",
+    "description": "Twórz i zarządzaj wieloma kodami kreskowymi w jednym obszarze roboczym.",
+    "itemTitle": "Kod kreskowy nr {{index}}",
+    "appearance": {
+      "title": "Wygląd",
+      "toggle": "Ustawienia wyglądu"
+    },
+    "actions": {
+      "add": "Dodaj kod",
+      "remove": "Usuń",
+      "duplicate": "Duplikuj",
+      "duplicateLast": "Duplikuj ostatni",
+      "print": "Drukuj",
+      "printAll": "Drukuj wszystko",
+      "clearAll": "Wyczyść wszystko",
+      "edit": "Edytuj",
+      "import": "Importuj",
+      "export": "Eksportuj",
+      "importText": "Importuj z tekstu",
+      "exportJson": "Eksportuj zestaw",
+      "importJson": "Importuj zestaw",
+      "resetSaved": "Resetuj zapisany zestaw"
+    },
+    "view": {
+      "compact": "Widok kompaktowy",
+      "full": "Widok pełny"
+    },
+    "import": {
+      "title": "Importuj kody",
+      "textPlaceholder": "Jeden kod w jednej linii...",
+      "replace": "Zastąp bieżące",
+      "append": "Dopisuj do bieżących",
+      "success": "Pomyślnie zaimportowano {{count}} kodów.",
+      "error": "Nieprawidłowy format pliku.",
+      "jsonHint": "Wgraj wcześniej wyeksportowany plik .json."
+    },
+    "status": {
+      "ready": "Gotowy",
+      "empty": "Pusty",
+      "invalid": "Błędny"
+    },
+    "sidebar": {
+      "title": "Ustawienia kodu",
+      "editing": "Edytujesz kod nr {{index}}",
+      "sections": {
+        "data": "Dane i zawartość",
+        "barcode": "Standard kodu",
+        "appearance": "Wygląd i wymiary",
+        "text": "Tekst i napisy"
       }
     }
   }

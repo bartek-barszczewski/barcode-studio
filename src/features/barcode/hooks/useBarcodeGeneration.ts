@@ -2,8 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { renderBarcodeToSvgString } from '../rendering/renderBarcode'
 import type { BarcodeFormState, BarcodeType } from '../types/barcode'
-import { validateBarcodeValue } from '../validation/barcodeValidation'
-import { VALIDATION_MESSAGE_KEYS } from '../constants/validationMessages'
+import { validateBarcodeValue, getTranslationKeyForMessage } from '../validation/barcodeValidation'
 import { BARCODE_TEST_VALUES, DEFAULT_BARCODE_FORM_STATE } from '../constants/barcodeTypes'
 
 export type PreviewState = {
@@ -24,12 +23,8 @@ export function useBarcodeGeneration() {
   })
   const [exportError, setExportError] = useState<string | null>(null)
 
-  const getValidationMessage = useCallback((message?: string) =>
-    t(
-      message
-        ? (VALIDATION_MESSAGE_KEYS[message] ?? 'barcode.validation.invalid')
-        : 'barcode.validation.invalid',
-    ), [t])
+  const getValidationMessage = useCallback((message?: string | null) =>
+    t(getTranslationKeyForMessage(message)), [t])
 
   useEffect(() => {
     let isCurrent = true

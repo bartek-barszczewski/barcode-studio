@@ -3,6 +3,7 @@ import { DocxPage } from '../pages/DocxPage/DocxPage'
 import { GeneratorPage } from '../pages/GeneratorPage/GeneratorPage'
 import { HelpPage } from '../pages/HelpPage/HelpPage'
 import { XlsxPage } from '../pages/XlsxPage/XlsxPage'
+import { BarcodeSetPage } from '../pages/BarcodeSetPage/BarcodeSetPage'
 import { AppLayout } from './AppLayout'
 
 export const router = createBrowserRouter([
@@ -17,6 +18,10 @@ export const router = createBrowserRouter([
       {
         path: 'generator',
         element: <GeneratorPage />,
+      },
+      {
+        path: 'barcode-set',
+        element: <BarcodeSetPage />,
       },
       {
         path: 'xlsx',

@@ -6,12 +6,14 @@ import {
   FileSpreadsheet,
   FileText,
   Languages,
+  Library,
   ScanBarcode,
 } from 'lucide-react'
 import styles from './TopNavigation.module.css'
 
 const navItems = [
   { to: '/generator', labelKey: 'navigation.generator', icon: ScanBarcode },
+  { to: '/barcode-set', labelKey: 'navigation.barcodeSet', icon: Library },
   { to: '/xlsx', labelKey: 'navigation.xlsx', icon: FileSpreadsheet },
   { to: '/docx', labelKey: 'navigation.docx', icon: FileText },
   { to: '/help', labelKey: 'navigation.help', icon: CircleHelp },
