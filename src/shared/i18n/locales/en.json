@@ -134,7 +134,7 @@
       "description": "Visual settings for generated codes."
     },
     "actions": {
-      "clear": "Clear"
+      "deselect": "Deselect"
     },
     "preview": {
       "title": "Sheet preview",
@@ -188,7 +188,8 @@
       "generated": "Successfully generated {{count}} barcodes."
     },
     "actions": {
-      "print": "Print"
+      "print": "Print",
+      "deselect": "Deselect"
     }
   },
   "help": {
