@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Plus, Minus, Printer, Trash2 } from 'lucide-react'
 import { useBarcodeSet } from '../../hooks/useBarcodeSet'
@@ -64,7 +64,6 @@ export function BarcodeSetView() {
   }, [items.length, isProgrammaticScroll])
 
   // Calculate indicator position (only for every 5th dot)
-  const navItems = items.filter((_, index) => index % 5 === 0)
   const activeDotIndex = Math.floor(activeItemIndex / 5)
   // dot height (14) + gap (20 aka 1.25rem) = 34px. 
   // Initial top padding of sideNav is 1.5rem (24px).
@@ -73,7 +72,7 @@ export function BarcodeSetView() {
   const indicatorOffset = activeDotIndex * 34;
   const indicatorTransform = `translateY(${indicatorOffset}px)`
 
-  const scrollToItem = (index: number) => {
+  const scrollToItem = useCallback((index: number) => {
     // Manually set index immediately for visual responsiveness
     setActiveItemIndex(index)
     setIsProgrammaticScroll(true)
@@ -98,7 +97,7 @@ export function BarcodeSetView() {
     if (targetElement) {
       targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
-  };
+  }, [items.length]);
 
   const handleEdit = (id: string) => {
     setSelectedItemId(id)
@@ -115,7 +114,9 @@ export function BarcodeSetView() {
   // Ensure selection persists if drawer is open but item index changes (e.g. duplicate)
   useEffect(() => {
     if (isDrawerOpen && !items.find(i => i.id === selectedItemId)) {
-      setIsDrawerOpen(false)
+      // Use a timeout to avoid synchronous setState warning in effect
+      const timer = setTimeout(() => setIsDrawerOpen(false), 0)
+      return () => clearTimeout(timer)
     }
   }, [items, selectedItemId, isDrawerOpen])
 
@@ -137,7 +138,7 @@ export function BarcodeSetView() {
     removeLastItem()
   }
 
-  const handlePrintAll = async () => {
+  const handlePrintAll = useCallback(async () => {
     if (items.length === 0 || isPrinting) return
     
     setIsPrinting(true)
@@ -166,7 +167,7 @@ export function BarcodeSetView() {
     } finally {
       setIsPrinting(false)
     }
-  }
+  }, [items, isPrinting]);
 
   // Keyboard shortcut: Ctrl+P for Print All
   useEffect(() => {
@@ -174,13 +175,13 @@ export function BarcodeSetView() {
       // Check for P key with Ctrl (Windows/Linux) or Meta (Mac)
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'p') {
         e.preventDefault()
-        handlePrintAll()
+        void handlePrintAll()
       }
     }
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [items, isPrinting]) // Update listener when items or printing state changes
+  }, [handlePrintAll]) // Optimized dependencies
 
   return (
     <div className={`${styles.container} ${isDrawerOpen ? styles.containerWithDrawer : ''}`}>

@@ -219,6 +219,17 @@
           "step3": "3. Sprawdź podgląd, wydrukuj go albo kliknij 'Generuj', aby pobrać nowy plik DOCX z kodami."
         }
       },
+      "barcodeSet": {
+        "title": "Zarządzanie Zestawem (Bulk)",
+        "body": "Narzędzie do masowego zarządzania kodami. Możesz dodawać, usuwać i edytować wiele widżetów jednocześnie.",
+        "features": {
+          "title": "Kluczowe funkcje:",
+          "nav": "Nawigacja: Użyj kropkowego menu po prawej stronie, aby szybko przeskakiwać między grupami kodów (co 5 sztuk).",
+          "edit": "Edycja: Kliknij ikonę ołówka, aby otworzyć boczny panel ustawień dla konkretnego kodu.",
+          "print": "Drukuj wszystko: Przycisk drukarki generuje gotową do druku siatkę A4 ze wszystkimi kodami.",
+          "shortcut": "Skrót klawiszowy: Ctrl+P automatycznie wywołuje drukowanie zestawu kodów."
+        }
+      },
       "printing": {
         "title": "Zasady Drukowania",
         "body": "Aby uzyskać najlepszą jakość:\n1. W oknie drukowania przeglądarki wyłącz 'Nagłówki i stopki'.\n2. Ustaw 'Marginesy' na 'Brak' lub 'Minimalne', jeśli dokument DOCX ma własne marginesy.\n3. Skala powinna wynosić 100%, aby zachować wymiary A4."

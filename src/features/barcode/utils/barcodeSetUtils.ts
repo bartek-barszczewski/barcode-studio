@@ -75,16 +75,19 @@ export function clearAllBarcodes(): BarcodeSetItem[] {
 }
 
 export function validateBarcodeSetItem(item: unknown): item is BarcodeSetItem {
+  if (typeof item !== 'object' || item === null) return false
+  
+  const candidate = item as Record<string, unknown>
+  const options = candidate.options as Record<string, unknown> | undefined
+
   return (
-    typeof item === 'object' &&
-    item !== null &&
-    typeof (item as any).id === 'string' &&
-    typeof (item as any).value === 'string' &&
-    typeof (item as any).type === 'string' &&
-    typeof (item as any).options === 'object' &&
-    (item as any).options !== null &&
-    typeof (item as any).options.height === 'number' &&
-    typeof (item as any).options.barWidth === 'number'
+    typeof candidate.id === 'string' &&
+    typeof candidate.value === 'string' &&
+    typeof candidate.type === 'string' &&
+    typeof options === 'object' &&
+    options !== null &&
+    typeof options.height === 'number' &&
+    typeof options.barWidth === 'number'
   )
 }
 

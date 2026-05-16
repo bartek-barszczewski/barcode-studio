@@ -42,7 +42,7 @@ export function ImportPanel({ onImport, onClose }: ImportPanelProps) {
       } else {
         setError(t('barcodeSet.import.error'))
       }
-    } catch (err) {
+    } catch {
       setError(t('barcodeSet.import.error'))
     } finally {
       if (fileInputRef.current) fileInputRef.current.value = ''

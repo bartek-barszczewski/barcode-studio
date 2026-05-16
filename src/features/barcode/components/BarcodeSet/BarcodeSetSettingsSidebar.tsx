@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { X, Trash2, Copy } from 'lucide-react'
+import { X, Trash2 } from 'lucide-react'
 import type { BarcodeSetItem } from '../../types/barcodeSet'
 import type { BarcodeType, BarcodeRotation } from '../../types/barcode'
 import { BARCODE_TYPE_OPTIONS } from '../../constants/barcodeTypes'

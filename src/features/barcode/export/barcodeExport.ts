@@ -148,6 +148,7 @@ export const downloadPngFromSvg = async (
 export const sanitizeFilename = (filename: string): string => {
   return filename
     .replace(/[<>:"/\\|?*]/g, '-') // Windows/Linux/macOS reserved chars
+    // eslint-disable-next-line no-control-regex
     .replace(/[\x00-\x1f]/g, '') // Control chars
     .replace(/^\.+/, '') // No leading dots
     .replace(/\s+/g, '_') // Replace spaces with underscores

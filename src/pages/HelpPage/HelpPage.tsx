@@ -7,7 +7,8 @@ import {
   AlertTriangle,
   HelpCircle,
   Info,
-  CheckCircle2
+  CheckCircle2,
+  Layers
 } from 'lucide-react';
 import styles from './HelpPage.module.css';
 import { Panel } from '../../shared/ui/Panel/Panel';
@@ -28,6 +29,26 @@ export function HelpPage() {
               <h3>{t('help.sections.generator.title')}</h3>
             </div>
             <p>{t('help.sections.generator.body')}</p>
+          </section>
+
+          {/* Barcode Set Section */}
+          <section className={styles.card}>
+            <div className={styles.cardHeader}>
+              <div className={styles.iconWrapper}>
+                <Layers size={24} />
+              </div>
+              <h3>{t('help.sections.barcodeSet.title')}</h3>
+            </div>
+            <div className={styles.workflow}>
+              <p>{t('help.sections.barcodeSet.body')}</p>
+              <strong>{t('help.sections.barcodeSet.features.title')}</strong>
+              <ul>
+                <li>{t('help.sections.barcodeSet.features.nav')}</li>
+                <li>{t('help.sections.barcodeSet.features.edit')}</li>
+                <li>{t('help.sections.barcodeSet.features.print')}</li>
+                <li>{t('help.sections.barcodeSet.features.shortcut')}</li>
+              </ul>
+            </div>
           </section>
 
           {/* XLSX Workflow Section */}

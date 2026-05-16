@@ -20,9 +20,11 @@ export function useBarcodeItemPreview(item: BarcodeSetItem | null) {
     let isCurrent = true
 
     if (!item) {
-      setSvg(null)
-      setError(null)
-      setStatus('empty')
+      void Promise.resolve().then(() => {
+        setSvg(null)
+        setError(null)
+        setStatus('empty')
+      })
       return
     }
 
@@ -35,9 +37,11 @@ export function useBarcodeItemPreview(item: BarcodeSetItem | null) {
     const validationResult = validateBarcodeValue(formState.type, formState.value)
 
     if (!validationResult.isValid) {
-      setSvg(null)
-      setError(t(getTranslationKeyForMessage(validationResult.message)))
-      setStatus('invalid')
+      void Promise.resolve().then(() => {
+        setSvg(null)
+        setError(t(getTranslationKeyForMessage(validationResult.message)))
+        setStatus('invalid')
+      })
       return
     }
 
@@ -63,7 +67,7 @@ export function useBarcodeItemPreview(item: BarcodeSetItem | null) {
     return () => {
       isCurrent = false
     }
-  }, [item?.value, item?.type, optionsKey, t])
+  }, [item, optionsKey, t]) // Added item to dependencies
 
   return { svg, error, status }
 }

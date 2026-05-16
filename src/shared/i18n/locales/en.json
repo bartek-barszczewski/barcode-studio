@@ -218,6 +218,17 @@
           "step3": "3. Check the preview, print it, or click 'Generate' to download a new DOCX file with barcodes."
         }
       },
+      "barcodeSet": {
+        "title": "Managing Barcode Sets (Bulk)",
+        "body": "A tool for bulk barcode management. You can add, remove, and edit multiple widgets simultaneously.",
+        "features": {
+          "title": "Key features:",
+          "nav": "Navigation: Use the dot menu on the right to quickly jump between barcode groups (every 5 items).",
+          "edit": "Editing: Click the pencil icon to open the side settings panel for a specific barcode.",
+          "print": "Print All: The printer button generates a print-ready A4 grid featuring all barcodes.",
+          "shortcut": "Keyboard Shortcut: Ctrl+P automatically triggers the bulk print functionality."
+        }
+      },
       "printing": {
         "title": "Printing Rules",
         "body": "For best quality:\n1. In the browser print window, disable 'Headers and footers'.\n2. Set 'Margins' to 'None' or 'Minimum' if the DOCX document has its own margins.\n3. Scale should be 100% to maintain A4 dimensions."
