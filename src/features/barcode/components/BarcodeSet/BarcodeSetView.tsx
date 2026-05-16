@@ -26,6 +26,79 @@ export function BarcodeSetView() {
   const [selectedItemId, setSelectedItemId] = useState<string | null>(null)
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
   const [isPrinting, setIsPrinting] = useState(false)
+  const [activeItemIndex, setActiveItemIndex] = useState(0)
+  const [isProgrammaticScroll, setIsProgrammaticScroll] = useState(false)
+
+  // Use IntersectionObserver for high-performance scroll tracking
+  useEffect(() => {
+    const observerOptions = {
+      root: null,
+      rootMargin: '-45% 0px -45% 0px', // Target the exact center to match 'block: center'
+      threshold: 0
+    }
+
+    const observerCallback = (entries: IntersectionObserverEntry[]) => {
+      // Ignore observer updates if we are in the middle of a dot-click scroll
+      if (isProgrammaticScroll) return;
+
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const index = Number(entry.target.getAttribute('data-index'))
+          if (!isNaN(index)) {
+            setActiveItemIndex(index)
+          }
+        }
+      })
+    }
+
+    const observer = new IntersectionObserver(observerCallback, observerOptions)
+    
+    // Watch all cards
+    const cards = document.querySelectorAll(`.${styles.minimalCard}`)
+    cards.forEach((card, index) => {
+      card.setAttribute('data-index', index.toString())
+      observer.observe(card)
+    })
+
+    return () => observer.disconnect()
+  }, [items.length, isProgrammaticScroll])
+
+  // Calculate indicator position (only for every 5th dot)
+  const navItems = items.filter((_, index) => index % 5 === 0)
+  const activeDotIndex = Math.floor(activeItemIndex / 5)
+  // dot height (14) + gap (20 aka 1.25rem) = 34px. 
+  // Initial top padding of sideNav is 1.5rem (24px).
+  // The indicator is 32px high, dot is 14px high. To center 32px indicator on 14px dot:
+  // indicatorTop = dotTop - (indicatorHeight - dotHeight) / 2 = dotTop - 9px.
+  const indicatorOffset = activeDotIndex * 34;
+  const indicatorTransform = `translateY(${indicatorOffset}px)`
+
+  const scrollToItem = (index: number) => {
+    // Manually set index immediately for visual responsiveness
+    setActiveItemIndex(index)
+    setIsProgrammaticScroll(true)
+    
+    // Reset programmatic scroll flag after animation completes
+    setTimeout(() => setIsProgrammaticScroll(false), 1000)
+
+    if (index === 0) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
+    const totalNavDots = Math.ceil(items.length / 5);
+    const currentDotIndex = index / 5;
+    if (currentDotIndex === totalNavDots - 1) {
+      window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
+      return;
+    }
+
+    const cardElements = document.querySelectorAll(`.${styles.minimalCard}`);
+    const targetElement = cardElements[index] as HTMLElement;
+    if (targetElement) {
+      targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  };
 
   const handleEdit = (id: string) => {
     setSelectedItemId(id)
@@ -95,6 +168,20 @@ export function BarcodeSetView() {
     }
   }
 
+  // Keyboard shortcut: Ctrl+P for Print All
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Check for P key with Ctrl (Windows/Linux) or Meta (Mac)
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'p') {
+        e.preventDefault()
+        handlePrintAll()
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [items, isPrinting]) // Update listener when items or printing state changes
+
   return (
     <div className={`${styles.container} ${isDrawerOpen ? styles.containerWithDrawer : ''}`}>
       <header className={styles.header}>
@@ -163,6 +250,34 @@ export function BarcodeSetView() {
           <Minus size={32} />
         </Button>
       </div>
+
+      {items.length > 1 && (
+        <nav className={styles.sideNav}>
+          <div 
+            className={styles.navIndicator} 
+            style={{ transform: indicatorTransform }}
+          />
+          {items.map((item, index) => {
+            // Only show a dot for every 5th item (0, 5, 10...)
+            if (index % 5 !== 0) return null;
+            
+            const isActive = activeItemIndex >= index && activeItemIndex < index + 5;
+            
+            return (
+              <button
+                key={`nav-${item.id}`}
+                className={`${styles.navDot} ${isActive ? styles.navDotActive : ''}`}
+                onClick={() => scrollToItem(index)}
+                aria-label={`Scroll to items starting at ${index + 1}`}
+              >
+                <span className={styles.navDotTooltip}>
+                  #{index + 1} {items.length > index + 1 ? ` - #${Math.min(index + 5, items.length)}` : ''}
+                </span>
+              </button>
+            );
+          })}
+        </nav>
+      )}
 
       <BarcodeSetSettingsSidebar
         item={selectedItem}

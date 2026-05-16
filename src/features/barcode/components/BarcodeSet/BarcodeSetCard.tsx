@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Printer, Edit3, FileCode, ImageIcon, Trash2 } from 'lucide-react'
 import type { BarcodeSetItem } from '../../types/barcodeSet'
@@ -21,7 +22,7 @@ interface BarcodeSetCardProps {
   isActive?: boolean
 }
 
-export function BarcodeSetCard({
+export const BarcodeSetCard = memo(function BarcodeSetCard({
   item,
   index,
   onEdit,
@@ -135,4 +136,4 @@ export function BarcodeSetCard({
       </div>
     </div>
   )
-}
+})
