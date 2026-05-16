@@ -150,6 +150,23 @@
   letter-spacing: 0.05em;
 }
 
+.cardBadgeRow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.barcodeTypeLabel {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #7c3aed;
+  background: rgba(124, 58, 237, 0.08);
+  padding: 0.125rem 0.5rem;
+  border-radius: 0.375rem;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
 .cardValue {
   font-weight: 800;
   font-size: 1.125rem;
@@ -361,6 +378,16 @@
 
 .roundActionButton svg {
   stroke-width: 2.5px;
+}
+
+.printActionButton {
+  background: #7c3aed !important;
+  color: #fff !important;
+}
+
+.printActionButton:hover:not(:disabled) {
+  background: #6d28d9 !important;
+  box-shadow: 0 15px 35px rgba(124, 58, 237, 0.25) !important;
 }
 
 @media (max-width: 1024px) {

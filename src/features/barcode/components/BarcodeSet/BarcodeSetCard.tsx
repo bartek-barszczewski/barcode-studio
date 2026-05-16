@@ -4,6 +4,7 @@ import type { BarcodeSetItem } from '../../types/barcodeSet'
 import { Button } from '../../../../shared/ui/Button/Button'
 import { BarcodePreview } from '../BarcodePreview/BarcodePreview'
 import { useBarcodeItemPreview } from '../../hooks/useBarcodeItemPreview'
+import { BARCODE_TYPE_LABELS } from '../../constants/barcodeTypes'
 import { 
   printSingleBarcode,
   exportBarcodeAsSvg,
@@ -58,6 +59,8 @@ export function BarcodeSetCard({
     onRemove(item.id)
   }
 
+  const barcodeTypeName = BARCODE_TYPE_LABELS[item.type] || item.type
+
   return (
     <div 
       className={`${styles.minimalCard} ${isActive ? styles.activeCard : ''}`}
@@ -76,7 +79,10 @@ export function BarcodeSetCard({
       </div>
 
       <div className={styles.cardInfo}>
-        <span className={styles.cardBadge}>#{index + 1}</span>
+        <div className={styles.cardBadgeRow}>
+          <span className={styles.cardBadge}>#{index + 1}</span>
+          <span className={styles.barcodeTypeLabel}>{barcodeTypeName}</span>
+        </div>
         <span className={styles.cardValue} title={item.value}>
           {item.value || t('barcodeSet.status.empty')}
         </span>

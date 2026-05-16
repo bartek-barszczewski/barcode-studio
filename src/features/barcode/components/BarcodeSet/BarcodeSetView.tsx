@@ -147,6 +147,15 @@ export function BarcodeSetView() {
         </Button>
         <Button
           variant="secondary"
+          onClick={handlePrintAll}
+          disabled={isPrinting || items.every(i => !i.value.trim())}
+          className={`${styles.roundActionButton} ${styles.printActionButton}`}
+          title={t('barcodeSet.actions.printAll')}
+        >
+          <Printer size={32} />
+        </Button>
+        <Button
+          variant="secondary"
           onClick={handleRemoveLastItem}
           disabled={items.length <= 1}
           className={styles.roundActionButton}
