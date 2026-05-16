@@ -108,13 +108,6 @@ export function DocxPage() {
     setBarcodeStyle((prev) => ({ ...prev, [key]: value }));
   };
 
-  const handleClear = () => {
-    setPreview({ lines: [{ index: 0, html: '', text: '', isEmpty: true }] });
-    setOriginalFile(null);
-    setError(null);
-    setSuccessMessage(null);
-  };
-
   const handlePrint = () => {
     window.print();
   };

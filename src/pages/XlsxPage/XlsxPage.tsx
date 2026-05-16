@@ -12,7 +12,6 @@ import { XlsxWorkbookViewer } from '../../features/xlsx/components/XlsxWorkbookV
 import { SearchableSelect } from '../../shared/ui/SearchableSelect/SearchableSelect';
 import { BARCODE_TYPE_OPTIONS } from '../../features/barcode/constants/barcodeTypes';
 import { validateBarcodeValue } from '../../features/barcode/validation/barcodeValidation';
-import { getOccupiedTargetCells } from '../../features/xlsx/utils/columnUtils';
 import { createOutputFileName, writeWorkbookWithBarcodes } from '../../features/xlsx/utils/writeWorkbookWithBarcodes';
 import { Button } from '../../shared/ui/Button/Button';
 import { Field } from '../../shared/ui/Field/Field';
@@ -126,29 +125,6 @@ export function XlsxPage() {
         return { rowNumber: cell.rowNumber, value: cell.value };
       });
   }, [workbook, selectedColumns.sourceColumnIndex]);
-
-  const sourceRowIndices = useMemo(
-    () => sourceRowsWithData.map((row) => row.rowNumber),
-    [sourceRowsWithData],
-  );
-
-  const occupiedTargetCells = useMemo(() => {
-    if (!workbook || selectedColumns.targetColumnIndex === null || sourceRowIndices.length === 0) {
-      return [];
-    }
-
-    // For Top/Bottom placement, we insert new rows, so we don't need to check for occupation
-    // in the existing spreadsheet structure for the target column.
-    if (selectedColumns.placement.startsWith('top') || selectedColumns.placement.startsWith('bottom')) {
-      return [];
-    }
-
-    return getOccupiedTargetCells(
-      workbook.rows,
-      selectedColumns.targetColumnIndex,
-      sourceRowIndices,
-    );
-  }, [workbook, selectedColumns.targetColumnIndex, sourceRowIndices, selectedColumns.placement]);
 
   const validatedRows = useMemo(() => {
     if (!workbook) return [];
