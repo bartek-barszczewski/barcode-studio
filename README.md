@@ -1,73 +1,56 @@
-# React + TypeScript + Vite
+# Barcode Studio
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A professional-grade bulk barcode management and generation suite. Designed for performance, privacy, and precision.
 
-Currently, two official plugins are available:
+**Live Tool:** [https://barcode-studio.standard-tools.workers.dev/generator](https://barcode-studio.standard-tools.workers.dev/generator)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 🚀 Key Features
 
-## React Compiler
+- **Single Generator:** Precise control over barcode parameters with high-quality SVG and PNG exports.
+- **XLSX Batch Processing:** In-cell barcode generation for Excel spreadsheets.
+- **DOCX Document Integration:** Replace text placeholders with barcodes directly in Word documents.
+- **Barcode Sets (Bulk Workspace):** Manage hundreds of barcodes in a unified grid with high-speed vertical navigation and real-time push-drawer editing.
+- **100% Privacy:** All processing happens locally in your browser. No data or files are ever sent to a server.
+- **Print Optimization:** Automatic A4 grid generation with scannability assurance and cutting guides.
+- **Keyboard Shortcuts:** Power-user features like `Ctrl+P` for instant bulk printing.
+- **Multi-language Support:** English (default) and Polish.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🛠 Tech Stack
 
-## Expanding the ESLint configuration
+- **Framework:** React + TypeScript + Vite
+- **Styling:** Vanilla CSS / CSS Modules
+- **Icons:** Lucide React
+- **I18n:** i18next
+- **Rendering:** BWIP-JS for accurate barcode symbology
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 📦 Getting Started
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### Prerequisites
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+- Node.js (v18+)
+- pnpm (recommended)
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### Installation
+
+```bash
+pnpm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Development
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+pnpm dev
 ```
+
+### Build
+
+```bash
+pnpm build
+```
+
+## 🛡 License
+
+This project is for internal and professional use. All data processing is strictly client-side.
+
+---
+© 2026 Barcode Studio. All rights reserved.
