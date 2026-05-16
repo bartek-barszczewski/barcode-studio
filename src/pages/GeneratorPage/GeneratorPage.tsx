@@ -6,8 +6,8 @@ import { BarcodePreview } from '../../features/barcode/components/BarcodePreview
 import { BarcodeForm } from '../../features/barcode/components/BarcodeForm/BarcodeForm'
 import { useBarcodeGeneration } from '../../features/barcode/hooks/useBarcodeGeneration'
 import {
-  downloadPngFromSvg,
-  downloadSvg,
+  exportBarcodeAsPng,
+  exportBarcodeAsSvg,
 } from '../../features/barcode/export/barcodeExport'
 import { Button } from '../../shared/ui/Button/Button'
 import { Panel } from '../../shared/ui/Panel/Panel'
@@ -30,7 +30,7 @@ export function GeneratorPage() {
 
     try {
       setExportError(null)
-      downloadSvg(previewState.svg, 'barcode.svg')
+      exportBarcodeAsSvg(previewState.svg, 'barcode')
     } catch {
       setExportError(t('generator.exportErrors.svg'))
     }
@@ -43,7 +43,7 @@ export function GeneratorPage() {
 
     try {
       setExportError(null)
-      await downloadPngFromSvg(previewState.svg, 'barcode.png')
+      await exportBarcodeAsPng(previewState.svg, 'barcode')
     } catch {
       setExportError(t('generator.exportErrors.png'))
     }

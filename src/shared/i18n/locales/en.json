@@ -5,6 +5,7 @@
     "generator": "Generator",
     "xlsx": "XLSX",
     "docx": "DOCX",
+    "barcodeSet": "Barcode Set",
     "help": "Help",
     "languageToggle": "Change language"
   },
@@ -217,6 +218,17 @@
           "step3": "3. Check the preview, print it, or click 'Generate' to download a new DOCX file with barcodes."
         }
       },
+      "barcodeSet": {
+        "title": "Managing Barcode Sets (Bulk)",
+        "body": "A tool for bulk barcode management. You can add, remove, and edit multiple widgets simultaneously.",
+        "features": {
+          "title": "Key features:",
+          "nav": "Navigation: Use the dot menu on the right to quickly jump between barcode groups (every 5 items).",
+          "edit": "Editing: Click the pencil icon to open the side settings panel for a specific barcode.",
+          "print": "Print All: The printer button generates a print-ready A4 grid featuring all barcodes.",
+          "shortcut": "Keyboard Shortcut: Ctrl+P automatically triggers the bulk print functionality."
+        }
+      },
       "printing": {
         "title": "Printing Rules",
         "body": "For best quality:\n1. In the browser print window, disable 'Headers and footers'.\n2. Set 'Margins' to 'None' or 'Minimum' if the DOCX document has its own margins.\n3. Scale should be 100% to maintain A4 dimensions."
@@ -287,6 +299,49 @@
         "q2": "Why can't I upload a .xls file?",
         "a2": "We only support the modern .xlsx format. Older .xls files must first be saved as .xlsx in Excel."
       }
+    }
+  },
+  "barcodeSet": {
+    "title": "Barcode Set",
+    "description": "Create and manage multiple barcodes in one workspace.",
+    "itemTitle": "Barcode #{{index}}",
+    "appearance": {
+      "title": "Appearance",
+      "toggle": "Appearance settings"
+    },
+    "actions": {
+      "add": "Add barcode",
+      "remove": "Remove",
+      "duplicate": "Duplicate",
+      "duplicateLast": "Duplicate last",
+      "print": "Print",
+      "printAll": "Print all",
+      "clearAll": "Clear all",
+      "edit": "Edit",
+      "import": "Import",
+      "export": "Export",
+      "importText": "Import from text",
+      "exportJson": "Export set",
+      "importJson": "Import set",
+      "resetSaved": "Reset saved set"
+    },
+    "view": {
+      "compact": "Compact view",
+      "full": "Full view"
+    },
+    "import": {
+      "title": "Import Barcodes",
+      "textPlaceholder": "One barcode per line...",
+      "replace": "Replace current",
+      "append": "Append to current",
+      "success": "Successfully imported {{count}} barcodes.",
+      "error": "Invalid file format.",
+      "jsonHint": "Upload a previously exported .json file."
+    },
+    "status": {
+      "ready": "Ready",
+      "empty": "Empty",
+      "invalid": "Invalid"
     }
   }
 }

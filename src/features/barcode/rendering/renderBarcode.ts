@@ -261,23 +261,51 @@ const renderBwipBarcode = (input: BarcodeFormState): string => {
 }
 
 
+const normalizeSvgAttributes = (svg: string): string => {
+  if (!svg.includes('<svg')) return svg
+
+  const width = parseSvgNumberAttribute(svg, 'width')
+  const height = parseSvgNumberAttribute(svg, 'height')
+  const hasViewBox = svg.includes('viewBox=')
+
+  let normalized = svg
+
+  // Ensure viewBox exists if we have dimensions
+  if (!hasViewBox && width !== null && height !== null) {
+    normalized = normalized.replace(
+      '<svg',
+      `<svg viewBox="0 0 ${formatSvgNumber(width)} ${formatSvgNumber(height)}"`,
+    )
+  }
+
+  // Ensure the SVG fills its container responsively
+  if (!normalized.includes('preserveAspectRatio=')) {
+    normalized = normalized.replace(
+      '<svg',
+      '<svg preserveAspectRatio="xMidYMid meet"',
+    )
+  }
+
+  return normalized
+}
+
 export const renderBarcodeToSvgString = async (
   input: BarcodeFormState,
 ): Promise<string> => {
   assertSvgColor(input.barColor, 'Kolor kodu')
   assertSvgColor(input.backgroundColor, 'Tło')
 
+  let result: string
+
   if (input.type === 'QR') {
-    return renderQrCode(input)
+    result = await renderQrCode(input)
+  } else if (JS_BARCODE_FORMATS[input.type]) {
+    result = renderLinearBarcode(input)
+  } else if (BWIP_JS_FORMATS[input.type]) {
+    result = renderBwipBarcode(input)
+  } else {
+    throw new Error('Nieobsługiwany typ kodu kreskowego.')
   }
 
-  if (JS_BARCODE_FORMATS[input.type]) {
-    return renderLinearBarcode(input)
-  }
-
-  if (BWIP_JS_FORMATS[input.type]) {
-    return renderBwipBarcode(input)
-  }
-
-  throw new Error('Nieobsługiwany typ kodu kreskowego.')
+  return normalizeSvgAttributes(result)
 }
