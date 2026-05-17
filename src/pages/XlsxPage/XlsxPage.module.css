@@ -22,7 +22,8 @@
   flex-direction: column;
   height: 100%;
   min-height: 0;
-  max-width: 91.25%;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .uploadPanel {
@@ -72,6 +73,8 @@
   height: 100%;
   display: flex;
   flex-direction: column;
+  min-width: 0;
+  width: 100%;
 }
 
 .previewPanelContent {
@@ -79,7 +82,9 @@
   display: flex;
   flex-direction: column;
   min-height: 0;
+  min-width: 0;
   padding: 0 !important; /* Workbook viewer handles its own padding/border */
+  overflow: hidden !important;
 }
 
 .previewWorkspace {
@@ -87,7 +92,8 @@
   display: flex;
   flex-direction: column;
   min-height: 0;
-  padding-right: 0.5rem;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .previewContainer {
@@ -95,8 +101,10 @@
   display: flex;
   flex-direction: column;
   min-height: 0;
-  width: 50%;
-  max-width: 50%;
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
 }
 
 .settingsGrid {
