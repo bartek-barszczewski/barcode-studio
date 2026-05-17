@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useBlocker } from 'react-router-dom';
 import { FileText, CheckCircle2, Printer } from 'lucide-react';
@@ -12,6 +12,7 @@ import { Panel } from '../../shared/ui/Panel/Panel';
 import { readDocx } from '../../features/docx/utils/readDocx';
 import { writeDocxWithBarcodes, createDocxOutputFileName } from '../../features/docx/utils/writeDocxWithBarcodes';
 import { DocxViewer } from '../../features/docx/components/DocxViewer/DocxViewer';
+import { printDocxPreview } from '../../features/docx/utils/printDocxPreview';
 import { SearchableSelect } from '../../shared/ui/SearchableSelect/SearchableSelect';
 import { BARCODE_TYPE_OPTIONS } from '../../features/barcode/constants/barcodeTypes';
 import { Button } from '../../shared/ui/Button/Button';
@@ -43,6 +44,7 @@ export function DocxPage() {
     showText: false,
   });
   const hasUnsavedChanges = originalFile !== null && !isGenerating;
+  const previewPaperRef = useRef<HTMLDivElement | null>(null);
   const navigationBlocker = useBlocker(({ currentLocation, nextLocation }) => {
     return hasUnsavedChanges && currentLocation.pathname !== nextLocation.pathname;
   });
@@ -131,8 +133,18 @@ export function DocxPage() {
     setBarcodeStyle((prev) => ({ ...prev, [key]: value }));
   };
 
-  const handlePrint = () => {
-    window.print();
+  const handlePrint = async () => {
+    if (!previewPaperRef.current) {
+      setError(t('generator.exportErrors.print'));
+      return;
+    }
+
+    try {
+      setError(null);
+      await printDocxPreview(previewPaperRef.current);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : t('generator.exportErrors.print'));
+    }
   };
 
   return (
@@ -320,7 +332,12 @@ export function DocxPage() {
 
           <div className={styles.rightColumn}>
               <Panel title={t("docx.previewTitle")} fullHeight>
-                  <DocxViewer preview={preview} barcodeType={barcodeType} barcodeStyle={barcodeStyle} />
+                  <DocxViewer
+                      ref={previewPaperRef}
+                      preview={preview}
+                      barcodeType={barcodeType}
+                      barcodeStyle={barcodeStyle}
+                  />
               </Panel>
           </div>
       </div>

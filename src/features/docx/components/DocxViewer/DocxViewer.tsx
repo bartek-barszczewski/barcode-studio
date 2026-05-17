@@ -49,13 +49,16 @@ interface DocxViewerProps {
   barcodeStyle: BarcodeStyle;
 }
 
-export function DocxViewer({ preview, barcodeType, barcodeStyle }: DocxViewerProps) {
+export const DocxViewer = React.forwardRef<HTMLDivElement, DocxViewerProps>(function DocxViewer(
+  { preview, barcodeType, barcodeStyle },
+  ref,
+) {
   const { t } = useTranslation();
 
   return (
     <div className={styles.container}>
       <div className={styles.paperWrapper}>
-        <div className={styles.paper}>
+        <div ref={ref} className={styles.paper}>
           {preview.lines.map((line, idx) => (
             <div key={idx} className={styles.block}>
               <div className={styles.content}>
@@ -78,4 +81,4 @@ export function DocxViewer({ preview, barcodeType, barcodeStyle }: DocxViewerPro
       </div>
     </div>
   );
-}
+});
