@@ -10,6 +10,11 @@
   box-sizing: border-box;
 }
 
+.controlsPanel {
+  display: flex;
+  flex-direction: column;
+}
+
 .controlsPanel,
 .previewPanel {
   height: 100%;
