@@ -708,6 +708,9 @@ export function XlsxPage() {
               }
               fileIcon={<FileSpreadsheet />}
               disabled={isGenerating}
+              iconClusterClassName={styles.xlsxDropzoneIconCluster}
+              titleClassName={styles.xlsxDropzoneTitle}
+              descriptionClassName={styles.xlsxDropzoneDescription}
             />
           )}
         </Panel>

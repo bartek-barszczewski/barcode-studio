@@ -13,6 +13,9 @@ type DropzoneProps = {
   accept?: string
   disabled?: boolean
   className?: string
+  iconClusterClassName?: string
+  titleClassName?: string
+  descriptionClassName?: string
 }
 
 export function Dropzone({
@@ -24,6 +27,9 @@ export function Dropzone({
   accept,
   disabled = false,
   className,
+  iconClusterClassName,
+  titleClassName,
+  descriptionClassName,
 }: DropzoneProps) {
   const { t } = useTranslation()
 
@@ -44,15 +50,15 @@ export function Dropzone({
         accept={accept}
         disabled={disabled}
       />
-      <div className={styles.iconCluster} aria-hidden="true">
+      <div className={clsx(styles.iconCluster, iconClusterClassName)} aria-hidden="true">
         {fileIcon && <span className={styles.typeIcon}>{fileIcon}</span>}
         <span className={styles.uploadIcon}>
           <UploadCloud />
         </span>
       </div>
       <div className={styles.copy}>
-        <p className={styles.title}>{title ?? t('dropzone.defaultTitle')}</p>
-        <p className={styles.description}>
+        <p className={clsx(styles.title, titleClassName)}>{title ?? t('dropzone.defaultTitle')}</p>
+        <p className={clsx(styles.description, descriptionClassName)}>
           {description ?? t('dropzone.defaultDescription')}
         </p>
       </div>

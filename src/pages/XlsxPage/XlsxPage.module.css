@@ -194,8 +194,28 @@
   background-color: var(--md-sys-color-surface-container-lowest);
   border-radius: var(--radius-lg);
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 1.5rem;
+}
+
+.xlsxDropzoneIconCluster > span {
+  width: 4.5rem;
+  height: 4.5rem;
+}
+
+.xlsxDropzoneIconCluster svg {
+  width: 2.25rem;
+  height: 2.25rem;
+}
+
+.xlsxDropzoneTitle {
+  font-size: 1.5rem;
+}
+
+.xlsxDropzoneDescription {
+  font-size: 1rem;
 }
 
 @media (max-width: 900px) {
