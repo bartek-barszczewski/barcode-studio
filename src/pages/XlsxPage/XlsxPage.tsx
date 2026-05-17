@@ -632,73 +632,73 @@ export function XlsxPage() {
                     <option value="hide">{t('generator.textOptions.hide')}</option>
                   </SelectInput>
                 </Field>
-                <div className={styles.field}>
-                  <label className={styles.label}>{t('xlsx.placement.label')}</label>
-                  <div className={styles.placementMatrix}>
-                    {PLACEMENT_OPTIONS.slice(0, 3).map(({ value, icon: Icon, labelKey }) => (
-                      <button
-                        key={value}
-                        type="button"
-                        className={clsx(styles.matrixButton, {
-                          [styles.active]: placement === value,
-                        })}
-                        title={t(labelKey)}
-                        aria-label={t(labelKey)}
-                        onClick={() => setPlacement(value)}
-                        disabled={isGenerating}
-                      >
-                        <Icon size={16} />
-                      </button>
-                    ))}
-                    {PLACEMENT_OPTIONS.slice(3, 4).map(({ value, icon: Icon, labelKey }) => (
-                      <button
-                        key={value}
-                        type="button"
-                        className={clsx(styles.matrixButton, {
-                          [styles.active]: placement === value,
-                        })}
-                        title={t(labelKey)}
-                        aria-label={t(labelKey)}
-                        onClick={() => setPlacement(value)}
-                        disabled={isGenerating}
-                      >
-                        <Icon size={16} />
-                      </button>
-                    ))}
-                    <div className={styles.matrixCenter} aria-hidden="true">
-                      <Type size={16} />
-                    </div>
-                    {PLACEMENT_OPTIONS.slice(4, 5).map(({ value, icon: Icon, labelKey }) => (
-                      <button
-                        key={value}
-                        type="button"
-                        className={clsx(styles.matrixButton, {
-                          [styles.active]: placement === value,
-                        })}
-                        title={t(labelKey)}
-                        aria-label={t(labelKey)}
-                        onClick={() => setPlacement(value)}
-                        disabled={isGenerating}
-                      >
-                        <Icon size={16} />
-                      </button>
-                    ))}
-                    {PLACEMENT_OPTIONS.slice(5).map(({ value, icon: Icon, labelKey }) => (
-                      <button
-                        key={value}
-                        type="button"
-                        className={clsx(styles.matrixButton, {
-                          [styles.active]: placement === value,
-                        })}
-                        title={t(labelKey)}
-                        aria-label={t(labelKey)}
-                        onClick={() => setPlacement(value)}
-                        disabled={isGenerating}
-                      >
-                        <Icon size={16} />
-                      </button>
-                    ))}
+              </div>
+              <div className={styles.placementField}>
+                <label className={styles.label}>{t('xlsx.placement.label')}</label>
+                <div className={styles.placementMatrix}>
+                  {PLACEMENT_OPTIONS.slice(0, 3).map(({ value, icon: Icon, labelKey }) => (
+                    <button
+                      key={value}
+                      type="button"
+                      className={clsx(styles.matrixButton, {
+                        [styles.active]: placement === value,
+                      })}
+                      title={t(labelKey)}
+                      aria-label={t(labelKey)}
+                      onClick={() => setPlacement(value)}
+                      disabled={isGenerating}
+                    >
+                      <Icon size={16} />
+                    </button>
+                  ))}
+                  {PLACEMENT_OPTIONS.slice(3, 4).map(({ value, icon: Icon, labelKey }) => (
+                    <button
+                      key={value}
+                      type="button"
+                      className={clsx(styles.matrixButton, {
+                        [styles.active]: placement === value,
+                      })}
+                      title={t(labelKey)}
+                      aria-label={t(labelKey)}
+                      onClick={() => setPlacement(value)}
+                      disabled={isGenerating}
+                    >
+                      <Icon size={16} />
+                    </button>
+                  ))}
+                  <div className={styles.matrixCenter} aria-hidden="true">
+                    <Type size={16} />
                   </div>
+                  {PLACEMENT_OPTIONS.slice(4, 5).map(({ value, icon: Icon, labelKey }) => (
+                    <button
+                      key={value}
+                      type="button"
+                      className={clsx(styles.matrixButton, {
+                        [styles.active]: placement === value,
+                      })}
+                      title={t(labelKey)}
+                      aria-label={t(labelKey)}
+                      onClick={() => setPlacement(value)}
+                      disabled={isGenerating}
+                    >
+                      <Icon size={16} />
+                    </button>
+                  ))}
+                  {PLACEMENT_OPTIONS.slice(5).map(({ value, icon: Icon, labelKey }) => (
+                    <button
+                      key={value}
+                      type="button"
+                      className={clsx(styles.matrixButton, {
+                        [styles.active]: placement === value,
+                      })}
+                      title={t(labelKey)}
+                      aria-label={t(labelKey)}
+                      onClick={() => setPlacement(value)}
+                      disabled={isGenerating}
+                    >
+                      <Icon size={16} />
+                    </button>
+                  ))}
                 </div>
               </div>
               {!isSettingsValid && (
