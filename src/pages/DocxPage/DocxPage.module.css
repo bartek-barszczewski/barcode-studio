@@ -1,159 +1,238 @@
 .page {
   display: grid;
-  grid-template-columns: 460px minmax(0, 1fr);
-  gap: 0.75rem;
-  height: calc(100vh - 4.5rem); /* Slightly more space */
-  width: 100%;
-  overflow: hidden;
+  grid-template-columns: clamp(380px, 25vw, 420px) minmax(0, 1fr);
+  gap: 1rem;
+  align-items: stretch;
+  height: 100vh;
+  padding: 1rem;
   box-sizing: border-box;
-  padding: 0.25rem;
+  overflow: hidden;
+  background-color: var(--md-sys-color-background);
 }
 
 .leftColumn {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 1rem;
+  min-width: 0;
   height: 100%;
-  min-height: 0;
   overflow: hidden;
 }
 
-.rightColumn {
+/* Stretch panels to fill column height */
+.leftColumn > section {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  height: 100%;
-  overflow: hidden;
+  min-height: 0; /* Important for flex children */
 }
 
-/* Panel overrides for DocxPage */
-.leftColumn > section {
-  padding: 0.75rem !important;
-  flex-shrink: 0;
-}
-
-.leftColumn > section > header {
-  margin-bottom: 0.4rem;
-}
-
-.uploadPanel {
-  flex: 0 0 auto;
+/* Stretch upload panel content without adding extra inner padding */
+.uploadPanelContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
 }
 
 .uploadPanel .controls {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-}
-
-/* Appearance Settings Panel - MAKE IT FLEXIBLE TO NOT PUSH BUTTONS */
-.leftColumn > section:nth-of-type(2) {
-  flex: 1 1 auto;
-  min-height: 0;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-.leftColumn > section:nth-of-type(2) > div:last-child {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-height: 0;
+}
+
+/* Aggressively large sizes for Upload Panel controls */
+.uploadPanel :global(div[class*="SearchableSelect_input"]),
+.uploadPanel :global(div[class*="SearchableSelect_control"]) {
+  min-height: 64px !important;
+  height: 64px !important;
+  font-size: 1.25rem !important;
+}
+
+.uploadPanel :global(label) {
+  font-size: 1.1rem !important;
+  font-weight: 600 !important;
+  margin-bottom: 0.75rem !important;
+  color: var(--md-sys-color-primary);
+}
+
+/* Maximize Dropzone size */
+.uploadPanel .compactDropzone {
+  flex: 1 1 auto;
+  min-height: 14rem !important;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-self: stretch;
+  padding: 2rem 1.5rem !important;
+  border-width: 3px !important;
+}
+
+.uploadPanel .compactDropzone :global(span[class*="typeIcon"]),
+.uploadPanel .compactDropzone :global(span[class*="uploadIcon"]) {
+  width: 80px !important;
+  height: 80px !important;
+}
+
+.uploadPanel .compactDropzone :global(span[class*="typeIcon"] svg),
+.uploadPanel .compactDropzone :global(span[class*="uploadIcon"] svg) {
+  width: 48px !important;
+  height: 48px !important;
+}
+
+.uploadPanel .compactDropzone :global(p[class*="Dropzone_title"]) {
+  font-size: 1.5rem !important;
+  font-weight: 700;
+  margin-top: 1rem;
+}
+
+.uploadPanel .compactDropzone :global(p[class*="Dropzone_description"]) {
+  font-size: 1.1rem !important;
+  margin-top: 0.5rem;
+}
+
+.rightColumn {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
   overflow: hidden;
 }
 
 .settingsGrid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 0.4rem 0.5rem;
-  align-items: end;
+  column-gap: 0.75rem;
+  row-gap: 0;
+  flex: 1;
+  min-height: 0;
+  align-content: space-between;
 }
 
-.colorFields, 
-.bottomFields {
-  display: contents;
+.fullWidthField {
+  grid-column: span 2;
 }
 
-.settingsGrid > div {
+.settingsPanelContent {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 0.2rem;
+  justify-content: space-between;
+  min-height: 0;
+  gap: 1rem;
 }
 
-.settingsGrid input,
-.settingsGrid select,
-.printButton {
-  height: 1.85rem !important;
-  font-size: 0.85rem;
+.settingsBody {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
 }
 
-.label {
-  display: block;
-  font-size: 0.75rem;
-  font-weight: 700;
+/* Aggressive compaction for DocxPage panels */
+.compactPanel {
+  padding: 0.75rem 1rem !important;
+}
+
+.leftColumn :global(header) {
+  margin-bottom: 0.5rem !important;
+}
+
+.leftColumn :global(h2) {
+  font-size: 1.25rem !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.02em;
+}
+
+/* Hide descriptions to save space */
+.leftColumn :global(header p) {
+  display: none !important;
+}
+
+/* Force standard height for all inputs and select controls in left column */
+.leftColumn :global(input),
+.leftColumn :global(select),
+.leftColumn :global(div[class*="TextInput_input"]),
+.leftColumn :global(div[class*="SearchableSelect_input"]),
+.leftColumn :global(div[class*="SearchableSelect_control"]) {
+  min-height: 40px !important;
+  height: 40px !important;
+  font-size: 0.9rem !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+/* Enlarge color inputs specifically when they are full width */
+.fullWidthField :global(input[type="color"]),
+.fullWidthField :global(div[class*="TextInput_input"]) {
+  min-height: 48px !important;
+  height: 48px !important;
+}
+
+/* Compact Field styling */
+.leftColumn :global(div[class*="Field_field"]) {
+  gap: 4px !important;
+}
+
+.settingsPanel :global(div[class*="Field_field"]) {
+  gap: 0.35rem !important;
+}
+
+.leftColumn :global(label) {
+  font-size: 0.75rem !important;
+  font-weight: 500 !important;
+  margin-bottom: 0 !important;
+}
+
+/* Compact Dropzone */
+.compactDropzone {
+  min-height: 60px !important;
+  padding: 0.5rem !important;
+  gap: 0.25rem !important;
+}
+
+.compactDropzone :global(div[class*="Dropzone_iconCluster"]) {
+  gap: 0.25rem !important;
+}
+
+.compactDropzone :global(span[class*="typeIcon"]),
+.compactDropzone :global(span[class*="uploadIcon"]) {
+  width: 24px !important;
+  height: 24px !important;
+}
+
+.compactDropzone :global(span[class*="typeIcon"] svg),
+.compactDropzone :global(span[class*="uploadIcon"] svg) {
+  width: 14px !important;
+  height: 14px !important;
+}
+
+.compactDropzone :global(p[class*="Dropzone_title"]) {
+  font-size: 0.8125rem !important;
+}
+
+.compactDropzone :global(p[class*="Dropzone_description"]) {
+  font-size: 0.7rem !important;
 }
 
 .actionsRow {
-  flex: 0 0 auto;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 0.5rem;
-  margin-top: 0.25rem;
-  padding: 0.25rem 0;
+  gap: 0.75rem;
+  padding-top: 0;
 }
 
-.actionButton {
-  height: 2.25rem;
-  font-weight: 700;
-  width: 100%;
-  justify-content: center;
-}
-
-.actionButton::before {
-  content: '';
-  display: inline-block;
-  width: 1rem;
-  height: 1rem;
-  flex: 0 0 auto;
-  background-color: currentColor;
-  mask-repeat: no-repeat;
-  mask-position: center;
-  mask-size: contain;
-  -webkit-mask-repeat: no-repeat;
-  -webkit-mask-position: center;
-  -webkit-mask-size: contain;
-  margin-right: 0.5rem;
-}
-
-.actionButton:first-child::before {
-  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m7 21 3-3'/%3E%3Cpath d='M3 7h18'/%3E%3Cpath d='M17 3v4'/%3E%3Cpath d='m14 7 1 14'/%3E%3Cpath d='M6 7 5 21'/%3E%3Cpath d='M12 7v14'/%3E%3Cpath d='M19 7c0 10-8 14-8 14'/%3E%3C/svg%3E");
-  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m7 21 3-3'/%3E%3Cpath d='M3 7h18'/%3E%3Cpath d='M17 3v4'/%3E%3Cpath d='m14 7 1 14'/%3E%3Cpath d='M6 7 5 21'/%3E%3Cpath d='M12 7v14'/%3E%3Cpath d='M19 7c0 10-8 14-8 14'/%3E%3C/svg%3E");
-}
-
-.actionButton:last-child::before {
-  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4'/%3E%3Cpolyline points='7 10 12 15 17 10'/%3E%3Cline x1='12' x2='12' y1='15' y2='3'/%3E%3C/svg%3E");
-  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4'/%3E%3Cpolyline points='7 10 12 15 17 10'/%3E%3Cline x1='12' x2='12' y1='15' y2='3'/%3E%3C/svg%3E");
-}
-
-.printButton {
-  background-color: #ffffff !important;
-  color: #000000 !important;
-  border: 1px solid var(--border) !important;
-  font-weight: 600 !important;
-}
-
-.printButton:hover {
-  background-color: #f8f9fa !important;
-  border-color: #000000 !important;
-}
-
-/* Dropzone styling - compacted */
-.uploadPanel .controls > label {
-  padding-block: 0.75rem;
+.actionButton, .printButton {
+  height: 40px !important;
 }
 
 .error {
-  color: var(--accent);
+  color: var(--md-sys-color-tertiary);
   font-size: 11px;
   padding: 4px 8px;
-  background: var(--accent-soft);
+  background: var(--md-sys-color-tertiary-container);
   border-radius: var(--radius-sm);
 }
 
@@ -161,24 +240,22 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  color: var(--success);
+  color: var(--md-sys-color-success, #2e7d32);
   font-size: 11px;
   padding: 4px 8px;
-  background: var(--success-soft);
+  background: var(--md-sys-color-success-container, #e8f5e9);
   border-radius: var(--radius-sm);
   font-weight: 500;
 }
 
-.previewPlaceholder {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex: 1;
-  min-height: 200px;
-  border: 2px dashed var(--border);
-  border-radius: var(--radius-md);
-  color: var(--muted);
-  font-size: 15px;
+.printButton {
+  background-color: var(--md-sys-color-surface-container-lowest) !important;
+  color: var(--md-sys-color-on-surface) !important;
+  border: 1px solid var(--md-sys-color-outline) !important;
+}
+
+.printButton:hover {
+  background-color: var(--md-sys-color-surface-container-low) !important;
 }
 
 @media (max-width: 1200px) {

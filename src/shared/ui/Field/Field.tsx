@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import clsx from 'clsx'
 import styles from './Field.module.css'
 
 type FieldProps = {
@@ -6,11 +7,12 @@ type FieldProps = {
   htmlFor: string
   description?: string
   children: ReactNode
+  className?: string
 }
 
-export function Field({ label, htmlFor, description, children }: FieldProps) {
+export function Field({ label, htmlFor, description, children, className }: FieldProps) {
   return (
-    <div className={styles.field}>
+    <div className={clsx(styles.field, className)}>
       <div className={styles.copy}>
         <label className={styles.label} htmlFor={htmlFor}>
           {label}

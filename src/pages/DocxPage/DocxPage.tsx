@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FileText, CheckCircle2, Printer } from 'lucide-react';
 import { saveAs } from 'file-saver';
+import clsx from 'clsx';
 import type { BarcodeType } from '../../features/barcode/types/barcode';
 import type { DocxPreview } from '../../features/docx/types/docx';
 import styles from './DocxPage.module.css';
@@ -115,7 +116,12 @@ export function DocxPage() {
   return (
       <div className={styles.page}>
           <div className={styles.leftColumn}>
-              <Panel className={styles.uploadPanel} title={t("docx.title")} description={t("docx.description")}>
+              <Panel 
+                  className={clsx(styles.compactPanel, styles.uploadPanel)} 
+                  contentClassName={styles.uploadPanelContent}
+                  title={t("docx.title")} 
+                  description={t("docx.description")}
+              >
                   <div className={styles.controls}>
                       <div className={styles.field}>
                           <label className={styles.label}>{t("generator.fields.type")}</label>
@@ -134,6 +140,7 @@ export function DocxPage() {
                           description={originalFile ? t("docx.dropzone.changeFile") : t("docx.dropzone.dropOrClick")}
                           fileIcon={<FileText />}
                           disabled={isGenerating}
+                          className={styles.compactDropzone}
                       />
 
                       {error && <div className={styles.error}>{error}</div>}
@@ -147,140 +154,145 @@ export function DocxPage() {
                   </div>
               </Panel>
 
-              <Panel title={t("xlsx.appearance.title")} description={t("xlsx.appearance.description")}>
-                  <div className={styles.settingsGrid}>
-                      <Field label={t("generator.fields.height")} htmlFor="docx-height">
-                          <TextInput
-                              id="docx-height"
-                              type="number"
-                              min={4}
-                              max={400}
-                              step={2}
-                              value={barcodeStyle.height}
-                              onChange={(event) =>
-                                  updateStyleField("height", toNumber(event.target.value, barcodeStyle.height, 4, 400))
-                              }
-                          />
-                      </Field>
-                      <Field label={t("generator.fields.barWidth")} htmlFor="docx-barwidth">
-                          <TextInput
-                              id="docx-barwidth"
-                              type="number"
-                              min={1}
-                              max={12}
-                              step={1}
-                              value={barcodeStyle.barWidth}
-                              onChange={(event) =>
-                                  updateStyleField(
-                                      "barWidth",
-                                      toNumber(event.target.value, barcodeStyle.barWidth, 1, 12)
-                                  )
-                              }
-                          />
-                      </Field>
-                      <Field label={t("generator.fields.scale")} htmlFor="docx-scale">
-                          <TextInput
-                              id="docx-scale"
-                              type="number"
-                              min={0.5}
-                              max={4}
-                              step={0.25}
-                              value={barcodeStyle.scale}
-                              onChange={(event) =>
-                                  updateStyleField("scale", toNumber(event.target.value, barcodeStyle.scale, 0.5, 4))
-                              }
-                          />
-                      </Field>
-                      <Field label={t("generator.fields.fontSize")} htmlFor="docx-fontsize">
-                          <TextInput
-                              id="docx-fontsize"
-                              type="number"
-                              min={4}
-                              max={128}
-                              step={1}
-                              value={barcodeStyle.fontSize}
-                              onChange={(event) =>
-                                  updateStyleField(
-                                      "fontSize",
-                                      toNumber(event.target.value, barcodeStyle.fontSize, 4, 128)
-                                  )
-                              }
-                          />
-                      </Field>
+              <Panel 
+                  className={clsx(styles.compactPanel, styles.settingsPanel)}
+                  contentClassName={styles.settingsPanelContent}
+                  title={t("xlsx.appearance.title")} 
+                  description={t("xlsx.appearance.description")}
+              >
+                  <div className={styles.settingsBody}>
+                      <div className={styles.settingsGrid}>
+                          <Field label={t("generator.fields.height")} htmlFor="docx-height">
+                              <TextInput
+                                  id="docx-height"
+                                  type="number"
+                                  min={4}
+                                  max={400}
+                                  step={2}
+                                  value={barcodeStyle.height}
+                                  onChange={(event) =>
+                                      updateStyleField("height", toNumber(event.target.value, barcodeStyle.height, 4, 400))
+                                  }
+                              />
+                          </Field>
+                          <Field label={t("generator.fields.barWidth")} htmlFor="docx-barwidth">
+                              <TextInput
+                                  id="docx-barwidth"
+                                  type="number"
+                                  min={1}
+                                  max={12}
+                                  step={1}
+                                  value={barcodeStyle.barWidth}
+                                  onChange={(event) =>
+                                      updateStyleField(
+                                          "barWidth",
+                                          toNumber(event.target.value, barcodeStyle.barWidth, 1, 12)
+                                      )
+                                  }
+                              />
+                          </Field>
+                          <Field label={t("generator.fields.scale")} htmlFor="docx-scale">
+                              <TextInput
+                                  id="docx-scale"
+                                  type="number"
+                                  min={0.5}
+                                  max={4}
+                                  step={0.25}
+                                  value={barcodeStyle.scale}
+                                  onChange={(event) =>
+                                      updateStyleField("scale", toNumber(event.target.value, barcodeStyle.scale, 0.5, 4))
+                                  }
+                              />
+                          </Field>
+                          <Field label={t("generator.fields.fontSize")} htmlFor="docx-fontsize">
+                              <TextInput
+                                  id="docx-fontsize"
+                                  type="number"
+                                  min={4}
+                                  max={128}
+                                  step={1}
+                                  value={barcodeStyle.fontSize}
+                                  onChange={(event) =>
+                                      updateStyleField(
+                                          "fontSize",
+                                          toNumber(event.target.value, barcodeStyle.fontSize, 4, 128)
+                                      )
+                                  }
+                              />
+                          </Field>
 
-                      <Field label={t("generator.fields.barColor")} htmlFor="docx-barcolor">
-                          <TextInput
-                              id="docx-barcolor"
-                              type="color"
-                              value={barcodeStyle.barColor}
-                              onChange={(event) => updateStyleField("barColor", event.target.value)}
-                          />
-                      </Field>
+                          <Field label={t("generator.fields.barColor")} htmlFor="docx-barcolor">
+                              <TextInput
+                                  id="docx-barcolor"
+                                  type="color"
+                                  value={barcodeStyle.barColor}
+                                  onChange={(event) => updateStyleField("barColor", event.target.value)}
+                              />
+                          </Field>
 
-                      <Field label={t("generator.fields.backgroundColor")} htmlFor="docx-bgcolor">
-                          <TextInput
-                              id="docx-bgcolor"
-                              type="color"
-                              value={barcodeStyle.backgroundColor}
-                              onChange={(event) => updateStyleField("backgroundColor", event.target.value)}
-                          />
-                      </Field>
+                          <Field label={t("generator.fields.backgroundColor")} htmlFor="docx-bgcolor">
+                              <TextInput
+                                  id="docx-bgcolor"
+                                  type="color"
+                                  value={barcodeStyle.backgroundColor}
+                                  onChange={(event) => updateStyleField("backgroundColor", event.target.value)}
+                              />
+                          </Field>
 
-                      <Field label={t("generator.fields.margin")} htmlFor="docx-margin">
-                          <TextInput
-                              id="docx-margin"
-                              type="number"
-                              min={0}
-                              max={80}
-                              step={4}
-                              value={barcodeStyle.margin}
-                              onChange={(event) =>
-                                  updateStyleField("margin", toNumber(event.target.value, barcodeStyle.margin, 0, 80))
-                              }
-                          />
-                      </Field>
+                          <Field label={t("generator.fields.margin")} htmlFor="docx-margin">
+                              <TextInput
+                                  id="docx-margin"
+                                  type="number"
+                                  min={0}
+                                  max={80}
+                                  step={4}
+                                  value={barcodeStyle.margin}
+                                  onChange={(event) =>
+                                      updateStyleField("margin", toNumber(event.target.value, barcodeStyle.margin, 0, 80))
+                                  }
+                              />
+                          </Field>
 
-                      <Field label={t("generator.fields.text")} htmlFor="docx-showtext">
-                          <SelectInput
-                              id="docx-showtext"
-                              value={barcodeStyle.showText ? "show" : "hide"}
-                              onChange={(event) => updateStyleField("showText", event.target.value === "show")}
-                          >
-                              <option value="show">{t("generator.textOptions.show")}</option>
-                              <option value="hide">{t("generator.textOptions.hide")}</option>
-                          </SelectInput>
-                      </Field>
-
-                      <div style={{gridColumn: "span 2"}}></div>
-                  </div>
-                  {!isSettingsValid && (
-                      <div className={styles.error} style={{marginTop: "8px"}}>
-                          {t("xlsx.errors.invalidAppearance")}
+                          <Field label={t("generator.fields.text")} htmlFor="docx-showtext">
+                              <SelectInput
+                                  id="docx-showtext"
+                                  value={barcodeStyle.showText ? "show" : "hide"}
+                                  onChange={(event) => updateStyleField("showText", event.target.value === "show")}
+                              >
+                                  <option value="show">{t("generator.textOptions.show")}</option>
+                                  <option value="hide">{t("generator.textOptions.hide")}</option>
+                              </SelectInput>
+                          </Field>
                       </div>
-                  )}
-              </Panel>
+                      {!isSettingsValid && (
+                          <div className={styles.error}>
+                              {t("xlsx.errors.invalidAppearance")}
+                          </div>
+                      )}
+                  </div>
 
-              <div className={styles.actionsRow}>
-                  <Button
-                      variant="primary"
-                      onClick={handleGenerate}
-                      fullWidth
-                      disabled={!isSettingsValid || isGenerating}
-                      className={styles.actionButton}
-                  >
-                      {isGenerating ? t("generator.actions.generating") : t("generator.actions.generate")}
-                  </Button>
-                  <Button
-                      id="docx-print"
-                      variant="secondary"
-                      onClick={handlePrint}
-                      fullWidth
-                      className={styles.printButton}
-                  >
-                      <Printer size={18} style={{marginRight: "8px", color: "#000000"}} />
-                      {t("docx.actions.print")}
-                  </Button>
-              </div>
+                  <div className={styles.actionsRow}>
+                      <Button
+                          variant="primary"
+                          onClick={handleGenerate}
+                          fullWidth
+                          disabled={!isSettingsValid || isGenerating}
+                          className={styles.actionButton}
+                      >
+                          {isGenerating ? t("generator.actions.generating") : t("generator.actions.generate")}
+                      </Button>
+                      <Button
+                          id="docx-print"
+                          variant="secondary"
+                          onClick={handlePrint}
+                          fullWidth
+                          className={styles.printButton}
+                      >
+                          <Printer size={18} style={{marginRight: "8px", color: "#000000"}} />
+                          {t("docx.actions.print")}
+                      </Button>
+                  </div>
+              </Panel>
           </div>
 
           <div className={styles.rightColumn}>

@@ -1,6 +1,6 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState, type ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ArrowDown, ArrowDownLeft, ArrowDownRight, ArrowLeft, ArrowRight, ArrowUp, ArrowUpLeft, ArrowUpRight, CheckCircle2, FileSpreadsheet, Type } from 'lucide-react';
+import { ArrowDown, ArrowDownLeft, ArrowDownRight, ArrowLeft, ArrowRight, ArrowUp, ArrowUpLeft, ArrowUpRight, CheckCircle2, FileSpreadsheet, Type, UploadCloud } from 'lucide-react';
 import { saveAs } from 'file-saver';
 import type { BarcodeType } from '../../features/barcode/types/barcode';
 import type { WorkbookPreview, SelectedColumns, XlsxPlacement, CellPreview } from '../../features/xlsx/types/xlsx';
@@ -25,6 +25,7 @@ export function XlsxPage() {
   const { t } = useTranslation();
   const [workbook, setWorkbook] = useState<WorkbookPreview | null>(null);
   const [originalFile, setOriginalFile] = useState<File | null>(null);
+  const replaceFileInputRef = useRef<HTMLInputElement | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -104,6 +105,23 @@ export function XlsxPage() {
 
   const handleClearSelection = () => {
     setSelectedColumns({ sourceColumnIndex: null, targetColumnIndex: null, placement: 'right' });
+  };
+
+  const handleReplaceFileClick = () => {
+    if (isGenerating || !replaceFileInputRef.current) return;
+
+    replaceFileInputRef.current.value = '';
+    replaceFileInputRef.current.click();
+  };
+
+  const handleReplaceFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+
+    if (files && files.length > 0) {
+      void handleFileSelect(Array.from(files));
+    }
+
+    event.target.value = '';
   };
 
   const sourceRowsWithData = useMemo(() => {
@@ -361,8 +379,17 @@ export function XlsxPage() {
           className={styles.uploadPanel}
           title={t('xlsx.batch.title')}
           description={t('xlsx.batch.description')}
+          compact
         >
           <div className={styles.controls}>
+            <input
+              ref={replaceFileInputRef}
+              type="file"
+              accept=".xlsx"
+              onChange={handleReplaceFileChange}
+              disabled={isGenerating}
+              hidden
+            />
             <div className={styles.field}>
               <label className={styles.label}>{t('generator.fields.type')}</label>
               <SearchableSelect
@@ -373,22 +400,10 @@ export function XlsxPage() {
               />
             </div>
 
-            <Dropzone
-              onFilesSelected={handleFileSelect}
-              accept=".xlsx"
-              title={originalFile ? originalFile.name : t('xlsx.dropzone.selectFile')}
-              description={
-                originalFile ? t('xlsx.dropzone.changeFile') : t('xlsx.dropzone.dropOrClick')
-              }
-              fileIcon={<FileSpreadsheet />}
-              disabled={isGenerating}
-            />
-
-            {!workbook && <div className={styles.instruction}>{t('xlsx.batch.instruction')}</div>}
-
             {workbook && (
               <div className={styles.field}>
                 <label className={styles.label}>Pozycja względem tekstu</label>
+
                 <div className={styles.placementMatrix}>
                   <button
                     className={clsx(styles.matrixButton, { [styles.active]: selectedColumns.placement === 'top-left' })}
@@ -396,7 +411,7 @@ export function XlsxPage() {
                     title="Powyżej w lewo"
                     disabled={isGenerating}
                   >
-                    <ArrowUpLeft size={20} />
+                    <ArrowUpLeft size={18} />
                   </button>
                   <button
                     className={clsx(styles.matrixButton, { [styles.active]: selectedColumns.placement === 'top' })}
@@ -404,7 +419,7 @@ export function XlsxPage() {
                     title="Powyżej"
                     disabled={isGenerating}
                   >
-                    <ArrowUp size={20} />
+                    <ArrowUp size={18} />
                   </button>
                   <button
                     className={clsx(styles.matrixButton, { [styles.active]: selectedColumns.placement === 'top-right' })}
@@ -412,7 +427,7 @@ export function XlsxPage() {
                     title="Powyżej w prawo"
                     disabled={isGenerating}
                   >
-                    <ArrowUpRight size={20} />
+                    <ArrowUpRight size={18} />
                   </button>
                   <button
                     className={clsx(styles.matrixButton, { [styles.active]: selectedColumns.placement === 'left' })}
@@ -420,10 +435,10 @@ export function XlsxPage() {
                     title="Po lewej"
                     disabled={isGenerating}
                   >
-                    <ArrowLeft size={20} />
+                    <ArrowLeft size={18} />
                   </button>
                   <div className={styles.matrixCenter}>
-                    <Type size={18} />
+                    <Type size={16} />
                   </div>
                   <button
                     className={clsx(styles.matrixButton, { [styles.active]: selectedColumns.placement === 'right' })}
@@ -431,7 +446,7 @@ export function XlsxPage() {
                     title="Po prawej"
                     disabled={isGenerating}
                   >
-                    <ArrowRight size={20} />
+                    <ArrowRight size={18} />
                   </button>
                   <button
                     className={clsx(styles.matrixButton, { [styles.active]: selectedColumns.placement === 'bottom-left' })}
@@ -439,7 +454,7 @@ export function XlsxPage() {
                     title="Poniżej w lewo"
                     disabled={isGenerating}
                   >
-                    <ArrowDownLeft size={20} />
+                    <ArrowDownLeft size={18} />
                   </button>
                   <button
                     className={clsx(styles.matrixButton, { [styles.active]: selectedColumns.placement === 'bottom' })}
@@ -447,7 +462,7 @@ export function XlsxPage() {
                     title="Poniżej"
                     disabled={isGenerating}
                   >
-                    <ArrowDown size={20} />
+                    <ArrowDown size={18} />
                   </button>
                   <button
                     className={clsx(styles.matrixButton, { [styles.active]: selectedColumns.placement === 'bottom-right' })}
@@ -455,7 +470,7 @@ export function XlsxPage() {
                     title="Poniżej w prawo"
                     disabled={isGenerating}
                   >
-                    <ArrowDownRight size={20} />
+                    <ArrowDownRight size={18} />
                   </button>
                 </div>
               </div>
@@ -465,7 +480,7 @@ export function XlsxPage() {
 
             {successMessage && (
               <div className={styles.success}>
-                <CheckCircle2 size={18} />
+                <CheckCircle2 size={16} />
                 {successMessage}
               </div>
             )}
@@ -473,96 +488,100 @@ export function XlsxPage() {
         </Panel>
 
         <Panel
+          className={styles.appearancePanel}
+          contentClassName={styles.appearancePanelContent}
+          fullHeight
           title={t('xlsx.appearance.title')}
           description={t('xlsx.appearance.description')}
+          compact
         >
-          <div className={styles.settingsGrid}>
-            <Field label={t('generator.fields.height')} htmlFor="xlsx-height">
-              <TextInput
-                id="xlsx-height"
-                type="number"
-                min={4}
-                max={400}
-                step={2}
-                value={barcodeStyle.height}
-                onChange={(event) =>
-                  updateStyleField(
-                    'height',
-                    toNumber(event.target.value, barcodeStyle.height, 4, 400),
-                  )
-                }
-                disabled={isGenerating}
-              />
-            </Field>
-            <Field label={t('generator.fields.barWidth')} htmlFor="xlsx-barwidth">
-              <TextInput
-                id="xlsx-barwidth"
-                type="number"
-                min={1}
-                max={12}
-                step={1}
-                value={barcodeStyle.barWidth}
-                onChange={(event) =>
-                  updateStyleField(
-                    'barWidth',
-                    toNumber(event.target.value, barcodeStyle.barWidth, 1, 12),
-                  )
-                }
-                disabled={isGenerating}
-              />
-            </Field>
-            <Field label={t('generator.fields.scale')} htmlFor="xlsx-scale">
-              <TextInput
-                id="xlsx-scale"
-                type="number"
-                min={0.5}
-                max={4}
-                step={0.25}
-                value={barcodeStyle.scale}
-                onChange={(event) =>
-                  updateStyleField(
-                    'scale',
-                    toNumber(event.target.value, barcodeStyle.scale, 0.5, 4),
-                  )
-                }
-                disabled={isGenerating}
-              />
-            </Field>
-            <Field label={t('generator.fields.fontSize')} htmlFor="xlsx-fontsize">
-              <TextInput
-                id="xlsx-fontsize"
-                type="number"
-                min={4}
-                max={128}
-                step={1}
-                value={barcodeStyle.fontSize}
-                onChange={(event) =>
-                  updateStyleField(
-                    'fontSize',
-                    toNumber(event.target.value, barcodeStyle.fontSize, 4, 128),
-                  )
-                }
-                disabled={isGenerating}
-              />
-            </Field>
-            <Field label={t('generator.fields.margin')} htmlFor="xlsx-margin">
-              <TextInput
-                id="xlsx-margin"
-                type="number"
-                min={0}
-                max={80}
-                step={4}
-                value={barcodeStyle.margin}
-                onChange={(event) =>
-                  updateStyleField(
-                    'margin',
-                    toNumber(event.target.value, barcodeStyle.margin, 0, 80),
-                  )
-                }
-                disabled={isGenerating}
-              />
-            </Field>
-            <div className={styles.colorFields}>
+          <div className={styles.appearanceBody}>
+            <div className={styles.settingsGrid}>
+              <Field label={t('generator.fields.height')} htmlFor="xlsx-height">
+                <TextInput
+                  id="xlsx-height"
+                  type="number"
+                  min={4}
+                  max={400}
+                  step={2}
+                  value={barcodeStyle.height}
+                  onChange={(event) =>
+                    updateStyleField(
+                      'height',
+                      toNumber(event.target.value, barcodeStyle.height, 4, 400),
+                    )
+                  }
+                  disabled={isGenerating}
+                />
+              </Field>
+              <Field label={t('generator.fields.barWidth')} htmlFor="xlsx-barwidth">
+                <TextInput
+                  id="xlsx-barwidth"
+                  type="number"
+                  min={1}
+                  max={12}
+                  step={1}
+                  value={barcodeStyle.barWidth}
+                  onChange={(event) =>
+                    updateStyleField(
+                      'barWidth',
+                      toNumber(event.target.value, barcodeStyle.barWidth, 1, 12),
+                    )
+                  }
+                  disabled={isGenerating}
+                />
+              </Field>
+              <Field label={t('generator.fields.scale')} htmlFor="xlsx-scale">
+                <TextInput
+                  id="xlsx-scale"
+                  type="number"
+                  min={0.5}
+                  max={4}
+                  step={0.25}
+                  value={barcodeStyle.scale}
+                  onChange={(event) =>
+                    updateStyleField(
+                      'scale',
+                      toNumber(event.target.value, barcodeStyle.scale, 0.5, 4),
+                    )
+                  }
+                  disabled={isGenerating}
+                />
+              </Field>
+              <Field label={t('generator.fields.fontSize')} htmlFor="xlsx-fontsize">
+                <TextInput
+                  id="xlsx-fontsize"
+                  type="number"
+                  min={4}
+                  max={128}
+                  step={1}
+                  value={barcodeStyle.fontSize}
+                  onChange={(event) =>
+                    updateStyleField(
+                      'fontSize',
+                      toNumber(event.target.value, barcodeStyle.fontSize, 4, 128),
+                    )
+                  }
+                  disabled={isGenerating}
+                />
+              </Field>
+              <Field label={t('generator.fields.margin')} htmlFor="xlsx-margin">
+                <TextInput
+                  id="xlsx-margin"
+                  type="number"
+                  min={0}
+                  max={80}
+                  step={4}
+                  value={barcodeStyle.margin}
+                  onChange={(event) =>
+                    updateStyleField(
+                      'margin',
+                      toNumber(event.target.value, barcodeStyle.margin, 0, 80),
+                    )
+                  }
+                  disabled={isGenerating}
+                />
+              </Field>
               <Field label={t('generator.fields.barColor')} htmlFor="xlsx-barcolor">
                 <TextInput
                   id="xlsx-barcolor"
@@ -584,85 +603,116 @@ export function XlsxPage() {
                   disabled={isGenerating}
                 />
               </Field>
-            </div>
-            <Field label={t('generator.fields.text')} htmlFor="xlsx-showtext">
-              <SelectInput
-                id="xlsx-showtext"
-                value={barcodeStyle.showText ? 'show' : 'hide'}
-                onChange={(event) =>
-                  updateStyleField('showText', event.target.value === 'show')
-                }
-                disabled={isGenerating}
+              <Field
+                label={t('generator.fields.text')}
+                htmlFor="xlsx-showtext"
               >
-                <option value="show">{t('generator.textOptions.show')}</option>
-                <option value="hide">{t('generator.textOptions.hide')}</option>
-              </SelectInput>
-            </Field>
-          </div>
-          {!isSettingsValid && (
-            <div className={styles.error} style={{ marginTop: '8px' }}>
-              {t('xlsx.errors.invalidAppearance')}
+                <SelectInput
+                  id="xlsx-showtext"
+                  value={barcodeStyle.showText ? 'show' : 'hide'}
+                  onChange={(event) =>
+                    updateStyleField('showText', event.target.value === 'show')
+                  }
+                  disabled={isGenerating}
+                >
+                  <option value="show">{t('generator.textOptions.show')}</option>
+                  <option value="hide">{t('generator.textOptions.hide')}</option>
+                </SelectInput>
+              </Field>
             </div>
-          )}
-        </Panel>
-
-        {workbook && (
-          <div className={styles.actionsRow}>
-            <Button
-              variant="secondary"
-              onClick={handleClearSelection}
-              fullWidth
-              disabled={
-                isGenerating ||
-                (selectedColumns.sourceColumnIndex === null &&
-                  selectedColumns.targetColumnIndex === null)
-              }
-              className={styles.actionButton}
-            >
-              {t('xlsx.actions.deselect')}
-            </Button>
-            <Button
-              variant="primary"
-              onClick={handleGenerate}
-              fullWidth
-              disabled={!isValidToGenerate || isGenerating}
-              className={styles.actionButton}
-              progress={isGenerating && progress ? (progress.current / progress.total) * 100 : undefined}
-            >
-              {isGenerating 
-                ? progress 
-                  ? `${t('generator.actions.generating')} (${Math.round((progress.current / progress.total) * 100)}%)`
-                  : t('generator.actions.generating')
-                : t('generator.actions.generate')}
-            </Button>
+            {!isSettingsValid && (
+              <div className={styles.error}>
+                {t('xlsx.errors.invalidAppearance')}
+              </div>
+            )}
           </div>
-        )}
+
+          {workbook && (
+            <>
+              <Button
+                variant="accent"
+                onClick={handleReplaceFileClick}
+                disabled={isGenerating}
+                fullWidth
+                className={styles.changeFileButton}
+              >
+                <UploadCloud size={18} />
+                {t('xlsx.dropzone.changeFile')}
+              </Button>
+              <div className={styles.actionsRow}>
+                <Button
+                  variant="secondary"
+                  onClick={handleClearSelection}
+                  fullWidth
+                  disabled={
+                    isGenerating ||
+                    (selectedColumns.sourceColumnIndex === null &&
+                      selectedColumns.targetColumnIndex === null)
+                  }
+                  className={styles.actionButton}
+                >
+                  {t('xlsx.actions.deselect')}
+                </Button>
+                <Button
+                  variant="primary"
+                  onClick={handleGenerate}
+                  fullWidth
+                  disabled={!isValidToGenerate || isGenerating}
+                  className={styles.actionButton}
+                  progress={isGenerating && progress ? (progress.current / progress.total) * 100 : undefined}
+                >
+                  {isGenerating
+                    ? progress
+                      ? `${t('generator.actions.generating')} (${Math.round((progress.current / progress.total) * 100)}%)`
+                      : t('generator.actions.generating')
+                    : t('generator.actions.generate')}
+                </Button>
+              </div>
+            </>
+          )}
+
+        </Panel>
       </div>
 
       <div className={styles.rightColumn}>
         <Panel
           className={styles.previewPanel}
+          contentClassName={styles.previewPanelContent}
           fullHeight
           title={
             workbook
               ? t('xlsx.preview.titleWithSheet', { sheetName: workbook.activeSheetName })
               : t('xlsx.preview.title')
           }
+          compact
         >
           {workbook ? (
-            <div className={styles.previewContainer}>
-              <XlsxWorkbookViewer
-                workbook={{ ...workbook, rows: validatedRows }}
-                selectedColumns={selectedColumns}
-                onColumnClick={handleColumnClick}
-                barcodeStyle={barcodeStyle}
-              />
+            <div className={styles.previewWorkspace}>
+              <div className={styles.previewContainer}>
+                <XlsxWorkbookViewer
+                  workbook={{ ...workbook, rows: validatedRows }}
+                  selectedColumns={selectedColumns}
+                  onColumnClick={handleColumnClick}
+                  barcodeStyle={barcodeStyle}
+                />
+              </div>
             </div>
           ) : (
-            <div className={styles.previewPlaceholder}>{t('xlsx.preview.placeholder')}</div>
+            <Dropzone
+              className={styles.previewDropzone}
+              onFilesSelected={handleFileSelect}
+              accept=".xlsx"
+              title={originalFile ? originalFile.name : t('xlsx.preview.placeholder')}
+              description={
+                originalFile ? t('xlsx.dropzone.changeFile') : t('xlsx.dropzone.dropOrClick')
+              }
+              fileIcon={<FileSpreadsheet />}
+              disabled={isGenerating}
+            />
           )}
         </Panel>
       </div>
     </div>
   );
+
 }

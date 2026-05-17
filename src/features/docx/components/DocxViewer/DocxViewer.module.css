@@ -20,10 +20,10 @@
   flex: 1;
   overflow-y: auto;
   min-height: 0;
-  background: var(--surface-soft);
+  background: var(--md-sys-color-surface-container-low);
   padding: 1.5rem;
   border-radius: var(--radius-md);
-  border: 1px solid var(--border);
+  border: 1px solid var(--md-sys-color-surface-variant);
 }
 
 /* A4 Mapping */
@@ -79,7 +79,7 @@
 .empty {
   padding: 2rem;
   text-align: center;
-  color: var(--muted);
+  color: var(--md-sys-color-on-surface-variant);
   font-style: italic;
 }
 

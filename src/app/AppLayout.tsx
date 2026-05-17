@@ -1,11 +1,11 @@
 import { Outlet } from 'react-router-dom'
-import { TopNavigation } from '../shared/ui/TopNavigation/TopNavigation'
+import { NavigationRail } from '../shared/ui/NavigationRail/NavigationRail'
 import styles from './App.module.css'
 
 export function AppLayout() {
   return (
     <div className={styles.appShell}>
-      <TopNavigation />
+      <NavigationRail />
       <main className={styles.content}>
         <Outlet />
       </main>

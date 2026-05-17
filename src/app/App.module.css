@@ -1,11 +1,9 @@
 .appShell {
   min-height: 100vh;
   display: flex;
-  flex-direction: column;
-  background:
-    radial-gradient(circle at 20% 10%, var(--primary-soft), transparent 28rem),
-    linear-gradient(135deg, var(--bg) 0%, var(--surface-soft) 48%, var(--primary-soft) 100%);
-  color: var(--text);
+  flex-direction: row; /* Sidebar on the left */
+  background-color: var(--md-sys-color-background);
+  color: var(--md-sys-color-on-surface);
 }
 
 .content {
@@ -13,7 +11,15 @@
   flex: 1;
   flex-direction: column;
   width: 100%;
-  margin: 0 auto;
-  padding: clamp(0.5rem, 1vw, 1rem);
+  max-width: 100%; /* Occupy remaining space */
+  padding: 0;
   box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+@media (max-width: 820px) {
+  .appShell {
+    flex-direction: column;
+    padding-bottom: 4rem; /* Space for bottom navigation */
+  }
 }

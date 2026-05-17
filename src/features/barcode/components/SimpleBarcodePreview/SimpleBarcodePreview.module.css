@@ -16,6 +16,6 @@
 }
 
 .errorLabel {
-  color: var(--accent);
+  color: var(--md-sys-color-tertiary);
   font-weight: bold;
 }

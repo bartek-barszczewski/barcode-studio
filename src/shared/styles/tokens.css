@@ -1,36 +1,55 @@
 :root {
-  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    Arial, sans-serif;
-  --font-numeric: "Segoe UI", Roboto, Arial, sans-serif;
+  /* MD3 Typography */
+  --font-sans: "Roboto", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-numeric: "Roboto Mono", monospace;
 
-  --bg: #ffffff;
-  --surface: #ffffff;
-  --surface-soft: #f7f9f9;
+  /* MD3 Color System - Mapped from existing brand colors */
+  /* Primary: Teal (#3cbbb1) */
+  --md-sys-color-primary: #006a64;
+  --md-sys-color-on-primary: #ffffff;
+  --md-sys-color-primary-container: #71f7ed;
+  --md-sys-color-on-primary-container: #00201e;
 
-  --text: #0a0f0d;
-  --muted: #66706d;
-  --border: #e5ebea;
+  /* Secondary: Indigo (#2a1e5c) */
+  --md-sys-color-secondary: #5e52a7;
+  --md-sys-color-on-secondary: #ffffff;
+  --md-sys-color-secondary-container: #e4dfff;
+  --md-sys-color-on-secondary-container: #190065;
 
-  --primary: #3cbbb1;
-  --primary-soft: #e7f8f6;
+  /* Tertiary: Accent (#ee4266) */
+  --md-sys-color-tertiary: #ba1a3d;
+  --md-sys-color-on-tertiary: #ffffff;
+  --md-sys-color-tertiary-container: #ffdad9;
+  --md-sys-color-on-tertiary-container: #41000a;
 
-  --secondary: #2a1e5c;
-  --secondary-soft: #eeeaf9;
+  /* Error */
+  --md-sys-color-error: #ba1a1a;
+  --md-sys-color-on-error: #ffffff;
+  --md-sys-color-error-container: #ffdad6;
+  --md-sys-color-on-error-container: #410002;
 
-  --accent: #ee4266;
-  --accent-soft: #fde8ee;
+  /* Surface / Background - Neutral MD3 Tones */
+  --md-sys-color-background: #fdfdfd; /* Neutral 99/100ish */
+  --md-sys-color-on-background: #1a1c1c;
+  --md-sys-color-surface: #fdfdfd;
+  --md-sys-color-on-surface: #1a1c1c;
+  --md-sys-color-surface-variant: #dfe4e2;
+  --md-sys-color-on-surface-variant: #3f4947;
+  --md-sys-color-outline: #707977;
+  --md-sys-color-surface-container-lowest: #ffffff;
+  --md-sys-color-surface-container-low: #f4f4f4; /* Neutral 96 */
+  --md-sys-color-surface-container: #eeeeee; /* Neutral 94 - Greyish Sidebar background */
+  --md-sys-color-surface-container-high: #e8e8e8; /* Neutral 92 */
+  --md-sys-color-surface-container-highest: #e2e2e2; /* Neutral 90 */
 
-  --success: #0ead69;
-  --success-soft: #e7f7f0;
-
-  --neutral: #c4cbca;
-
-  --shadow: 0 10px 30px rgba(10, 15, 13, 0.06);
-  --shadow-strong: 0 18px 50px rgba(10, 15, 13, 0.08);
-
-  --radius-sm: 12px;
-  --radius-md: 18px;
-  --radius-lg: 24px;
+  /* MD3 Shapes */
+  --radius-none: 0px;
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 28px;
+  --radius-full: 9999px;
 
   --container: 1600px;
 }
