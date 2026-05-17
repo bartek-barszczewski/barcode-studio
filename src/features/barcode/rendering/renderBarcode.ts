@@ -27,7 +27,6 @@ const BWIP_JS_FORMATS: Partial<Record<BarcodeType, string>> = {
   PHARMACODE: 'pharmacode',
 }
 
-const MIN_QR_SIZE = 240
 const BWIP_MAX_TEXT_SIZE = 25
 const TEXT_WIDTH_RATIO = 0.92
 const ESTIMATED_TEXT_CHAR_WIDTH = 0.58
@@ -89,7 +88,7 @@ const injectTextToSvg = (svg: string, input: BarcodeFormState): string => {
       : desiredFontSize
   const textLength =
     estimatedTextWidth > maxTextWidth
-      ? ` textLength="${formatSvgNumber(maxTextWidth)}" lengthAdjust="spacingAndGlyphs"`
+      ? ` textLength="${formatSvgNumber(maxTextWidth)}" lengthAdjust="spacing"`
       : ''
   const spacing = 8 * scale * unitsPerPixelY
   const extraHeight = fittedFontSize * 1.25 + spacing
@@ -160,7 +159,7 @@ const renderLinearBarcode = (input: BarcodeFormState): string => {
 const renderQrCode = async (input: BarcodeFormState): Promise<string> => {
   try {
     const scale = getRenderScale(input.scale)
-    const size = Math.max(MIN_QR_SIZE, Math.round(input.height)) * scale
+    const size = Math.max(1, Math.round(input.height)) * scale
     
     const svg = await QRCode.toString(input.value, {
       type: 'svg',
