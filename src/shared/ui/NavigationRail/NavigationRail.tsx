@@ -5,13 +5,15 @@ import {
   CircleHelp,
   FileSpreadsheet,
   FileText,
+  House,
   Languages,
   Library,
   ScanBarcode,
 } from 'lucide-react'
-import styles from './TopNavigation.module.css'
+import styles from './NavigationRail.module.css'
 
 const navItems = [
+  { to: '/home', labelKey: 'navigation.home', icon: House },
   { to: '/generator', labelKey: 'navigation.generator', icon: ScanBarcode },
   { to: '/barcode-set', labelKey: 'navigation.barcodeSet', icon: Library },
   { to: '/xlsx', labelKey: 'navigation.xlsx', icon: FileSpreadsheet },
@@ -19,7 +21,7 @@ const navItems = [
   { to: '/help', labelKey: 'navigation.help', icon: CircleHelp },
 ]
 
-export function TopNavigation() {
+export function NavigationRail() {
   const { i18n, t } = useTranslation()
 
   const handleLanguageToggle = () => {
@@ -27,11 +29,14 @@ export function TopNavigation() {
   }
 
   return (
-    <header className={styles.topbar}>
-      <NavLink className={styles.brand} to="/generator">
-        <ScanBarcode aria-hidden="true" />
-        {t('navigation.brand')}
-      </NavLink>
+    <aside className={styles.rail}>
+      <div className={styles.topSection}>
+        <NavLink className={styles.brand} to="/home">
+          <ScanBarcode aria-hidden="true" size={32} />
+          <span className={styles.brandText}>{t('navigation.brand')}</span>
+        </NavLink>
+      </div>
+
       <nav className={styles.navigation} aria-label={t('navigation.ariaLabel')}>
         {navItems.map((item) => {
           const Icon = item.icon
@@ -44,21 +49,26 @@ export function TopNavigation() {
               key={item.to}
               to={item.to}
             >
-              <Icon aria-hidden="true" />
-              {t(item.labelKey)}
+              <div className={styles.iconContainer}>
+                <Icon aria-hidden="true" size={24} />
+              </div>
+              <span className={styles.label}>{t(item.labelKey)}</span>
             </NavLink>
           )
         })}
       </nav>
-      <button
-        aria-label={t('navigation.languageToggle')}
-        className={styles.languageButton}
-        onClick={handleLanguageToggle}
-        type="button"
-      >
-        <Languages aria-hidden="true" />
-        PL / EN
-      </button>
-    </header>
+
+      <div className={styles.bottomSection}>
+        <button
+          aria-label={t('navigation.languageToggle')}
+          className={styles.languageButton}
+          onClick={handleLanguageToggle}
+          type="button"
+        >
+          <Languages aria-hidden="true" size={20} />
+          <span className={styles.label}>PL / EN</span>
+        </button>
+      </div>
+    </aside>
   )
 }

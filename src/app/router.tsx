@@ -4,6 +4,7 @@ import { GeneratorPage } from '../pages/GeneratorPage/GeneratorPage'
 import { HelpPage } from '../pages/HelpPage/HelpPage'
 import { XlsxPage } from '../pages/XlsxPage/XlsxPage'
 import { BarcodeSetPage } from '../pages/BarcodeSetPage/BarcodeSetPage'
+import { HomePage } from '../pages/HomePage/HomePage'
 import { AppLayout } from './AppLayout'
 
 export const router = createBrowserRouter([
@@ -13,7 +14,11 @@ export const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <Navigate to="/generator" replace />,
+        element: <Navigate to="/home" replace />,
+      },
+      {
+        path: 'home',
+        element: <HomePage />,
       },
       {
         path: 'generator',
@@ -38,4 +43,3 @@ export const router = createBrowserRouter([
     ],
   },
 ])
-

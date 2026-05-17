@@ -14,6 +14,8 @@ import {
 } from '../../export/barcodeExport'
 import styles from './BarcodeSet.module.css'
 
+const CARD_VALUE_PREVIEW_LIMIT = 32
+
 interface BarcodeSetCardProps {
   item: BarcodeSetItem
   index: number
@@ -31,6 +33,14 @@ export const BarcodeSetCard = memo(function BarcodeSetCard({
 }: BarcodeSetCardProps) {
   const { t } = useTranslation()
   const { svg, error: previewError } = useBarcodeItemPreview(item)
+
+  const getCardValuePreview = (value: string) => {
+    if (value.length <= CARD_VALUE_PREVIEW_LIMIT) {
+      return value
+    }
+
+    return `${value.slice(0, CARD_VALUE_PREVIEW_LIMIT)}...`
+  }
 
   const getBaseFilename = () => {
     const value = sanitizeFileName(item.value)
@@ -85,7 +95,7 @@ export const BarcodeSetCard = memo(function BarcodeSetCard({
           <span className={styles.barcodeTypeLabel}>{barcodeTypeName}</span>
         </div>
         <span className={styles.cardValue} title={item.value}>
-          {item.value || t('barcodeSet.status.empty')}
+          {item.value ? getCardValuePreview(item.value) : t('barcodeSet.status.empty')}
         </span>
       </div>
 

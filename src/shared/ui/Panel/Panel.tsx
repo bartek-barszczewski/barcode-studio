@@ -7,7 +7,9 @@ type PanelProps = {
   description?: string
   children: ReactNode
   className?: string
+  contentClassName?: string
   fullHeight?: boolean
+  compact?: boolean
 }
 
 export function Panel({
@@ -15,19 +17,27 @@ export function Panel({
   description,
   children,
   className,
+  contentClassName,
   fullHeight,
+  compact,
 }: PanelProps) {
   return (
     <section
-      className={clsx(styles.panel, className, fullHeight && styles.fullHeight)}
+      className={clsx(
+        styles.panel, 
+        className, 
+        fullHeight && styles.fullHeight,
+        compact && styles.compact
+      )}
     >
+
       {(title || description) && (
         <header className={styles.header}>
           {title && <h2 className={styles.title}>{title}</h2>}
           {description && <p className={styles.description}>{description}</p>}
         </header>
       )}
-      <div className={styles.content}>{children}</div>
+      <div className={clsx(styles.content, contentClassName)}>{children}</div>
     </section>
   )
 }

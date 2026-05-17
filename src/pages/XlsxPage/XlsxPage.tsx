@@ -1,6 +1,7 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState, type ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ArrowDown, ArrowDownLeft, ArrowDownRight, ArrowLeft, ArrowRight, ArrowUp, ArrowUpLeft, ArrowUpRight, CheckCircle2, FileSpreadsheet, Type } from 'lucide-react';
+import { useBlocker } from 'react-router-dom';
+import { ArrowDown, ArrowDownLeft, ArrowDownRight, ArrowLeft, ArrowRight, ArrowUp, ArrowUpLeft, ArrowUpRight, CheckCircle2, FileSpreadsheet, Type, UploadCloud } from 'lucide-react';
 import { saveAs } from 'file-saver';
 import type { BarcodeType } from '../../features/barcode/types/barcode';
 import type { WorkbookPreview, SelectedColumns, XlsxPlacement, CellPreview } from '../../features/xlsx/types/xlsx';
@@ -25,6 +26,7 @@ export function XlsxPage() {
   const { t } = useTranslation();
   const [workbook, setWorkbook] = useState<WorkbookPreview | null>(null);
   const [originalFile, setOriginalFile] = useState<File | null>(null);
+  const replaceFileInputRef = useRef<HTMLInputElement | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -47,6 +49,11 @@ export function XlsxPage() {
     showText: false,
   });
 
+  const hasUnsavedChanges = originalFile !== null && !isGenerating;
+  const navigationBlocker = useBlocker(({ currentLocation, nextLocation }) => {
+    return hasUnsavedChanges && currentLocation.pathname !== nextLocation.pathname;
+  });
+
   const isSettingsValid = useMemo(() => {
     return (
       barcodeStyle.height >= 4 &&
@@ -61,6 +68,23 @@ export function XlsxPage() {
       barcodeStyle.margin <= 80
     );
   }, [barcodeStyle]);
+
+  useEffect(() => {
+    if (!hasUnsavedChanges) {
+      return undefined;
+    }
+
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      event.preventDefault();
+      event.returnValue = '';
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [hasUnsavedChanges]);
 
   const handleFileSelect = async (files: File[]) => {
     if (files.length === 0) return;
@@ -88,22 +112,37 @@ export function XlsxPage() {
     if (isGenerating) return;
 
     setSelectedColumns((prev) => {
-      // First click: set both source and target to the same column
       if (prev.sourceColumnIndex === null) {
-        return { 
-          ...prev, 
-          sourceColumnIndex: columnIndex, 
-          targetColumnIndex: columnIndex 
+        return {
+          ...prev,
+          sourceColumnIndex: columnIndex,
+          targetColumnIndex: columnIndex,
         };
       }
 
-      // Subsequent clicks update the target column
       return { ...prev, targetColumnIndex: columnIndex };
     });
   };
 
   const handleClearSelection = () => {
     setSelectedColumns({ sourceColumnIndex: null, targetColumnIndex: null, placement: 'right' });
+  };
+
+  const handleReplaceFileClick = () => {
+    if (isGenerating || !replaceFileInputRef.current) return;
+
+    replaceFileInputRef.current.value = '';
+    replaceFileInputRef.current.click();
+  };
+
+  const handleReplaceFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+
+    if (files && files.length > 0) {
+      void handleFileSelect(Array.from(files));
+    }
+
+    event.target.value = '';
   };
 
   const sourceRowsWithData = useMemo(() => {
@@ -137,7 +176,6 @@ export function XlsxPage() {
       const sourceValue = sourceCell?.value ?? '';
       const isSourceValid = sourceValue.trim() !== '' && validateBarcodeValue(barcodeType, sourceValue).isValid;
 
-      // Simulate row insertion ABOVE for Top-* placement
       if (selectedColumns.placement.startsWith('top') && isSourceValid) {
         let hOffset = 0;
         if (selectedColumns.placement.endsWith('-left')) hOffset = -1;
@@ -145,7 +183,7 @@ export function XlsxPage() {
 
         const barcodeColIndex = Math.max(0, (selectedColumns.targetColumnIndex ?? 0) + hOffset);
 
-        const barcodeRow: CellPreview[] = row.map(cell => {
+        const barcodeRow: CellPreview[] = row.map((cell) => {
           if (cell.columnIndex === barcodeColIndex) {
             return {
               ...cell,
@@ -164,7 +202,6 @@ export function XlsxPage() {
         currentRowCounter++;
       }
 
-      // The original row (modified for validation and Left/Right preview)
       const validatedOriginalRow = row.map((cell) => {
         const baseCell = { ...cell, rowNumber: currentRowCounter };
 
@@ -181,9 +218,8 @@ export function XlsxPage() {
           };
         }
 
-        // Handle Left/Right preview in the SAME row
         if (
-          selectedColumns.targetColumnIndex === cell.columnIndex && 
+          selectedColumns.targetColumnIndex === cell.columnIndex &&
           (selectedColumns.placement === 'left' || selectedColumns.placement === 'right')
         ) {
           if (isSourceValid) {
@@ -202,7 +238,6 @@ export function XlsxPage() {
       resultRows.push(validatedOriginalRow);
       currentRowCounter++;
 
-      // Simulate row insertion BELOW for Bottom-* placement
       if (selectedColumns.placement.startsWith('bottom') && isSourceValid) {
         let hOffset = 0;
         if (selectedColumns.placement.endsWith('-left')) hOffset = -1;
@@ -210,7 +245,7 @@ export function XlsxPage() {
 
         const barcodeColIndex = Math.max(0, (selectedColumns.targetColumnIndex ?? 0) + hOffset);
 
-        const barcodeRow: CellPreview[] = row.map(cell => {
+        const barcodeRow: CellPreview[] = row.map((cell) => {
           if (cell.columnIndex === barcodeColIndex) {
             return {
               ...cell,
@@ -291,8 +326,8 @@ export function XlsxPage() {
 
     try {
       const fileBuffer = await originalFile.arrayBuffer();
+      const sourceColumnIndex = selectedColumns.sourceColumnIndex;
 
-      // Read only the needed rows first
       const fullWorkbook = new ExcelJS.Workbook();
       await fullWorkbook.xlsx.load(fileBuffer);
       const worksheet = fullWorkbook.getWorksheet(workbook.activeSheetName);
@@ -303,7 +338,7 @@ export function XlsxPage() {
 
       const allSourceRows: { rowNumber: number; value: string }[] = [];
       worksheet.eachRow((row, rowNumber) => {
-        const cell = row.getCell(selectedColumns.sourceColumnIndex! + 1);
+        const cell = row.getCell(sourceColumnIndex + 1);
         let value = '';
 
         if (cell.value !== null && cell.value !== undefined) {
@@ -325,7 +360,6 @@ export function XlsxPage() {
         throw new Error(t('xlsx.errors.noDataInColumn'));
       }
 
-      // Generate the workbook on main thread for stability
       const resultBlob = await writeWorkbookWithBarcodes({
         sourceFile: originalFile,
         sheetName: workbook.activeSheetName,
@@ -355,314 +389,384 @@ export function XlsxPage() {
   };
 
   return (
-    <div className={styles.page}>
-      <div className={styles.leftColumn}>
-        <Panel
-          className={styles.uploadPanel}
-          title={t('xlsx.batch.title')}
-          description={t('xlsx.batch.description')}
-        >
-          <div className={styles.controls}>
-            <div className={styles.field}>
-              <label className={styles.label}>{t('generator.fields.type')}</label>
-              <SearchableSelect
-                options={BARCODE_TYPE_OPTIONS}
-                value={barcodeType}
-                onChange={(value) => setBarcodeType(value as BarcodeType)}
+    <>
+      <div className={styles.page}>
+        <div className={styles.leftColumn}>
+          <Panel
+            className={styles.uploadPanel}
+            title={t('xlsx.batch.title')}
+            description={t('xlsx.batch.description')}
+            compact
+          >
+            <div className={styles.controls}>
+              <input
+                ref={replaceFileInputRef}
+                type="file"
+                accept=".xlsx"
+                onChange={handleReplaceFileChange}
                 disabled={isGenerating}
+                hidden
               />
+              <div className={styles.field}>
+                <label className={styles.label}>{t('generator.fields.type')}</label>
+                <SearchableSelect
+                  options={BARCODE_TYPE_OPTIONS}
+                  value={barcodeType}
+                  onChange={(value) => setBarcodeType(value as BarcodeType)}
+                  disabled={isGenerating}
+                />
+              </div>
+
+              {workbook && (
+                <div className={styles.field}>
+                  <label className={styles.label}>Pozycja wzglÄ™dem tekstu</label>
+
+                  <div className={styles.placementMatrix}>
+                    <button
+                      className={clsx(styles.matrixButton, { [styles.active]: selectedColumns.placement === 'top-left' })}
+                      onClick={() => handlePlacementChange('top-left')}
+                      title="PowyĹĽej w lewo"
+                      disabled={isGenerating}
+                    >
+                      <ArrowUpLeft size={18} />
+                    </button>
+                    <button
+                      className={clsx(styles.matrixButton, { [styles.active]: selectedColumns.placement === 'top' })}
+                      onClick={() => handlePlacementChange('top')}
+                      title="PowyĹĽej"
+                      disabled={isGenerating}
+                    >
+                      <ArrowUp size={18} />
+                    </button>
+                    <button
+                      className={clsx(styles.matrixButton, { [styles.active]: selectedColumns.placement === 'top-right' })}
+                      onClick={() => handlePlacementChange('top-right')}
+                      title="PowyĹĽej w prawo"
+                      disabled={isGenerating}
+                    >
+                      <ArrowUpRight size={18} />
+                    </button>
+                    <button
+                      className={clsx(styles.matrixButton, { [styles.active]: selectedColumns.placement === 'left' })}
+                      onClick={() => handlePlacementChange('left')}
+                      title="Po lewej"
+                      disabled={isGenerating}
+                    >
+                      <ArrowLeft size={18} />
+                    </button>
+                    <div className={styles.matrixCenter}>
+                      <Type size={16} />
+                    </div>
+                    <button
+                      className={clsx(styles.matrixButton, { [styles.active]: selectedColumns.placement === 'right' })}
+                      onClick={() => handlePlacementChange('right')}
+                      title="Po prawej"
+                      disabled={isGenerating}
+                    >
+                      <ArrowRight size={18} />
+                    </button>
+                    <button
+                      className={clsx(styles.matrixButton, { [styles.active]: selectedColumns.placement === 'bottom-left' })}
+                      onClick={() => handlePlacementChange('bottom-left')}
+                      title="PoniĹĽej w lewo"
+                      disabled={isGenerating}
+                    >
+                      <ArrowDownLeft size={18} />
+                    </button>
+                    <button
+                      className={clsx(styles.matrixButton, { [styles.active]: selectedColumns.placement === 'bottom' })}
+                      onClick={() => handlePlacementChange('bottom')}
+                      title="PoniĹĽej"
+                      disabled={isGenerating}
+                    >
+                      <ArrowDown size={18} />
+                    </button>
+                    <button
+                      className={clsx(styles.matrixButton, { [styles.active]: selectedColumns.placement === 'bottom-right' })}
+                      onClick={() => handlePlacementChange('bottom-right')}
+                      title="PoniĹĽej w prawo"
+                      disabled={isGenerating}
+                    >
+                      <ArrowDownRight size={18} />
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {error && <div className={styles.error}>{error}</div>}
+
+              {successMessage && (
+                <div className={styles.success}>
+                  <CheckCircle2 size={16} />
+                  {successMessage}
+                </div>
+              )}
             </div>
+          </Panel>
 
-            <Dropzone
-              onFilesSelected={handleFileSelect}
-              accept=".xlsx"
-              title={originalFile ? originalFile.name : t('xlsx.dropzone.selectFile')}
-              description={
-                originalFile ? t('xlsx.dropzone.changeFile') : t('xlsx.dropzone.dropOrClick')
-              }
-              fileIcon={<FileSpreadsheet />}
-              disabled={isGenerating}
-            />
-
-            {!workbook && <div className={styles.instruction}>{t('xlsx.batch.instruction')}</div>}
+          <Panel
+            className={styles.appearancePanel}
+            contentClassName={styles.appearancePanelContent}
+            fullHeight
+            title={t('xlsx.appearance.title')}
+            description={t('xlsx.appearance.description')}
+            compact
+          >
+            <div className={styles.appearanceBody}>
+              <div className={styles.settingsGrid}>
+                <Field label={t('generator.fields.height')} htmlFor="xlsx-height">
+                  <TextInput
+                    id="xlsx-height"
+                    type="number"
+                    min={4}
+                    max={400}
+                    step={2}
+                    value={barcodeStyle.height}
+                    onChange={(event) =>
+                      updateStyleField(
+                        'height',
+                        toNumber(event.target.value, barcodeStyle.height, 4, 400),
+                      )
+                    }
+                    disabled={isGenerating}
+                  />
+                </Field>
+                <Field label={t('generator.fields.barWidth')} htmlFor="xlsx-barwidth">
+                  <TextInput
+                    id="xlsx-barwidth"
+                    type="number"
+                    min={1}
+                    max={12}
+                    step={1}
+                    value={barcodeStyle.barWidth}
+                    onChange={(event) =>
+                      updateStyleField(
+                        'barWidth',
+                        toNumber(event.target.value, barcodeStyle.barWidth, 1, 12),
+                      )
+                    }
+                    disabled={isGenerating}
+                  />
+                </Field>
+                <Field label={t('generator.fields.scale')} htmlFor="xlsx-scale">
+                  <TextInput
+                    id="xlsx-scale"
+                    type="number"
+                    min={0.5}
+                    max={4}
+                    step={0.25}
+                    value={barcodeStyle.scale}
+                    onChange={(event) =>
+                      updateStyleField(
+                        'scale',
+                        toNumber(event.target.value, barcodeStyle.scale, 0.5, 4),
+                      )
+                    }
+                    disabled={isGenerating}
+                  />
+                </Field>
+                <Field label={t('generator.fields.fontSize')} htmlFor="xlsx-fontsize">
+                  <TextInput
+                    id="xlsx-fontsize"
+                    type="number"
+                    min={4}
+                    max={128}
+                    step={1}
+                    value={barcodeStyle.fontSize}
+                    onChange={(event) =>
+                      updateStyleField(
+                        'fontSize',
+                        toNumber(event.target.value, barcodeStyle.fontSize, 4, 128),
+                      )
+                    }
+                    disabled={isGenerating}
+                  />
+                </Field>
+                <Field label={t('generator.fields.margin')} htmlFor="xlsx-margin">
+                  <TextInput
+                    id="xlsx-margin"
+                    type="number"
+                    min={0}
+                    max={80}
+                    step={4}
+                    value={barcodeStyle.margin}
+                    onChange={(event) =>
+                      updateStyleField(
+                        'margin',
+                        toNumber(event.target.value, barcodeStyle.margin, 0, 80),
+                      )
+                    }
+                    disabled={isGenerating}
+                  />
+                </Field>
+                <Field label={t('generator.fields.barColor')} htmlFor="xlsx-barcolor">
+                  <TextInput
+                    id="xlsx-barcolor"
+                    type="color"
+                    value={barcodeStyle.barColor}
+                    onChange={(event) => updateStyleField('barColor', event.target.value)}
+                    disabled={isGenerating}
+                  />
+                </Field>
+                <Field
+                  label={t('generator.fields.backgroundColor')}
+                  htmlFor="xlsx-bgcolor"
+                >
+                  <TextInput
+                    id="xlsx-bgcolor"
+                    type="color"
+                    value={barcodeStyle.backgroundColor}
+                    onChange={(event) => updateStyleField('backgroundColor', event.target.value)}
+                    disabled={isGenerating}
+                  />
+                </Field>
+                <Field
+                  label={t('generator.fields.text')}
+                  htmlFor="xlsx-showtext"
+                >
+                  <SelectInput
+                    id="xlsx-showtext"
+                    value={barcodeStyle.showText ? 'show' : 'hide'}
+                    onChange={(event) =>
+                      updateStyleField('showText', event.target.value === 'show')
+                    }
+                    disabled={isGenerating}
+                  >
+                    <option value="show">{t('generator.textOptions.show')}</option>
+                    <option value="hide">{t('generator.textOptions.hide')}</option>
+                  </SelectInput>
+                </Field>
+              </div>
+              {!isSettingsValid && (
+                <div className={styles.error}>
+                  {t('xlsx.errors.invalidAppearance')}
+                </div>
+              )}
+            </div>
 
             {workbook && (
-              <div className={styles.field}>
-                <label className={styles.label}>Pozycja względem tekstu</label>
-                <div className={styles.placementMatrix}>
-                  <button
-                    className={clsx(styles.matrixButton, { [styles.active]: selectedColumns.placement === 'top-left' })}
-                    onClick={() => handlePlacementChange('top-left')}
-                    title="Powyżej w lewo"
-                    disabled={isGenerating}
+              <>
+                <Button
+                  variant="accent"
+                  onClick={handleReplaceFileClick}
+                  disabled={isGenerating}
+                  fullWidth
+                  className={styles.changeFileButton}
+                >
+                  <UploadCloud size={18} />
+                  {t('xlsx.dropzone.changeFile')}
+                </Button>
+                <div className={styles.actionsRow}>
+                  <Button
+                    variant="secondary"
+                    onClick={handleClearSelection}
+                    fullWidth
+                    disabled={
+                      isGenerating ||
+                      (selectedColumns.sourceColumnIndex === null &&
+                        selectedColumns.targetColumnIndex === null)
+                    }
+                    className={styles.actionButton}
                   >
-                    <ArrowUpLeft size={20} />
-                  </button>
-                  <button
-                    className={clsx(styles.matrixButton, { [styles.active]: selectedColumns.placement === 'top' })}
-                    onClick={() => handlePlacementChange('top')}
-                    title="Powyżej"
-                    disabled={isGenerating}
+                    {t('xlsx.actions.deselect')}
+                  </Button>
+                  <Button
+                    variant="primary"
+                    onClick={handleGenerate}
+                    fullWidth
+                    disabled={!isValidToGenerate || isGenerating}
+                    className={styles.actionButton}
+                    progress={isGenerating && progress ? (progress.current / progress.total) * 100 : undefined}
                   >
-                    <ArrowUp size={20} />
-                  </button>
-                  <button
-                    className={clsx(styles.matrixButton, { [styles.active]: selectedColumns.placement === 'top-right' })}
-                    onClick={() => handlePlacementChange('top-right')}
-                    title="Powyżej w prawo"
-                    disabled={isGenerating}
-                  >
-                    <ArrowUpRight size={20} />
-                  </button>
-                  <button
-                    className={clsx(styles.matrixButton, { [styles.active]: selectedColumns.placement === 'left' })}
-                    onClick={() => handlePlacementChange('left')}
-                    title="Po lewej"
-                    disabled={isGenerating}
-                  >
-                    <ArrowLeft size={20} />
-                  </button>
-                  <div className={styles.matrixCenter}>
-                    <Type size={18} />
-                  </div>
-                  <button
-                    className={clsx(styles.matrixButton, { [styles.active]: selectedColumns.placement === 'right' })}
-                    onClick={() => handlePlacementChange('right')}
-                    title="Po prawej"
-                    disabled={isGenerating}
-                  >
-                    <ArrowRight size={20} />
-                  </button>
-                  <button
-                    className={clsx(styles.matrixButton, { [styles.active]: selectedColumns.placement === 'bottom-left' })}
-                    onClick={() => handlePlacementChange('bottom-left')}
-                    title="Poniżej w lewo"
-                    disabled={isGenerating}
-                  >
-                    <ArrowDownLeft size={20} />
-                  </button>
-                  <button
-                    className={clsx(styles.matrixButton, { [styles.active]: selectedColumns.placement === 'bottom' })}
-                    onClick={() => handlePlacementChange('bottom')}
-                    title="Poniżej"
-                    disabled={isGenerating}
-                  >
-                    <ArrowDown size={20} />
-                  </button>
-                  <button
-                    className={clsx(styles.matrixButton, { [styles.active]: selectedColumns.placement === 'bottom-right' })}
-                    onClick={() => handlePlacementChange('bottom-right')}
-                    title="Poniżej w prawo"
-                    disabled={isGenerating}
-                  >
-                    <ArrowDownRight size={20} />
-                  </button>
+                    {isGenerating
+                      ? progress
+                        ? `${t('generator.actions.generating')} (${Math.round((progress.current / progress.total) * 100)}%)`
+                        : t('generator.actions.generating')
+                      : t('generator.actions.generate')}
+                  </Button>
+                </div>
+              </>
+            )}
+          </Panel>
+        </div>
+
+        <div className={styles.rightColumn}>
+          <Panel
+            className={styles.previewPanel}
+            contentClassName={styles.previewPanelContent}
+            fullHeight
+            title={
+              workbook
+                ? t('xlsx.preview.titleWithSheet', { sheetName: workbook.activeSheetName })
+                : t('xlsx.preview.title')
+            }
+            compact
+          >
+            {workbook ? (
+              <div className={styles.previewWorkspace}>
+                <div className={styles.previewContainer}>
+                  <XlsxWorkbookViewer
+                    workbook={{ ...workbook, rows: validatedRows }}
+                    selectedColumns={selectedColumns}
+                    onColumnClick={handleColumnClick}
+                    barcodeStyle={barcodeStyle}
+                  />
                 </div>
               </div>
+            ) : (
+              <Dropzone
+                className={styles.previewDropzone}
+                onFilesSelected={handleFileSelect}
+                accept=".xlsx"
+                title={originalFile ? originalFile.name : t('xlsx.preview.placeholder')}
+                description={
+                  originalFile ? t('xlsx.dropzone.changeFile') : t('xlsx.dropzone.dropOrClick')
+                }
+                fileIcon={<FileSpreadsheet />}
+                disabled={isGenerating}
+                iconClusterClassName={styles.xlsxDropzoneIconCluster}
+                titleClassName={styles.xlsxDropzoneTitle}
+                descriptionClassName={styles.xlsxDropzoneDescription}
+              />
             )}
-
-            {error && <div className={styles.error}>{error}</div>}
-
-            {successMessage && (
-              <div className={styles.success}>
-                <CheckCircle2 size={18} />
-                {successMessage}
-              </div>
-            )}
-          </div>
-        </Panel>
-
-        <Panel
-          title={t('xlsx.appearance.title')}
-          description={t('xlsx.appearance.description')}
-        >
-          <div className={styles.settingsGrid}>
-            <Field label={t('generator.fields.height')} htmlFor="xlsx-height">
-              <TextInput
-                id="xlsx-height"
-                type="number"
-                min={4}
-                max={400}
-                step={2}
-                value={barcodeStyle.height}
-                onChange={(event) =>
-                  updateStyleField(
-                    'height',
-                    toNumber(event.target.value, barcodeStyle.height, 4, 400),
-                  )
-                }
-                disabled={isGenerating}
-              />
-            </Field>
-            <Field label={t('generator.fields.barWidth')} htmlFor="xlsx-barwidth">
-              <TextInput
-                id="xlsx-barwidth"
-                type="number"
-                min={1}
-                max={12}
-                step={1}
-                value={barcodeStyle.barWidth}
-                onChange={(event) =>
-                  updateStyleField(
-                    'barWidth',
-                    toNumber(event.target.value, barcodeStyle.barWidth, 1, 12),
-                  )
-                }
-                disabled={isGenerating}
-              />
-            </Field>
-            <Field label={t('generator.fields.scale')} htmlFor="xlsx-scale">
-              <TextInput
-                id="xlsx-scale"
-                type="number"
-                min={0.5}
-                max={4}
-                step={0.25}
-                value={barcodeStyle.scale}
-                onChange={(event) =>
-                  updateStyleField(
-                    'scale',
-                    toNumber(event.target.value, barcodeStyle.scale, 0.5, 4),
-                  )
-                }
-                disabled={isGenerating}
-              />
-            </Field>
-            <Field label={t('generator.fields.fontSize')} htmlFor="xlsx-fontsize">
-              <TextInput
-                id="xlsx-fontsize"
-                type="number"
-                min={4}
-                max={128}
-                step={1}
-                value={barcodeStyle.fontSize}
-                onChange={(event) =>
-                  updateStyleField(
-                    'fontSize',
-                    toNumber(event.target.value, barcodeStyle.fontSize, 4, 128),
-                  )
-                }
-                disabled={isGenerating}
-              />
-            </Field>
-            <Field label={t('generator.fields.margin')} htmlFor="xlsx-margin">
-              <TextInput
-                id="xlsx-margin"
-                type="number"
-                min={0}
-                max={80}
-                step={4}
-                value={barcodeStyle.margin}
-                onChange={(event) =>
-                  updateStyleField(
-                    'margin',
-                    toNumber(event.target.value, barcodeStyle.margin, 0, 80),
-                  )
-                }
-                disabled={isGenerating}
-              />
-            </Field>
-            <div className={styles.colorFields}>
-              <Field label={t('generator.fields.barColor')} htmlFor="xlsx-barcolor">
-                <TextInput
-                  id="xlsx-barcolor"
-                  type="color"
-                  value={barcodeStyle.barColor}
-                  onChange={(event) => updateStyleField('barColor', event.target.value)}
-                  disabled={isGenerating}
-                />
-              </Field>
-              <Field
-                label={t('generator.fields.backgroundColor')}
-                htmlFor="xlsx-bgcolor"
-              >
-                <TextInput
-                  id="xlsx-bgcolor"
-                  type="color"
-                  value={barcodeStyle.backgroundColor}
-                  onChange={(event) => updateStyleField('backgroundColor', event.target.value)}
-                  disabled={isGenerating}
-                />
-              </Field>
-            </div>
-            <Field label={t('generator.fields.text')} htmlFor="xlsx-showtext">
-              <SelectInput
-                id="xlsx-showtext"
-                value={barcodeStyle.showText ? 'show' : 'hide'}
-                onChange={(event) =>
-                  updateStyleField('showText', event.target.value === 'show')
-                }
-                disabled={isGenerating}
-              >
-                <option value="show">{t('generator.textOptions.show')}</option>
-                <option value="hide">{t('generator.textOptions.hide')}</option>
-              </SelectInput>
-            </Field>
-          </div>
-          {!isSettingsValid && (
-            <div className={styles.error} style={{ marginTop: '8px' }}>
-              {t('xlsx.errors.invalidAppearance')}
-            </div>
-          )}
-        </Panel>
-
-        {workbook && (
-          <div className={styles.actionsRow}>
-            <Button
-              variant="secondary"
-              onClick={handleClearSelection}
-              fullWidth
-              disabled={
-                isGenerating ||
-                (selectedColumns.sourceColumnIndex === null &&
-                  selectedColumns.targetColumnIndex === null)
-              }
-              className={styles.actionButton}
-            >
-              {t('xlsx.actions.deselect')}
-            </Button>
-            <Button
-              variant="primary"
-              onClick={handleGenerate}
-              fullWidth
-              disabled={!isValidToGenerate || isGenerating}
-              className={styles.actionButton}
-              progress={isGenerating && progress ? (progress.current / progress.total) * 100 : undefined}
-            >
-              {isGenerating 
-                ? progress 
-                  ? `${t('generator.actions.generating')} (${Math.round((progress.current / progress.total) * 100)}%)`
-                  : t('generator.actions.generating')
-                : t('generator.actions.generate')}
-            </Button>
-          </div>
-        )}
+          </Panel>
+        </div>
       </div>
 
-      <div className={styles.rightColumn}>
-        <Panel
-          className={styles.previewPanel}
-          fullHeight
-          title={
-            workbook
-              ? t('xlsx.preview.titleWithSheet', { sheetName: workbook.activeSheetName })
-              : t('xlsx.preview.title')
-          }
+      {navigationBlocker.state === 'blocked' && (
+        <div
+          className={styles.leaveDialogBackdrop}
+          role="presentation"
+          onClick={() => navigationBlocker.reset()}
         >
-          {workbook ? (
-            <div className={styles.previewContainer}>
-              <XlsxWorkbookViewer
-                workbook={{ ...workbook, rows: validatedRows }}
-                selectedColumns={selectedColumns}
-                onColumnClick={handleColumnClick}
-                barcodeStyle={barcodeStyle}
-              />
+          <div
+            className={styles.leaveDialog}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="xlsx-leave-dialog-title"
+            aria-describedby="xlsx-leave-dialog-description"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className={styles.leaveDialogBody}>
+              <span className={styles.leaveDialogEyebrow}>{t('xlsx.leaveGuard.eyebrow')}</span>
+              <h2 id="xlsx-leave-dialog-title" className={styles.leaveDialogTitle}>
+                {t('xlsx.leaveGuard.title')}
+              </h2>
+              <p id="xlsx-leave-dialog-description" className={styles.leaveDialogDescription}>
+                {t('xlsx.leaveGuard.description')}
+              </p>
             </div>
-          ) : (
-            <div className={styles.previewPlaceholder}>{t('xlsx.preview.placeholder')}</div>
-          )}
-        </Panel>
-      </div>
-    </div>
+            <div className={styles.leaveDialogActions}>
+              <Button variant="secondary" onClick={() => navigationBlocker.reset()}>
+                {t('xlsx.leaveGuard.cancel')}
+              </Button>
+              <Button variant="primary" onClick={() => navigationBlocker.proceed()}>
+                {t('xlsx.leaveGuard.confirm')}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }

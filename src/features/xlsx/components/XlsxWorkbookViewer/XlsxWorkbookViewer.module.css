@@ -1,16 +1,18 @@
 .container {
   overflow: auto;
   flex: 1;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  background: var(--bg);
+  border: 1px solid var(--md-sys-color-outline);
+  border-radius: var(--radius-xs);
+  background: var(--md-sys-color-outline-variant); /* Grid line color */
   min-height: 0;
+  position: relative;
 }
 
 .grid {
   display: grid;
-  border-collapse: collapse;
+  gap: 1px; /* The actual grid lines */
   min-width: 100%;
+  background: var(--md-sys-color-outline-variant);
 }
 
 .headerRow {
@@ -18,79 +20,94 @@
 }
 
 .cell {
-  padding: 8px;
-  border-right: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
-  font-size: 13px;
+  padding: 4px 8px;
+  font-size: 0.8125rem;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   min-height: 32px;
-  background: white;
+  background: var(--md-sys-color-surface-container-lowest);
+  color: var(--md-sys-color-on-surface);
+  display: flex;
+  align-items: center;
 }
 
 .headerCell {
-  background: var(--surface-soft);
-  font-weight: 600;
+  background: var(--md-sys-color-surface-container-high);
+  color: var(--md-sys-color-on-surface-variant);
+  font-weight: 500;
+  font-size: 0.75rem;
   text-align: center;
   position: sticky;
   top: 0;
   z-index: 10;
   cursor: pointer;
   user-select: none;
-  border-right: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 32px;
+  box-shadow: 0 1px 0 var(--md-sys-color-outline-variant); /* Keep line when sticky */
 }
 
 .headerCell:hover {
-  background: var(--border);
+  background: var(--md-sys-color-surface-container-highest);
 }
 
 .rowNumberCell {
-  background: var(--surface-soft);
-  font-weight: 600;
+  background: var(--md-sys-color-surface-container-high);
+  color: var(--md-sys-color-on-surface-variant);
+  font-weight: 500;
+  font-size: 0.75rem;
   text-align: center;
   position: sticky;
   left: 0;
   z-index: 5;
-  border-right: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 1px 0 0 var(--md-sys-color-outline-variant); /* Keep line when sticky */
 }
 
 .sourceColumn {
-  background: var(--primary-soft) !important;
+  background: var(--md-sys-color-primary-container) !important;
+  color: var(--md-sys-color-on-primary-container) !important;
 }
 
 .targetColumn {
-  background: var(--secondary-soft) !important;
+  background: var(--md-sys-color-secondary-container) !important;
+  color: var(--md-sys-color-on-secondary-container) !important;
 }
 
 .headerCell.sourceSelected {
-  background: var(--primary);
-  color: white;
+  background: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
+  z-index: 11;
 }
 
 .headerCell.targetSelected {
-  background: var(--secondary);
-  color: white;
+  background: var(--md-sys-color-secondary);
+  color: var(--md-sys-color-on-secondary);
+  z-index: 11;
 }
 
 .invalidCell {
-  background: var(--accent-soft) !important;
-  color: var(--accent);
+  background: var(--md-sys-color-error-container) !important;
+  color: var(--md-sys-color-on-error-container) !important;
   position: relative;
 }
 
 .targetColumn.invalidCell {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--md-sys-color-error);
   outline-offset: -2px;
 }
 
 .previewCell {
-  padding: 0;
+  padding: 2px;
   display: flex;
   align-items: center;
   justify-content: center;
+  background-color: var(--md-sys-color-surface-container-lowest);
 }
 
 .invalidCell::after {
@@ -100,5 +117,27 @@
   right: 0;
   border-style: solid;
   border-width: 0 8px 8px 0;
-  border-color: transparent var(--accent) transparent transparent;
+  border-color: transparent var(--md-sys-color-error) transparent transparent;
 }
+
+/* Custom scrollbar for spreadsheet */
+.container::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.container::-webkit-scrollbar-track {
+  background: var(--md-sys-color-surface-container-low);
+}
+
+.container::-webkit-scrollbar-thumb {
+  background: var(--md-sys-color-outline);
+  border-radius: 5px;
+  border: 2px solid var(--md-sys-color-surface-container-low);
+}
+
+.container::-webkit-scrollbar-thumb:hover {
+  background: var(--md-sys-color-on-surface-variant);
+}
+
+

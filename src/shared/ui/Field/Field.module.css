@@ -1,22 +1,26 @@
 .field {
-  display: grid;
-  gap: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem; /* 6px */
 }
 
 .copy {
-  display: grid;
-  gap: 0.25rem;
+  display: flex;
+  flex-direction: column;
+  padding-left: 0.125rem;
 }
 
 .label {
-  color: var(--text);
-  font-size: 0.9rem;
-  font-weight: 700;
+  color: var(--md-sys-color-on-surface-variant);
+  font-size: 0.75rem; /* Label small/medium for compact fields */
+  font-weight: 500;
+  letter-spacing: 0.1px;
 }
+
 
 .description {
   margin: 0;
-  color: var(--muted);
-  font-size: 0.84rem;
-  line-height: 1.45;
+  color: var(--md-sys-color-on-surface-variant);
+  font-size: 0.75rem; /* Body small */
+  line-height: 1.4;
 }

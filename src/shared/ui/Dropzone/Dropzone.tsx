@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { UploadCloud } from 'lucide-react'
+import clsx from 'clsx'
 import styles from './Dropzone.module.css'
 
 type DropzoneProps = {
@@ -11,6 +12,10 @@ type DropzoneProps = {
   onFilesSelected?: (files: File[]) => void
   accept?: string
   disabled?: boolean
+  className?: string
+  iconClusterClassName?: string
+  titleClassName?: string
+  descriptionClassName?: string
 }
 
 export function Dropzone({
@@ -21,6 +26,10 @@ export function Dropzone({
   onFilesSelected,
   accept,
   disabled = false,
+  className,
+  iconClusterClassName,
+  titleClassName,
+  descriptionClassName,
 }: DropzoneProps) {
   const { t } = useTranslation()
 
@@ -33,7 +42,7 @@ export function Dropzone({
   }
 
   return (
-    <label className={`${styles.dropzone} ${disabled ? styles.disabled : ''}`}>
+    <label className={clsx(styles.dropzone, className, disabled && styles.disabled)}>
       <input
         type="file"
         className={styles.hiddenInput}
@@ -41,15 +50,15 @@ export function Dropzone({
         accept={accept}
         disabled={disabled}
       />
-      <div className={styles.iconCluster} aria-hidden="true">
+      <div className={clsx(styles.iconCluster, iconClusterClassName)} aria-hidden="true">
         {fileIcon && <span className={styles.typeIcon}>{fileIcon}</span>}
         <span className={styles.uploadIcon}>
           <UploadCloud />
         </span>
       </div>
       <div className={styles.copy}>
-        <p className={styles.title}>{title ?? t('dropzone.defaultTitle')}</p>
-        <p className={styles.description}>
+        <p className={clsx(styles.title, titleClassName)}>{title ?? t('dropzone.defaultTitle')}</p>
+        <p className={clsx(styles.description, descriptionClassName)}>
           {description ?? t('dropzone.defaultDescription')}
         </p>
       </div>
