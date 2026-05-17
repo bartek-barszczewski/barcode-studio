@@ -6,7 +6,6 @@ import {
   FileText,
   Info,
   Library,
-  PlayCircle,
   ScanBarcode,
   ShieldCheck,
 } from 'lucide-react'
@@ -120,9 +119,16 @@ export function HomePage() {
           title={t('home.video.title')}
           description={t('home.video.description')}
         >
-          <div className={styles.videoPlaceholder}>
-            <PlayCircle aria-hidden="true" size={56} />
-            <span>{t('home.video.placeholder')}</span>
+          <div className={styles.videoFrame}>
+            <video
+              className={styles.video}
+              controls
+              muted
+              playsInline
+              preload="metadata"
+            >
+              <source src="/barcode-studio-video.webm" type="video/webm" />
+            </video>
           </div>
         </Panel>
 

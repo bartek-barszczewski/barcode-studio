@@ -249,25 +249,25 @@
   min-width: 0;
 }
 
-.videoPlaceholder {
+.videoFrame {
   min-height: 24rem;
   border-radius: calc(var(--radius-xl) + 4px);
-  border: 1.5px dashed rgba(112, 121, 119, 0.34);
+  border: 1px solid rgba(112, 121, 119, 0.24);
   background:
-    linear-gradient(135deg, rgba(113, 247, 237, 0.12), rgba(228, 223, 255, 0.38)),
+    linear-gradient(135deg, rgba(113, 247, 237, 0.08), rgba(228, 223, 255, 0.2)),
     var(--md-sys-color-surface-container-lowest);
-  display: grid;
-  place-items: center;
-  text-align: center;
-  gap: 0.8rem;
-  padding: 1.5rem;
-  color: var(--md-sys-color-on-surface-variant);
+  overflow: hidden;
+  box-shadow: var(--md-sys-elevation-level1);
 }
 
-.videoPlaceholder span {
-  max-width: 22rem;
-  font-size: 1rem;
-  line-height: 1.5;
+.video {
+  display: block;
+  width: 100%;
+  min-height: 24rem;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  background: #000;
 }
 
 .featureCards {
@@ -451,7 +451,11 @@
     grid-template-columns: 1fr;
   }
 
-  .videoPlaceholder {
+  .videoFrame {
+    min-height: 18rem;
+  }
+
+  .video {
     min-height: 18rem;
   }
 
