@@ -21,7 +21,6 @@ const BWIP_JS_FORMATS: Partial<Record<BarcodeType, string>> = {
   PHARMACODE: 'pharmacode',
 };
 
-const MIN_QR_SIZE = 240;
 const BWIP_MAX_TEXT_SIZE = 25;
 
 const getRenderScale = (scale: number) => (Number.isFinite(scale) && scale > 0 ? scale : 1);
@@ -68,7 +67,7 @@ const injectTextToCanvas = (
 
 const renderQrCodeCanvas = async (input: BarcodeFormState): Promise<OffscreenCanvas> => {
   const scale = getRenderScale(input.scale);
-  const size = Math.max(MIN_QR_SIZE, Math.round(input.height)) * scale;
+  const size = Math.max(1, Math.round(input.height)) * scale;
 
   const canvas = new OffscreenCanvas(size, size);
 
