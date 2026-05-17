@@ -4,7 +4,7 @@
   padding: clamp(1.25rem, 3vw, 1.75rem);
   min-width: 0;
   border: none;
-  box-shadow: none; /* MD3 uses color for elevation in container-level panels */
+  box-shadow: var(--md-sys-elevation-level1);
 }
 
 .compact {

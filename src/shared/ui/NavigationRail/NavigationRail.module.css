@@ -11,6 +11,7 @@
   border-right: 1px solid var(--md-sys-color-outline-variant, rgba(0, 0, 0, 0.05));
   padding: 1.5rem 0.75rem;
   box-sizing: border-box;
+  box-shadow: var(--md-sys-elevation-level1);
 }
 
 .topSection {
@@ -121,6 +122,7 @@
     border-right: none;
     border-top: 1px solid rgba(0, 0, 0, 0.05);
     justify-content: space-around;
+    box-shadow: var(--md-sys-elevation-level2);
   }
 
   .topSection, .brandText, .label, .bottomSection {

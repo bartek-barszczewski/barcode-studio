@@ -76,6 +76,7 @@ export function BarcodeSetSettingsSidebar({
                   value={item.value}
                   onChange={(e) => onUpdate(item.id, { value: e.target.value })}
                   placeholder={t('generator.placeholders.value')}
+                  maxLength={512}
                 />
               </Field>
             </section>

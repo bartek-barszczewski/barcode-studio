@@ -56,6 +56,7 @@
   padding: 2rem;
   position: relative;
   overflow: hidden;
+  box-shadow: var(--md-sys-elevation-level1);
 }
 
 /* Subtle grid for the preview box */

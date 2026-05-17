@@ -45,7 +45,7 @@
   border: none;
   border-radius: var(--radius-xs);
   background: var(--md-sys-color-surface-container-high);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--md-sys-elevation-level2);
   padding: 4px;
 }
 
@@ -78,4 +78,3 @@
   padding: 12px;
   text-align: center;
 }
-
