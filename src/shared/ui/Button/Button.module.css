@@ -21,6 +21,9 @@
   outline: none;
   user-select: none;
   box-sizing: border-box;
+  overflow: hidden;
+  background-color: var(--button-bg);
+  color: var(--button-fg);
 }
 
 
@@ -47,7 +50,7 @@
   opacity: 0.12;
 }
 
-.button:disabled {
+.button:disabled:not(.hasProgress) {
   cursor: not-allowed;
   background-color: rgba(25, 28, 27, 0.12) !important;
   color: rgba(25, 28, 27, 0.38) !important;
@@ -63,7 +66,7 @@
   top: 0;
   left: 0;
   height: 100%;
-  background: rgba(255, 255, 255, 0.2);
+  background-color: var(--button-progress-fill, currentColor);
   transition: width 0.2s ease;
   z-index: 1;
 }
@@ -83,8 +86,9 @@
 }
 
 .primary {
-  background-color: var(--md-sys-color-primary);
-  color: var(--md-sys-color-on-primary);
+  --button-bg: var(--md-sys-color-primary);
+  --button-fg: var(--md-sys-color-on-primary);
+  --button-progress-fill: var(--md-sys-color-primary);
   box-shadow: var(--md-sys-elevation-level1);
 }
 
@@ -93,18 +97,21 @@
 }
 
 .secondary {
-  background-color: var(--md-sys-color-secondary);
-  color: var(--md-sys-color-on-secondary);
+  --button-bg: var(--md-sys-color-secondary);
+  --button-fg: var(--md-sys-color-on-secondary);
+  --button-progress-fill: var(--md-sys-color-secondary);
 }
 
 .accent {
-  background-color: var(--md-sys-color-tertiary);
-  color: var(--md-sys-color-on-tertiary);
+  --button-bg: var(--md-sys-color-tertiary);
+  --button-fg: var(--md-sys-color-on-tertiary);
+  --button-progress-fill: var(--md-sys-color-tertiary);
 }
 
 .ghost {
-  background-color: transparent;
-  color: var(--md-sys-color-primary);
+  --button-bg: transparent;
+  --button-fg: var(--md-sys-color-primary);
+  --button-progress-fill: var(--md-sys-color-primary);
   border: 1px solid var(--md-sys-color-outline);
   border-radius: var(--radius-sm); /* Outlined buttons often have smaller radius in some variants, but pill is also fine */
 }
@@ -115,4 +122,24 @@
 
 .fullWidth {
   width: 100%;
+}
+
+.hasProgress.primary {
+  --button-bg: var(--md-sys-color-primary-container);
+  --button-fg: var(--md-sys-color-on-primary);
+}
+
+.hasProgress.secondary {
+  --button-bg: var(--md-sys-color-secondary-container);
+  --button-fg: var(--md-sys-color-on-secondary);
+}
+
+.hasProgress.accent {
+  --button-bg: var(--md-sys-color-tertiary-container);
+  --button-fg: var(--md-sys-color-on-tertiary);
+}
+
+.hasProgress.ghost {
+  --button-bg: color-mix(in srgb, var(--md-sys-color-primary) 14%, transparent);
+  --button-fg: var(--md-sys-color-on-primary-container);
 }

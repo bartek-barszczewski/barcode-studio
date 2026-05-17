@@ -12,11 +12,14 @@ export type BarcodeStyle = Omit<BarcodeFormState, 'type' | 'value'>;
 interface WriteWorkbookParams {
   sourceFile: File;
   sheetName: string;
-  targetColumnIndex: number;
-  placement: XlsxPlacement;
   barcodeType: BarcodeType;
   barcodeStyle: BarcodeStyle;
-  sourceRows: { rowNumber: number; value: string }[];
+  placement: XlsxPlacement;
+  sourceColumns: {
+    sourceColumnIndex: number;
+    rows: { rowNumber: number; value: string }[];
+  }[];
+  onProgress?: (progress: { current: number; total: number }) => void;
 }
 
 export const createOutputFileName = (originalName: string): string => {
@@ -28,40 +31,48 @@ export const createOutputFileName = (originalName: string): string => {
   return `${name}_barcodes${ext}`;
 };
 
-const getBarcodeColumnIndex = (
-  targetColumnIndex: number,
-  placement: XlsxPlacement,
-): number => {
-  if (placement === 'left' || placement === 'right') {
-    return targetColumnIndex;
-  }
-
-  if (placement.endsWith('-left')) {
-    return Math.max(0, targetColumnIndex - 1);
-  }
-
-  if (placement.endsWith('-right')) {
-    return targetColumnIndex + 1;
-  }
-
-  return targetColumnIndex;
+const isLeftPlacement = (placement: XlsxPlacement): boolean => {
+  return placement === 'left' || placement === 'top-left' || placement === 'bottom-left';
 };
 
-const getInsertedTargetRows = (
-  originalRowNumbers: number[],
-  placement: XlsxPlacement,
-): Map<number, number> => {
-  const targetRows = new Map<number, number>();
+const isRightPlacement = (placement: XlsxPlacement): boolean => {
+  return placement === 'right' || placement === 'top-right' || placement === 'bottom-right';
+};
 
-  originalRowNumbers.forEach((originalRowNumber, index) => {
-    const targetRowNumber = placement.startsWith('top')
-      ? originalRowNumber + index
-      : originalRowNumber + index + 1;
+const isTopPlacement = (placement: XlsxPlacement): boolean => {
+  return placement === 'top' || placement === 'top-left' || placement === 'top-right';
+};
 
-    targetRows.set(originalRowNumber, targetRowNumber);
-  });
+const isBottomPlacement = (placement: XlsxPlacement): boolean => {
+  return placement === 'bottom' || placement === 'bottom-left' || placement === 'bottom-right';
+};
 
-  return targetRows;
+const countLessThan = (values: number[], target: number): number => {
+  let count = 0;
+
+  for (const value of values) {
+    if (value >= target) {
+      break;
+    }
+
+    count += 1;
+  }
+
+  return count;
+};
+
+const countLessThanOrEqual = (values: number[], target: number): number => {
+  let count = 0;
+
+  for (const value of values) {
+    if (value > target) {
+      break;
+    }
+
+    count += 1;
+  }
+
+  return count;
 };
 
 export const writeWorkbookWithBarcodes = async (
@@ -70,16 +81,31 @@ export const writeWorkbookWithBarcodes = async (
   const {
     sourceFile,
     sheetName,
-    targetColumnIndex,
-    placement,
     barcodeType,
     barcodeStyle,
-    sourceRows,
+    placement,
+    sourceColumns,
+    onProgress,
   } = params;
+
+  const sourceEntries = sourceColumns.flatMap((sourceColumn) =>
+    sourceColumn.rows.map((row) => ({
+      sourceColumnIndex: sourceColumn.sourceColumnIndex,
+      rowNumber: row.rowNumber,
+      value: row.value,
+    })),
+  );
+
+  let currentStep = 0;
+  const totalSteps = Math.max(sourceEntries.length * 2 + 1, 1);
+  const reportProgress = () => {
+    onProgress?.({ current: currentStep, total: totalSteps });
+  };
 
   const workbook = new ExcelJS.Workbook();
   const arrayBuffer = await sourceFile.arrayBuffer();
   await workbook.xlsx.load(arrayBuffer);
+  reportProgress();
 
   const worksheet = workbook.getWorksheet(sheetName);
   if (!worksheet) {
@@ -87,11 +113,20 @@ export const writeWorkbookWithBarcodes = async (
   }
 
   // 1. Generate all barcodes first to avoid async issues during structural changes
-  const barcodeMap = new Map<number, { base64: string; width: number; height: number }>();
+  const barcodeMap = new Map<
+    string,
+    {
+      sourceColumnIndex: number;
+      rowNumber: number;
+      base64: string;
+      width: number;
+      height: number;
+    }
+  >();
   const CONCURRENCY_LIMIT = 20;
 
-  for (let i = 0; i < sourceRows.length; i += CONCURRENCY_LIMIT) {
-    const chunk = sourceRows.slice(i, i + CONCURRENCY_LIMIT);
+  for (let i = 0; i < sourceEntries.length; i += CONCURRENCY_LIMIT) {
+    const chunk = sourceEntries.slice(i, i + CONCURRENCY_LIMIT);
     const chunkResults = await Promise.all(
       chunk.map(async (rowData) => {
         const barcodeState: BarcodeFormState = {
@@ -111,93 +146,122 @@ export const writeWorkbookWithBarcodes = async (
 
     for (const res of chunkResults) {
       if (!res.error && res.dataUrl) {
-        barcodeMap.set(res.rowData.rowNumber, {
+        barcodeMap.set(`${res.rowData.sourceColumnIndex}:${res.rowData.rowNumber}`, {
+          sourceColumnIndex: res.rowData.sourceColumnIndex,
+          rowNumber: res.rowData.rowNumber,
           base64: dataUrlToBase64(res.dataUrl),
           width: res.width,
           height: res.height,
         });
       }
+
+      currentStep += 1;
+      reportProgress();
     }
   }
 
-  const originalRowNumbers = Array.from(barcodeMap.keys()).sort((a, b) => a - b);
+  const sourceColumnIndexes = Array.from(
+    new Set(sourceColumns.map((sourceColumn) => sourceColumn.sourceColumnIndex)),
+  ).sort((a, b) => a - b);
+  const sourceRowNumbers = Array.from(new Set(sourceEntries.map((entry) => entry.rowNumber))).sort(
+    (a, b) => a - b,
+  );
 
-  // 2. Apply structural changes first. ExcelJS does not shift existing image
-  // anchors when rows are spliced, so images must be added only after all row
-  // insertions are finished.
-  if (placement.startsWith('top') || placement.startsWith('bottom')) {
-    const targetRows = getInsertedTargetRows(originalRowNumbers, placement);
-    const rowsToInsertDescending = [...originalRowNumbers].sort((a, b) => b - a);
+  if (isLeftPlacement(placement)) {
+    for (const sourceColumnIndex of [...sourceColumnIndexes].sort((a, b) => b - a)) {
+      worksheet.spliceColumns(sourceColumnIndex + 1, 0, []);
+    }
+  }
 
-    for (const originalRowNumber of rowsToInsertDescending) {
-      const insertAtRow = placement.startsWith('top')
-        ? originalRowNumber
-        : originalRowNumber + 1;
+  if (isRightPlacement(placement)) {
+    for (const sourceColumnIndex of [...sourceColumnIndexes].sort((a, b) => b - a)) {
+      worksheet.spliceColumns(sourceColumnIndex + 2, 0, []);
+    }
+  }
 
-      worksheet.spliceRows(insertAtRow, 0, []);
+  if (isTopPlacement(placement)) {
+    for (const sourceRowNumber of [...sourceRowNumbers].sort((a, b) => b - a)) {
+      worksheet.spliceRows(sourceRowNumber, 0, []);
+    }
+  }
+
+  if (isBottomPlacement(placement)) {
+    for (const sourceRowNumber of [...sourceRowNumbers].sort((a, b) => b - a)) {
+      worksheet.spliceRows(sourceRowNumber + 1, 0, []);
+    }
+  }
+
+  const mapOriginalColumnIndex = (sourceColumnIndex: number): number => {
+    if (isLeftPlacement(placement)) {
+      return sourceColumnIndex + countLessThanOrEqual(sourceColumnIndexes, sourceColumnIndex);
     }
 
-    for (const originalRowNumber of originalRowNumbers) {
-      const data = barcodeMap.get(originalRowNumber);
-      const targetRowNumber = targetRows.get(originalRowNumber);
-      if (!data || !targetRowNumber) {
-        continue;
-      }
-
-      const barcodeColIndex = getBarcodeColumnIndex(targetColumnIndex, placement);
-      const imageId = workbook.addImage({
-        base64: data.base64,
-        extension: 'png',
-      });
-
-      const rowHeightPt = data.height * 0.75;
-      const row = worksheet.getRow(targetRowNumber);
-      row.height = Math.min(Math.max(rowHeightPt, 24), 400);
-
-      const col = worksheet.getColumn(barcodeColIndex + 1);
-      const estimatedColWidth = (data.width + 10) / 7;
-      col.width = Math.max(col.width || 0, estimatedColWidth, 12);
-
-      worksheet.addImage(imageId, {
-        tl: { col: barcodeColIndex, row: targetRowNumber - 1 },
-        ext: { width: data.width, height: data.height },
-        editAs: 'oneCell',
-      });
+    if (isRightPlacement(placement)) {
+      return sourceColumnIndex + countLessThan(sourceColumnIndexes, sourceColumnIndex);
     }
-  } else {
-    // For Left/Right placement, we use the target column directly (as seen in preview)
-    // The UI already checks if this column is empty for the affected rows.
-    
-    for (const originalRowNum of originalRowNumbers) {
-      const data = barcodeMap.get(originalRowNum);
+
+    return sourceColumnIndex;
+  };
+
+  const mapOriginalRowNumber = (sourceRowNumber: number): number => {
+    if (isTopPlacement(placement)) {
+      return sourceRowNumber + countLessThanOrEqual(sourceRowNumbers, sourceRowNumber);
+    }
+
+    if (isBottomPlacement(placement)) {
+      return sourceRowNumber + countLessThan(sourceRowNumbers, sourceRowNumber);
+    }
+
+    return sourceRowNumber;
+  };
+
+  for (const sourceColumn of sourceColumns) {
+    for (const rowData of sourceColumn.rows) {
+      const data = barcodeMap.get(`${sourceColumn.sourceColumnIndex}:${rowData.rowNumber}`);
       if (!data) {
         continue;
       }
 
+      const sourceColumnIndex = mapOriginalColumnIndex(sourceColumn.sourceColumnIndex);
+      const sourceRowNumber = mapOriginalRowNumber(rowData.rowNumber);
+      const barcodeColumnIndex = isLeftPlacement(placement)
+        ? sourceColumnIndex - 1
+        : isRightPlacement(placement)
+          ? sourceColumnIndex + 1
+          : sourceColumnIndex;
+      const barcodeRowNumber = isTopPlacement(placement)
+        ? sourceRowNumber - 1
+        : isBottomPlacement(placement)
+          ? sourceRowNumber + 1
+          : sourceRowNumber;
+      const col = worksheet.getColumn(barcodeColumnIndex + 1);
+      const row = worksheet.getRow(barcodeRowNumber);
+
       const imageId = workbook.addImage({
         base64: data.base64,
         extension: 'png',
       });
 
-      // Update row height if the barcode is taller than the existing row
       const rowHeightPt = data.height * 0.75;
-      const row = worksheet.getRow(originalRowNum);
       row.height = Math.max(row.height || 0, rowHeightPt, 24);
 
-      // Update column width
-      const col = worksheet.getColumn(targetColumnIndex + 1);
       const estimatedColWidth = (data.width + 10) / 7;
       col.width = Math.max(col.width || 0, estimatedColWidth, 12);
 
       worksheet.addImage(imageId, {
-        tl: { col: targetColumnIndex, row: originalRowNum - 1 },
+        tl: { col: barcodeColumnIndex, row: barcodeRowNumber - 1 },
         ext: { width: data.width, height: data.height },
         editAs: 'oneCell',
       });
+
+      currentStep += 1;
+      reportProgress();
     }
   }
 
   const buffer = await workbook.xlsx.writeBuffer();
+  currentStep = totalSteps;
+  reportProgress();
   return new Blob([buffer], {
     type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
   });

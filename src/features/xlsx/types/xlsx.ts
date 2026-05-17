@@ -18,6 +18,7 @@ export interface WorkbookPreview {
   sheetNames: string[];
   activeSheetName: string;
   rows: CellPreview[][];
+  detectedSourceColumnIndexes: number[];
 }
 
 export type XlsxPlacement =

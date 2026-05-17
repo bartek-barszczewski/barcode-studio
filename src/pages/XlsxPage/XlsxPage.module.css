@@ -94,7 +94,7 @@
   display: flex;
   flex-direction: column;
   min-height: 0;
-  width: calc(65% - 0.5rem);
+  width: calc(50% - 1.5rem);
   max-width: 100%;
 }
 
@@ -143,7 +143,7 @@
   border-color: var(--md-sys-color-outline);
 }
 
-.matrixButton.active {
+.active {
   background: var(--md-sys-color-primary);
   border-color: var(--md-sys-color-primary);
   color: var(--md-sys-color-on-primary);

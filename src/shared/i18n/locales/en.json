@@ -186,6 +186,19 @@
     "actions": {
       "deselect": "Deselect"
     },
+    "placement": {
+      "label": "Position relative to text",
+      "options": {
+        "topLeft": "Above left",
+        "top": "Above",
+        "topRight": "Above right",
+        "left": "Left",
+        "right": "Right",
+        "bottomLeft": "Below left",
+        "bottom": "Below",
+        "bottomRight": "Below right"
+      }
+    },
     "leaveGuard": {
       "eyebrow": "Unsaved work",
       "title": "Leave the XLSX tab?",

@@ -31,6 +31,9 @@ export function Button({
         className,
       )}
       type={type}
+      aria-valuenow={showProgress ? progress : undefined}
+      aria-valuemin={showProgress ? 0 : undefined}
+      aria-valuemax={showProgress ? 100 : undefined}
       {...props}
     >
       {showProgress && (
