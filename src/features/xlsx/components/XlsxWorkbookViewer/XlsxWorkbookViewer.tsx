@@ -1,13 +1,14 @@
 import React from 'react';
-import type { WorkbookPreview, SelectedColumns } from '../../types/xlsx';
+import type { WorkbookPreview } from '../../types/xlsx';
 import styles from './XlsxWorkbookViewer.module.css';
 import clsx from 'clsx';
 import { SimpleBarcodePreview } from '../../../barcode/components/SimpleBarcodePreview/SimpleBarcodePreview';
 
 interface XlsxWorkbookViewerProps {
   workbook: WorkbookPreview;
-  selectedColumns: SelectedColumns;
-  onColumnClick: (columnIndex: number) => void;
+  sourceColumnIndexes: number[];
+  barcodeColumnIndexes: number[];
+  onColumnClick?: (columnIndex: number) => void;
   barcodeStyle: {
     height: number;
     barWidth: number;
@@ -22,23 +23,23 @@ interface XlsxWorkbookViewerProps {
 
 export const XlsxWorkbookViewer: React.FC<XlsxWorkbookViewerProps> = ({
   workbook,
-  selectedColumns,
+  sourceColumnIndexes,
+  barcodeColumnIndexes,
   onColumnClick,
   barcodeStyle,
 }) => {
   if (workbook.rows.length === 0) return null;
 
   const firstRow = workbook.rows[0];
+  const sourceColumnIndexSet = new Set(sourceColumnIndexes);
+  const barcodeColumnIndexSet = new Set(barcodeColumnIndexes);
 
   // Calculate dynamic grid template columns
   const gridTemplateColumns = [
     '50px', // Row number column
     ...firstRow.map((cell) => {
-      if (cell.columnIndex === selectedColumns.targetColumnIndex && selectedColumns.sourceColumnIndex !== null) {
-        // If placement is top/bottom, we don't necessarily need a super wide column
-        // but for left/right it's essential. For now keep it wide for all target columns
-        // to ensure the barcode is visible.
-        return '200px'; 
+      if (barcodeColumnIndexSet.has(cell.columnIndex)) {
+        return '200px';
       }
       return '120px';
     })
@@ -57,10 +58,11 @@ export const XlsxWorkbookViewer: React.FC<XlsxWorkbookViewerProps> = ({
             <div
               key={`header-${cell.columnIndex}`}
               className={clsx(styles.headerCell, {
-                [styles.sourceSelected]: selectedColumns.sourceColumnIndex === cell.columnIndex,
-                [styles.targetSelected]: selectedColumns.targetColumnIndex === cell.columnIndex,
+                [styles.sourceSelected]: sourceColumnIndexSet.has(cell.columnIndex),
+                [styles.targetSelected]: barcodeColumnIndexSet.has(cell.columnIndex),
               })}
-              onClick={() => onColumnClick(cell.columnIndex)}
+              onClick={onColumnClick ? () => onColumnClick(cell.columnIndex) : undefined}
+              style={{ cursor: onColumnClick ? 'pointer' : 'default' }}
             >
               {cell.columnLetter}
             </div>
@@ -75,8 +77,8 @@ export const XlsxWorkbookViewer: React.FC<XlsxWorkbookViewerProps> = ({
               <div
                 key={`cell-${rowIndex}-${colIndex}`}
                 className={clsx(styles.cell, {
-                  [styles.sourceColumn]: selectedColumns.sourceColumnIndex === cell.columnIndex,
-                  [styles.targetColumn]: selectedColumns.targetColumnIndex === cell.columnIndex,
+                  [styles.sourceColumn]: sourceColumnIndexSet.has(cell.columnIndex),
+                  [styles.targetColumn]: barcodeColumnIndexSet.has(cell.columnIndex),
                   [styles.invalidCell]: cell.isValid === false,
                   [styles.previewCell]: !!cell.barcodePreviewData,
                 })}

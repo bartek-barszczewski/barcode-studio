@@ -137,6 +137,19 @@
     "actions": {
       "deselect": "Odznacz"
     },
+    "placement": {
+      "label": "Pozycja względem tekstu",
+      "options": {
+        "topLeft": "Powyżej w lewo",
+        "top": "Powyżej",
+        "topRight": "Powyżej w prawo",
+        "left": "Po lewej",
+        "right": "Po prawej",
+        "bottomLeft": "Poniżej w lewo",
+        "bottom": "Poniżej",
+        "bottomRight": "Poniżej w prawo"
+      }
+    },
     "leaveGuard": {
       "eyebrow": "Niezapisane zmiany",
       "title": "Opuścić zakładkę XLSX?",

@@ -1,10 +1,23 @@
 import { useEffect, useMemo, useRef, useState, type ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useBlocker } from 'react-router-dom';
-import { ArrowDown, ArrowDownLeft, ArrowDownRight, ArrowLeft, ArrowRight, ArrowUp, ArrowUpLeft, ArrowUpRight, CheckCircle2, FileSpreadsheet, Type, UploadCloud } from 'lucide-react';
+import {
+  ArrowDown,
+  ArrowDownLeft,
+  ArrowDownRight,
+  ArrowLeft,
+  ArrowRight,
+  ArrowUp,
+  ArrowUpLeft,
+  ArrowUpRight,
+  CheckCircle2,
+  FileSpreadsheet,
+  Type,
+  UploadCloud,
+} from 'lucide-react';
 import { saveAs } from 'file-saver';
 import type { BarcodeType } from '../../features/barcode/types/barcode';
-import type { WorkbookPreview, SelectedColumns, XlsxPlacement, CellPreview } from '../../features/xlsx/types/xlsx';
+import type { WorkbookPreview, CellPreview, XlsxPlacement } from '../../features/xlsx/types/xlsx';
 import styles from './XlsxPage.module.css';
 import { Dropzone } from '../../shared/ui/Dropzone/Dropzone';
 import { Panel } from '../../shared/ui/Panel/Panel';
@@ -19,8 +32,88 @@ import { Field } from '../../shared/ui/Field/Field';
 import { TextInput } from '../../shared/ui/TextInput/TextInput';
 import { SelectInput } from '../../shared/ui/SelectInput/SelectInput';
 import { toNumber } from '../../shared/utils/number';
-import clsx from 'clsx';
 import ExcelJS from 'exceljs';
+import { getColumnLetter } from '../../features/xlsx/utils/columnUtils';
+import clsx from 'clsx';
+
+const getCellTextValue = (value: ExcelJS.CellValue): string => {
+  if (value === null || value === undefined) {
+    return '';
+  }
+
+  if (typeof value === 'object' && 'result' in value) {
+    return String(value.result ?? '');
+  }
+
+  if (typeof value === 'object' && 'text' in value) {
+    return String(value.text ?? '');
+  }
+
+  if (typeof value === 'object' && 'formula' in value) {
+    return String(value.formula ?? '');
+  }
+
+  return String(value);
+};
+
+const PLACEMENT_OPTIONS: {
+  value: XlsxPlacement;
+  icon: typeof ArrowUp;
+  labelKey: string;
+}[] = [
+  { value: 'top-left', icon: ArrowUpLeft, labelKey: 'xlsx.placement.options.topLeft' },
+  { value: 'top', icon: ArrowUp, labelKey: 'xlsx.placement.options.top' },
+  { value: 'top-right', icon: ArrowUpRight, labelKey: 'xlsx.placement.options.topRight' },
+  { value: 'left', icon: ArrowLeft, labelKey: 'xlsx.placement.options.left' },
+  { value: 'right', icon: ArrowRight, labelKey: 'xlsx.placement.options.right' },
+  { value: 'bottom-left', icon: ArrowDownLeft, labelKey: 'xlsx.placement.options.bottomLeft' },
+  { value: 'bottom', icon: ArrowDown, labelKey: 'xlsx.placement.options.bottom' },
+  { value: 'bottom-right', icon: ArrowDownRight, labelKey: 'xlsx.placement.options.bottomRight' },
+];
+
+const isLeftPlacement = (placement: XlsxPlacement): boolean => {
+  return placement === 'left' || placement === 'top-left' || placement === 'bottom-left';
+};
+
+const isRightPlacement = (placement: XlsxPlacement): boolean => {
+  return placement === 'right' || placement === 'top-right' || placement === 'bottom-right';
+};
+
+const isTopPlacement = (placement: XlsxPlacement): boolean => {
+  return placement === 'top' || placement === 'top-left' || placement === 'top-right';
+};
+
+const isBottomPlacement = (placement: XlsxPlacement): boolean => {
+  return placement === 'bottom' || placement === 'bottom-left' || placement === 'bottom-right';
+};
+
+const countLessThan = (values: number[], target: number): number => {
+  let count = 0;
+
+  for (const value of values) {
+    if (value >= target) {
+      break;
+    }
+
+    count += 1;
+  }
+
+  return count;
+};
+
+const countLessThanOrEqual = (values: number[], target: number): number => {
+  let count = 0;
+
+  for (const value of values) {
+    if (value > target) {
+      break;
+    }
+
+    count += 1;
+  }
+
+  return count;
+};
 
 export function XlsxPage() {
   const { t } = useTranslation();
@@ -32,11 +125,7 @@ export function XlsxPage() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [progress, setProgress] = useState<{ current: number; total: number } | null>(null);
   const [barcodeType, setBarcodeType] = useState<BarcodeType>('CODE128');
-  const [selectedColumns, setSelectedColumns] = useState<SelectedColumns>({
-    sourceColumnIndex: null,
-    targetColumnIndex: null,
-    placement: 'right',
-  });
+  const [placement, setPlacement] = useState<XlsxPlacement>('right');
   const [barcodeStyle, setBarcodeStyle] = useState({
     rotation: 0 as const,
     barColor: '#0A0F0D',
@@ -101,31 +190,11 @@ export function XlsxPage() {
       const buffer = await file.arrayBuffer();
       const preview = await readWorkbook(buffer);
       setWorkbook(preview);
+      setPlacement('right');
       setOriginalFile(file);
-      setSelectedColumns({ sourceColumnIndex: null, targetColumnIndex: null, placement: 'right' });
     } catch (err) {
       setError(err instanceof Error ? err.message : t('xlsx.errors.loadFailed'));
     }
-  };
-
-  const handleColumnClick = (columnIndex: number) => {
-    if (isGenerating) return;
-
-    setSelectedColumns((prev) => {
-      if (prev.sourceColumnIndex === null) {
-        return {
-          ...prev,
-          sourceColumnIndex: columnIndex,
-          targetColumnIndex: columnIndex,
-        };
-      }
-
-      return { ...prev, targetColumnIndex: columnIndex };
-    });
-  };
-
-  const handleClearSelection = () => {
-    setSelectedColumns({ sourceColumnIndex: null, targetColumnIndex: null, placement: 'right' });
   };
 
   const handleReplaceFileClick = () => {
@@ -144,189 +213,185 @@ export function XlsxPage() {
 
     event.target.value = '';
   };
+  const previewLayout = useMemo(() => {
+    if (!workbook) {
+      return null;
+    }
 
-  const sourceRowsWithData = useMemo(() => {
-    if (!workbook || selectedColumns.sourceColumnIndex === null) return [];
+    const sourceColumnIndexes = workbook.detectedSourceColumnIndexes;
+    const sourceColumnIndexSet = new Set(sourceColumnIndexes);
+    const sourceRowNumbers = Array.from(
+      new Set(
+        workbook.rows.flatMap((row) =>
+          row
+            .filter((cell) => sourceColumnIndexSet.has(cell.columnIndex) && !cell.isEmpty)
+            .map((cell) => cell.rowNumber),
+        ),
+      ),
+    ).sort((a, b) => a - b);
+    const originalRowCount = workbook.rows.length;
+    const originalColumnCount = workbook.rows[0]?.length ?? 0;
+    const insertedColumnCount =
+      isLeftPlacement(placement) || isRightPlacement(placement) ? sourceColumnIndexes.length : 0;
+    const insertedRowCount =
+      isTopPlacement(placement) || isBottomPlacement(placement) ? sourceRowNumbers.length : 0;
+    const rows: CellPreview[][] = Array.from(
+      { length: originalRowCount + insertedRowCount },
+      (_, rowIndex) =>
+        Array.from({ length: originalColumnCount + insertedColumnCount }, (_, columnIndex) => ({
+          rowNumber: rowIndex + 1,
+          columnIndex,
+          columnLetter: getColumnLetter(columnIndex),
+          value: '',
+          isEmpty: true,
+        })),
+    );
 
-    return workbook.rows
-      .filter((row) => {
-        const sourceCell = row.find(
-          (cell) => cell.columnIndex === selectedColumns.sourceColumnIndex,
-        );
+    const mapOriginalColumnIndex = (columnIndex: number): number => {
+      if (isLeftPlacement(placement)) {
+        return columnIndex + countLessThanOrEqual(sourceColumnIndexes, columnIndex);
+      }
 
-        return sourceCell && !sourceCell.isEmpty;
-      })
-      .map((row) => {
-        const cell = row.find(
-          (candidate) => candidate.columnIndex === selectedColumns.sourceColumnIndex,
-        )!;
+      if (isRightPlacement(placement)) {
+        return columnIndex + countLessThan(sourceColumnIndexes, columnIndex);
+      }
 
-        return { rowNumber: cell.rowNumber, value: cell.value };
-      });
-  }, [workbook, selectedColumns.sourceColumnIndex]);
+      return columnIndex;
+    };
 
-  const validatedRows = useMemo(() => {
-    if (!workbook) return [];
+    const mapOriginalRowNumber = (rowNumber: number): number => {
+      if (isTopPlacement(placement)) {
+        return rowNumber + countLessThanOrEqual(sourceRowNumbers, rowNumber);
+      }
 
-    const resultRows: CellPreview[][] = [];
-    let currentRowCounter = workbook.rows.length > 0 ? workbook.rows[0][0].rowNumber : 1;
+      if (isBottomPlacement(placement)) {
+        return rowNumber + countLessThan(sourceRowNumbers, rowNumber);
+      }
+
+      return rowNumber;
+    };
 
     workbook.rows.forEach((row) => {
-      const sourceCell = row.find(c => c.columnIndex === selectedColumns.sourceColumnIndex);
-      const sourceValue = sourceCell?.value ?? '';
-      const isSourceValid = sourceValue.trim() !== '' && validateBarcodeValue(barcodeType, sourceValue).isValid;
+      row.forEach((cell) => {
+        const previewColumnIndex = mapOriginalColumnIndex(cell.columnIndex);
+        const previewRowNumber = mapOriginalRowNumber(cell.rowNumber);
+        const isAutoSource = sourceColumnIndexSet.has(cell.columnIndex);
+        const nextCell: CellPreview = {
+          ...cell,
+          rowNumber: previewRowNumber,
+          columnIndex: previewColumnIndex,
+          columnLetter: getColumnLetter(previewColumnIndex),
+        };
 
-      if (selectedColumns.placement.startsWith('top') && isSourceValid) {
-        let hOffset = 0;
-        if (selectedColumns.placement.endsWith('-left')) hOffset = -1;
-        else if (selectedColumns.placement.endsWith('-right')) hOffset = 1;
-
-        const barcodeColIndex = Math.max(0, (selectedColumns.targetColumnIndex ?? 0) + hOffset);
-
-        const barcodeRow: CellPreview[] = row.map((cell) => {
-          if (cell.columnIndex === barcodeColIndex) {
-            return {
-              ...cell,
-              rowNumber: currentRowCounter,
-              value: '',
-              isEmpty: true,
-              barcodePreviewData: {
-                value: sourceValue,
-                type: barcodeType,
-              },
-            };
-          }
-          return { ...cell, rowNumber: currentRowCounter, value: '', isEmpty: true, barcodePreviewData: undefined };
-        });
-        resultRows.push(barcodeRow);
-        currentRowCounter++;
-      }
-
-      const validatedOriginalRow = row.map((cell) => {
-        const baseCell = { ...cell, rowNumber: currentRowCounter };
-
-        if (selectedColumns.sourceColumnIndex === cell.columnIndex) {
+        if (isAutoSource) {
           if (cell.isEmpty) {
-            return { ...baseCell, isValid: true };
-          }
-
-          const result = validateBarcodeValue(barcodeType, cell.value);
-          return {
-            ...baseCell,
-            isValid: result.isValid,
-            validationError: result.message,
-          };
-        }
-
-        if (
-          selectedColumns.targetColumnIndex === cell.columnIndex &&
-          (selectedColumns.placement === 'left' || selectedColumns.placement === 'right')
-        ) {
-          if (isSourceValid) {
-            return {
-              ...baseCell,
-              barcodePreviewData: {
-                value: sourceValue,
-                type: barcodeType,
-              },
-            };
+            nextCell.isValid = true;
+            nextCell.validationError = undefined;
+          } else {
+            const validation = validateBarcodeValue(barcodeType, cell.value);
+            nextCell.isValid = validation.isValid;
+            nextCell.validationError = validation.message;
           }
         }
 
-        return baseCell;
+        rows[previewRowNumber - 1][previewColumnIndex] = nextCell;
+
+        if (!isAutoSource || cell.isEmpty) {
+          return;
+        }
+
+        const validation = validateBarcodeValue(barcodeType, cell.value);
+        if (!validation.isValid) {
+          return;
+        }
+
+        const barcodeColumnIndex = isLeftPlacement(placement)
+          ? previewColumnIndex - 1
+          : isRightPlacement(placement)
+            ? previewColumnIndex + 1
+            : previewColumnIndex;
+        const barcodeRowNumber = isTopPlacement(placement)
+          ? previewRowNumber - 1
+          : isBottomPlacement(placement)
+            ? previewRowNumber + 1
+            : previewRowNumber;
+
+        rows[barcodeRowNumber - 1][barcodeColumnIndex] = {
+          rowNumber: barcodeRowNumber,
+          columnIndex: barcodeColumnIndex,
+          columnLetter: getColumnLetter(barcodeColumnIndex),
+          value: '',
+          isEmpty: true,
+          barcodePreviewData: {
+            value: cell.value,
+            type: barcodeType,
+          },
+        };
       });
-      resultRows.push(validatedOriginalRow);
-      currentRowCounter++;
-
-      if (selectedColumns.placement.startsWith('bottom') && isSourceValid) {
-        let hOffset = 0;
-        if (selectedColumns.placement.endsWith('-left')) hOffset = -1;
-        else if (selectedColumns.placement.endsWith('-right')) hOffset = 1;
-
-        const barcodeColIndex = Math.max(0, (selectedColumns.targetColumnIndex ?? 0) + hOffset);
-
-        const barcodeRow: CellPreview[] = row.map((cell) => {
-          if (cell.columnIndex === barcodeColIndex) {
-            return {
-              ...cell,
-              rowNumber: currentRowCounter,
-              value: '',
-              isEmpty: true,
-              barcodePreviewData: {
-                value: sourceValue,
-                type: barcodeType,
-              },
-            };
-          }
-          return { ...cell, rowNumber: currentRowCounter, value: '', isEmpty: true, barcodePreviewData: undefined };
-        });
-        resultRows.push(barcodeRow);
-        currentRowCounter++;
-      }
     });
 
-    return resultRows;
-  }, [
-    workbook,
-    selectedColumns.sourceColumnIndex,
-    selectedColumns.targetColumnIndex,
-    selectedColumns.placement,
-    barcodeType,
-  ]);
+    const previewSourceColumnIndexes = sourceColumnIndexes.map(mapOriginalColumnIndex);
+    const previewBarcodeColumnIndexes = sourceColumnIndexes.map((sourceColumnIndex) => {
+      const previewSourceColumnIndex = mapOriginalColumnIndex(sourceColumnIndex);
+
+      if (isLeftPlacement(placement)) {
+        return previewSourceColumnIndex - 1;
+      }
+
+      if (isRightPlacement(placement)) {
+        return previewSourceColumnIndex + 1;
+      }
+
+      return previewSourceColumnIndex;
+    });
+
+    return {
+      workbook: {
+        ...workbook,
+        rows,
+      },
+      sourceColumnIndexes: previewSourceColumnIndexes,
+      barcodeColumnIndexes: previewBarcodeColumnIndexes,
+    };
+  }, [barcodeType, placement, workbook]);
 
   const invalidSourceCount = useMemo(() => {
-    if (!workbook || selectedColumns.sourceColumnIndex === null) {
+    if (!previewLayout) {
       return 0;
     }
 
-    return validatedRows
+    const previewSourceColumnIndexSet = new Set(previewLayout.sourceColumnIndexes);
+
+    return previewLayout.workbook.rows
       .flatMap((row) =>
         row.filter(
           (cell) =>
-            cell.columnIndex === selectedColumns.sourceColumnIndex &&
+            previewSourceColumnIndexSet.has(cell.columnIndex) &&
             !cell.isEmpty &&
             cell.isValid === false,
         ),
       )
       .length;
-  }, [validatedRows, workbook, selectedColumns.sourceColumnIndex]);
+  }, [previewLayout]);
 
-  const hasSourceData = sourceRowsWithData.length > 0;
+  const hasSourceData = (workbook?.detectedSourceColumnIndexes.length ?? 0) > 0;
 
   const isValidToGenerate = useMemo(() => {
-    return (
-      selectedColumns.sourceColumnIndex !== null &&
-      selectedColumns.targetColumnIndex !== null &&
-      invalidSourceCount === 0 &&
-      hasSourceData &&
-      isSettingsValid
-    );
-  }, [
-    selectedColumns,
-    invalidSourceCount,
-    hasSourceData,
-    isSettingsValid,
-  ]);
+    return hasSourceData && invalidSourceCount === 0 && isSettingsValid;
+  }, [hasSourceData, invalidSourceCount, isSettingsValid]);
 
   const handleGenerate = async () => {
-    if (
-      !originalFile ||
-      !workbook ||
-      !isValidToGenerate ||
-      selectedColumns.sourceColumnIndex === null ||
-      selectedColumns.targetColumnIndex === null
-    ) {
+    if (!originalFile || !workbook || !isValidToGenerate) {
       return;
     }
 
     setIsGenerating(true);
     setError(null);
     setSuccessMessage(null);
-    setProgress(null);
+    setProgress({ current: 0, total: 1 });
 
     try {
       const fileBuffer = await originalFile.arrayBuffer();
-      const sourceColumnIndex = selectedColumns.sourceColumnIndex;
 
       const fullWorkbook = new ExcelJS.Workbook();
       await fullWorkbook.xlsx.load(fileBuffer);
@@ -336,56 +401,63 @@ export function XlsxPage() {
         throw new Error(t('xlsx.errors.sheetMissingInFile'));
       }
 
-      const allSourceRows: { rowNumber: number; value: string }[] = [];
-      worksheet.eachRow((row, rowNumber) => {
-        const cell = row.getCell(sourceColumnIndex + 1);
-        let value = '';
+      const sourceColumnIndexes = workbook.detectedSourceColumnIndexes;
+      const sourceRowsByColumn = new Map<number, { rowNumber: number; value: string }[]>();
 
-        if (cell.value !== null && cell.value !== undefined) {
-          if (typeof cell.value === 'object' && 'result' in cell.value) {
-            value = String(cell.value.result ?? '');
-          } else if (typeof cell.value === 'object' && 'text' in cell.value) {
-            value = String(cell.value.text ?? '');
-          } else {
-            value = String(cell.value);
-          }
-        }
-
-        if (value.trim() !== '') {
-          allSourceRows.push({ rowNumber, value });
-        }
+      sourceColumnIndexes.forEach((sourceColumnIndex) => {
+        sourceRowsByColumn.set(sourceColumnIndex, []);
       });
 
-      if (allSourceRows.length === 0) {
+      worksheet.eachRow((row, rowNumber) => {
+        sourceColumnIndexes.forEach((sourceColumnIndex) => {
+          const cell = row.getCell(sourceColumnIndex + 1);
+          const value = getCellTextValue(cell.value);
+
+          if (value.trim() !== '') {
+            sourceRowsByColumn.get(sourceColumnIndex)?.push({ rowNumber, value });
+          }
+        });
+      });
+
+      const sourceColumns = sourceColumnIndexes
+        .map((sourceColumnIndex) => ({
+          sourceColumnIndex,
+          rows: sourceRowsByColumn.get(sourceColumnIndex) ?? [],
+        }))
+        .filter((sourceColumn) => sourceColumn.rows.length > 0);
+
+      const totalBarcodeCount = sourceColumns.reduce(
+        (count, sourceColumn) => count + sourceColumn.rows.length,
+        0,
+      );
+
+      if (totalBarcodeCount === 0) {
         throw new Error(t('xlsx.errors.noDataInColumn'));
       }
 
       const resultBlob = await writeWorkbookWithBarcodes({
         sourceFile: originalFile,
         sheetName: workbook.activeSheetName,
-        targetColumnIndex: selectedColumns.targetColumnIndex,
-        placement: selectedColumns.placement,
         barcodeType,
         barcodeStyle,
-        sourceRows: allSourceRows,
+        placement,
+        sourceColumns,
+        onProgress: setProgress,
       });
 
       saveAs(resultBlob, createOutputFileName(originalFile.name));
-      setSuccessMessage(t('xlsx.success.generated', { count: allSourceRows.length }));
+      setSuccessMessage(t('xlsx.success.generated', { count: totalBarcodeCount }));
       setIsGenerating(false);
+      setProgress(null);
     } catch (err) {
       setError(err instanceof Error ? err.message : t('xlsx.errors.generateFailed'));
       setIsGenerating(false);
+      setProgress(null);
     }
   };
 
   const updateStyleField = (key: keyof typeof barcodeStyle, value: unknown) => {
     setBarcodeStyle((prev) => ({ ...prev, [key]: value }));
-  };
-
-  const handlePlacementChange = (placement: XlsxPlacement) => {
-    if (isGenerating) return;
-    setSelectedColumns(prev => ({ ...prev, placement }));
   };
 
   return (
@@ -416,82 +488,6 @@ export function XlsxPage() {
                   disabled={isGenerating}
                 />
               </div>
-
-              {workbook && (
-                <div className={styles.field}>
-                  <label className={styles.label}>Pozycja wzglÄ™dem tekstu</label>
-
-                  <div className={styles.placementMatrix}>
-                    <button
-                      className={clsx(styles.matrixButton, { [styles.active]: selectedColumns.placement === 'top-left' })}
-                      onClick={() => handlePlacementChange('top-left')}
-                      title="PowyĹĽej w lewo"
-                      disabled={isGenerating}
-                    >
-                      <ArrowUpLeft size={18} />
-                    </button>
-                    <button
-                      className={clsx(styles.matrixButton, { [styles.active]: selectedColumns.placement === 'top' })}
-                      onClick={() => handlePlacementChange('top')}
-                      title="PowyĹĽej"
-                      disabled={isGenerating}
-                    >
-                      <ArrowUp size={18} />
-                    </button>
-                    <button
-                      className={clsx(styles.matrixButton, { [styles.active]: selectedColumns.placement === 'top-right' })}
-                      onClick={() => handlePlacementChange('top-right')}
-                      title="PowyĹĽej w prawo"
-                      disabled={isGenerating}
-                    >
-                      <ArrowUpRight size={18} />
-                    </button>
-                    <button
-                      className={clsx(styles.matrixButton, { [styles.active]: selectedColumns.placement === 'left' })}
-                      onClick={() => handlePlacementChange('left')}
-                      title="Po lewej"
-                      disabled={isGenerating}
-                    >
-                      <ArrowLeft size={18} />
-                    </button>
-                    <div className={styles.matrixCenter}>
-                      <Type size={16} />
-                    </div>
-                    <button
-                      className={clsx(styles.matrixButton, { [styles.active]: selectedColumns.placement === 'right' })}
-                      onClick={() => handlePlacementChange('right')}
-                      title="Po prawej"
-                      disabled={isGenerating}
-                    >
-                      <ArrowRight size={18} />
-                    </button>
-                    <button
-                      className={clsx(styles.matrixButton, { [styles.active]: selectedColumns.placement === 'bottom-left' })}
-                      onClick={() => handlePlacementChange('bottom-left')}
-                      title="PoniĹĽej w lewo"
-                      disabled={isGenerating}
-                    >
-                      <ArrowDownLeft size={18} />
-                    </button>
-                    <button
-                      className={clsx(styles.matrixButton, { [styles.active]: selectedColumns.placement === 'bottom' })}
-                      onClick={() => handlePlacementChange('bottom')}
-                      title="PoniĹĽej"
-                      disabled={isGenerating}
-                    >
-                      <ArrowDown size={18} />
-                    </button>
-                    <button
-                      className={clsx(styles.matrixButton, { [styles.active]: selectedColumns.placement === 'bottom-right' })}
-                      onClick={() => handlePlacementChange('bottom-right')}
-                      title="PoniĹĽej w prawo"
-                      disabled={isGenerating}
-                    >
-                      <ArrowDownRight size={18} />
-                    </button>
-                  </div>
-                </div>
-              )}
 
               {error && <div className={styles.error}>{error}</div>}
 
@@ -637,6 +633,74 @@ export function XlsxPage() {
                   </SelectInput>
                 </Field>
               </div>
+              <div className={styles.placementField}>
+                <label className={styles.label}>{t('xlsx.placement.label')}</label>
+                <div className={styles.placementMatrix}>
+                  {PLACEMENT_OPTIONS.slice(0, 3).map(({ value, icon: Icon, labelKey }) => (
+                    <button
+                      key={value}
+                      type="button"
+                      className={clsx(styles.matrixButton, {
+                        [styles.active]: placement === value,
+                      })}
+                      title={t(labelKey)}
+                      aria-label={t(labelKey)}
+                      onClick={() => setPlacement(value)}
+                      disabled={isGenerating}
+                    >
+                      <Icon size={16} />
+                    </button>
+                  ))}
+                  {PLACEMENT_OPTIONS.slice(3, 4).map(({ value, icon: Icon, labelKey }) => (
+                    <button
+                      key={value}
+                      type="button"
+                      className={clsx(styles.matrixButton, {
+                        [styles.active]: placement === value,
+                      })}
+                      title={t(labelKey)}
+                      aria-label={t(labelKey)}
+                      onClick={() => setPlacement(value)}
+                      disabled={isGenerating}
+                    >
+                      <Icon size={16} />
+                    </button>
+                  ))}
+                  <div className={styles.matrixCenter} aria-hidden="true">
+                    <Type size={16} />
+                  </div>
+                  {PLACEMENT_OPTIONS.slice(4, 5).map(({ value, icon: Icon, labelKey }) => (
+                    <button
+                      key={value}
+                      type="button"
+                      className={clsx(styles.matrixButton, {
+                        [styles.active]: placement === value,
+                      })}
+                      title={t(labelKey)}
+                      aria-label={t(labelKey)}
+                      onClick={() => setPlacement(value)}
+                      disabled={isGenerating}
+                    >
+                      <Icon size={16} />
+                    </button>
+                  ))}
+                  {PLACEMENT_OPTIONS.slice(5).map(({ value, icon: Icon, labelKey }) => (
+                    <button
+                      key={value}
+                      type="button"
+                      className={clsx(styles.matrixButton, {
+                        [styles.active]: placement === value,
+                      })}
+                      title={t(labelKey)}
+                      aria-label={t(labelKey)}
+                      onClick={() => setPlacement(value)}
+                      disabled={isGenerating}
+                    >
+                      <Icon size={16} />
+                    </button>
+                  ))}
+                </div>
+              </div>
               {!isSettingsValid && (
                 <div className={styles.error}>
                   {t('xlsx.errors.invalidAppearance')}
@@ -656,35 +720,21 @@ export function XlsxPage() {
                   <UploadCloud size={18} />
                   {t('xlsx.dropzone.changeFile')}
                 </Button>
-                <div className={styles.actionsRow}>
-                  <Button
-                    variant="secondary"
-                    onClick={handleClearSelection}
-                    fullWidth
-                    disabled={
-                      isGenerating ||
-                      (selectedColumns.sourceColumnIndex === null &&
-                        selectedColumns.targetColumnIndex === null)
-                    }
-                    className={styles.actionButton}
-                  >
-                    {t('xlsx.actions.deselect')}
-                  </Button>
-                  <Button
-                    variant="primary"
-                    onClick={handleGenerate}
-                    fullWidth
-                    disabled={!isValidToGenerate || isGenerating}
-                    className={styles.actionButton}
-                    progress={isGenerating && progress ? (progress.current / progress.total) * 100 : undefined}
-                  >
-                    {isGenerating
-                      ? progress
-                        ? `${t('generator.actions.generating')} (${Math.round((progress.current / progress.total) * 100)}%)`
-                        : t('generator.actions.generating')
-                      : t('generator.actions.generate')}
-                  </Button>
-                </div>
+                <Button
+                  variant="primary"
+                  onClick={handleGenerate}
+                  fullWidth
+                  disabled={!isValidToGenerate || isGenerating}
+                  progress={
+                    isGenerating && progress
+                      ? (progress.current / progress.total) * 100
+                      : undefined
+                  }
+                >
+                  {isGenerating
+                    ? `${Math.round(((progress?.current ?? 0) / (progress?.total ?? 1)) * 100)}%`
+                    : t('generator.actions.generate')}
+                </Button>
               </>
             )}
           </Panel>
@@ -705,12 +755,14 @@ export function XlsxPage() {
             {workbook ? (
               <div className={styles.previewWorkspace}>
                 <div className={styles.previewContainer}>
-                  <XlsxWorkbookViewer
-                    workbook={{ ...workbook, rows: validatedRows }}
-                    selectedColumns={selectedColumns}
-                    onColumnClick={handleColumnClick}
-                    barcodeStyle={barcodeStyle}
-                  />
+                  {previewLayout && (
+                    <XlsxWorkbookViewer
+                      workbook={previewLayout.workbook}
+                      sourceColumnIndexes={previewLayout.sourceColumnIndexes}
+                      barcodeColumnIndexes={previewLayout.barcodeColumnIndexes}
+                      barcodeStyle={barcodeStyle}
+                    />
+                  )}
                 </div>
               </div>
             ) : (
