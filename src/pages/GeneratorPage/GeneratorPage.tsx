@@ -71,6 +71,7 @@ export function GeneratorPage() {
         title={t('generator.preview.title')}
         description={t('generator.preview.description')}
         className={styles.previewPanel}
+        contentClassName={styles.previewPanelContent}
       >
         <div
           className={styles.toolbar}

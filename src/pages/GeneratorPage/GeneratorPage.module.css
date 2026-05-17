@@ -48,14 +48,15 @@
   margin-top: 1.5rem;
   display: grid;
   place-items: center;
-  height: max-content;
+  height: 100%;
   min-height: 40rem;
+  max-height: 40rem;
   border: 1px solid var(--md-sys-color-surface-variant);
   border-radius: var(--radius-lg);
   background: var(--md-sys-color-surface-container-lowest);
   padding: 2rem;
   position: relative;
-  overflow: hidden;
+  overflow: auto;
   box-shadow: var(--md-sys-elevation-level1);
 }
 
