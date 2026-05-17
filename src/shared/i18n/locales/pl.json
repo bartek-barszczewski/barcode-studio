@@ -2,6 +2,7 @@
   "navigation": {
     "ariaLabel": "Główna nawigacja",
     "brand": "Barcode Studio",
+    "home": "Home",
     "generator": "Generator",
     "xlsx": "XLSX",
     "docx": "DOCX",
@@ -136,6 +137,13 @@
     "actions": {
       "deselect": "Odznacz"
     },
+    "leaveGuard": {
+      "eyebrow": "Niezapisane zmiany",
+      "title": "Opuścić zakładkę XLSX?",
+      "description": "Jeśli teraz opuścisz tę zakładkę, bieżąca konfiguracja XLSX i podgląd zostaną utracone.",
+      "cancel": "Anuluj",
+      "confirm": "OK"
+    },
     "preview": {
       "title": "Podgląd arkusza",
       "titleWithSheet": "Podgląd: {{sheetName}}",
@@ -165,6 +173,13 @@
   "docx": {
     "title": "DOCX",
     "description": "Załaduj dokument, wskaż dane w podglądzie i wygeneruj nowy DOCX.",
+    "leaveGuard": {
+      "eyebrow": "Niezapisane zmiany",
+      "title": "Opuścić zakładkę DOCX?",
+      "description": "Jeśli teraz opuścisz tę zakładkę, bieżąca konfiguracja DOCX i podgląd zostaną utracone.",
+      "cancel": "Anuluj",
+      "confirm": "OK"
+    },
     "dropzoneTitle": "Przeciągnij plik DOCX albo wybierz z dysku",
     "dropzoneDescription": "Wszystkie linie tekstu z dokumentu zostaną przetworzone.",
     "previewTitle": "Podgląd",
@@ -353,6 +368,55 @@
         "appearance": "Wygląd i wymiary",
         "text": "Tekst i napisy"
       }
+    }
+  },
+  "home": {
+    "eyebrow": "Nowoczesne studio kodow dla szybkiej pracy",
+    "title": "Generuj, grupuj i eksportuj kody gotowe do produkcji.",
+    "description": "Barcode Studio laczy generator pojedynczy, zestawy kodow, przetwarzanie XLSX i DOCX w jednym prywatnym workflow dzialajacym lokalnie w przegladarce.",
+    "primaryAction": "Przejdz do Generatora",
+    "secondaryAction": "Zobacz Pomoc",
+    "sectionLabel": "Landing MD3",
+    "spotlightTitle": "Projektowane pod realna prace z dokumentami",
+    "spotlightDescription": "Szybki podglad, gotowy wydruk i lokalne przetwarzanie plikow bez wysylania danych na serwer.",
+    "browserFirstMetric": "Workflow lokalny w przegladarce",
+    "spotlightPoints": {
+      "generator": "Projektowanie pojedynczych kodow z eksportem SVG i PNG",
+      "set": "Masowa edycja z szybka nawigacja i ukladem do druku",
+      "xlsx": "Podglad arkusza i wstawianie kodow bezposrednio do komorek",
+      "docx": "Przetwarzanie DOCX i tworzenie nowych dokumentow z kodami"
+    },
+    "slogans": {
+      "title": "Dlaczego warto",
+      "items": [
+        "Jedna szybka przestrzen dla kazdego scenariusza barcode.",
+        "Projekt pod wydruk i produkcje, nie tylko podglad na ekranie.",
+        "Prywatnosc od poczatku, bo pliki zostaja w przegladarce.",
+        "Tempo pracy dla operatora, ktory potrzebuje czytelnosci i kontroli."
+      ]
+    },
+    "video": {
+      "title": "Miejsce na wideo",
+      "description": "Tutaj mozesz osadzic prezentacje YouTube albo szybki onboarding produktu.",
+      "placeholder": "Miejsce na osadzenie linku YouTube"
+    },
+    "footer": {
+      "eyebrow": "Gotowe do pracy",
+      "title": "Przejdz z landingu prosto do wybranego workflow",
+      "description": "Wybierz tryb pracy pasujacy do zadania i trzymaj generowanie kodow, arkusze oraz dokumenty w jednej spojnej przestrzeni roboczej.",
+      "badge": "Lokalne przetwarzanie. Bez wysylki na serwer.",
+      "linksLabel": "Szybkie linki Home"
+    },
+    "featureCards": {
+      "title": "Glowne workflowy",
+      "generatorTitle": "Generator",
+      "generatorBody": "Skonfiguruj typ kodu, wymiary, kolory i eksport w jednym panelu.",
+      "setTitle": "Zestaw kodow",
+      "setBody": "Obsluguj wieksze partie kodow z szybka nawigacja i ukladem do druku.",
+      "xlsxTitle": "Przetwarzanie XLSX",
+      "xlsxBody": "Podgladaj arkusze, mapuj kolumny i zapisuj obrazy kodow w komorkach.",
+      "docxTitle": "Przetwarzanie DOCX",
+      "docxBody": "Czytaj tekst z plikow Word i generuj nowe dokumenty z kodami."
     }
   }
 }

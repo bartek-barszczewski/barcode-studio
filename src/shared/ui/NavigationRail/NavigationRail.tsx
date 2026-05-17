@@ -5,6 +5,7 @@ import {
   CircleHelp,
   FileSpreadsheet,
   FileText,
+  House,
   Languages,
   Library,
   ScanBarcode,
@@ -12,6 +13,7 @@ import {
 import styles from './NavigationRail.module.css'
 
 const navItems = [
+  { to: '/home', labelKey: 'navigation.home', icon: House },
   { to: '/generator', labelKey: 'navigation.generator', icon: ScanBarcode },
   { to: '/barcode-set', labelKey: 'navigation.barcodeSet', icon: Library },
   { to: '/xlsx', labelKey: 'navigation.xlsx', icon: FileSpreadsheet },
@@ -29,7 +31,7 @@ export function NavigationRail() {
   return (
     <aside className={styles.rail}>
       <div className={styles.topSection}>
-        <NavLink className={styles.brand} to="/generator">
+        <NavLink className={styles.brand} to="/home">
           <ScanBarcode aria-hidden="true" size={32} />
           <span className={styles.brandText}>{t('navigation.brand')}</span>
         </NavLink>

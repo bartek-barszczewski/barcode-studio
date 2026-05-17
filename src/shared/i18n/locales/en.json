@@ -2,12 +2,62 @@
   "navigation": {
     "ariaLabel": "Main navigation",
     "brand": "Barcode Studio",
+    "home": "Home",
     "generator": "Generator",
     "xlsx": "XLSX",
     "docx": "DOCX",
     "barcodeSet": "Barcode Set",
     "help": "Help",
     "languageToggle": "Change language"
+  },
+  "home": {
+    "eyebrow": "Barcode workspace for fast operators",
+    "title": "Generate, batch, and export production-ready barcodes.",
+    "description": "Barcode Studio keeps every workflow in the browser: single labels, bulk barcode sets, XLSX writeback, and DOCX output without sending your files anywhere.",
+    "primaryAction": "Open Generator",
+    "secondaryAction": "See Help",
+    "sectionLabel": "MD3 landing",
+    "spotlightTitle": "Built for real document flow",
+    "spotlightDescription": "One workspace for quick previews, print-ready output, and private local file processing.",
+    "browserFirstMetric": "Browser-first workflow",
+    "spotlightPoints": {
+      "generator": "Single barcode design with SVG and PNG export",
+      "set": "Bulk editing with quick navigation and print layout",
+      "xlsx": "Spreadsheet preview with barcode insertion into cells",
+      "docx": "DOCX processing that turns text into rendered codes"
+    },
+    "slogans": {
+      "title": "Why teams adopt it",
+      "items": [
+        "One fast screen for every barcode scenario.",
+        "Built for print quality, not just on-screen previews.",
+        "Private by design because files stay in the browser.",
+        "Ready for operators who need throughput, clarity, and control."
+      ]
+    },
+    "video": {
+      "title": "Video slot",
+      "description": "Reserved space for your YouTube walkthrough or product demo.",
+      "placeholder": "Embed your YouTube link here"
+    },
+    "footer": {
+      "eyebrow": "Ready to work",
+      "title": "Move straight from landing to action",
+      "description": "Choose the workflow that fits your task and keep barcode, spreadsheet, and document operations inside one consistent workspace.",
+      "badge": "Local processing. No server upload.",
+      "linksLabel": "Home quick links"
+    },
+    "featureCards": {
+      "title": "Core workflows",
+      "generatorTitle": "Single Generator",
+      "generatorBody": "Tune barcode type, dimensions, colors, and export format in one panel.",
+      "setTitle": "Barcode Set",
+      "setBody": "Manage larger batches with persistent cards and print-ready layouts.",
+      "xlsxTitle": "XLSX Processing",
+      "xlsxBody": "Preview spreadsheets, map source columns, and write barcode images back.",
+      "docxTitle": "DOCX Processing",
+      "docxBody": "Read text from Word files and generate new documents with barcodes."
+    }
   },
   "barcode": {
     "types": {
@@ -136,6 +186,13 @@
     "actions": {
       "deselect": "Deselect"
     },
+    "leaveGuard": {
+      "eyebrow": "Unsaved work",
+      "title": "Leave the XLSX tab?",
+      "description": "If you leave this tab now, the current XLSX configuration and preview will be lost.",
+      "cancel": "Cancel",
+      "confirm": "OK"
+    },
     "preview": {
       "title": "Sheet preview",
       "titleWithSheet": "Preview: {{sheetName}}",
@@ -165,6 +222,13 @@
   "docx": {
     "title": "DOCX",
     "description": "Load a document, point to data in the preview, and generate a new DOCX.",
+    "leaveGuard": {
+      "eyebrow": "Unsaved work",
+      "title": "Leave the DOCX tab?",
+      "description": "If you leave this tab now, the current DOCX configuration and preview will be lost.",
+      "cancel": "Cancel",
+      "confirm": "OK"
+    },
     "dropzoneTitle": "Drag a DOCX file here or choose one from disk",
     "dropzoneDescription": "All text lines from the document will be processed.",
     "previewTitle": "Preview",

@@ -1,5 +1,6 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useBlocker } from 'react-router-dom';
 import { FileText, CheckCircle2, Printer } from 'lucide-react';
 import { saveAs } from 'file-saver';
 import clsx from 'clsx';
@@ -41,6 +42,10 @@ export function DocxPage() {
     scale: 1,
     showText: false,
   });
+  const hasUnsavedChanges = originalFile !== null && !isGenerating;
+  const navigationBlocker = useBlocker(({ currentLocation, nextLocation }) => {
+    return hasUnsavedChanges && currentLocation.pathname !== nextLocation.pathname;
+  });
 
   const isSettingsValid = useMemo(() => {
     return (
@@ -56,6 +61,23 @@ export function DocxPage() {
       barcodeStyle.margin <= 80
     );
   }, [barcodeStyle]);
+
+  useEffect(() => {
+    if (!hasUnsavedChanges) {
+      return undefined;
+    }
+
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      event.preventDefault();
+      event.returnValue = '';
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [hasUnsavedChanges]);
 
   const handleFileSelect = async (files: File[]) => {
     if (files.length === 0) return;
@@ -114,6 +136,7 @@ export function DocxPage() {
   };
 
   return (
+      <>
       <div className={styles.page}>
           <div className={styles.leftColumn}>
               <Panel 
@@ -301,5 +324,40 @@ export function DocxPage() {
               </Panel>
           </div>
       </div>
+      {navigationBlocker.state === 'blocked' && (
+          <div
+              className={styles.leaveDialogBackdrop}
+              role="presentation"
+              onClick={() => navigationBlocker.reset()}
+          >
+              <div
+                  className={styles.leaveDialog}
+                  role="dialog"
+                  aria-modal="true"
+                  aria-labelledby="docx-leave-dialog-title"
+                  aria-describedby="docx-leave-dialog-description"
+                  onClick={(event) => event.stopPropagation()}
+              >
+                  <div className={styles.leaveDialogBody}>
+                      <span className={styles.leaveDialogEyebrow}>{t("docx.leaveGuard.eyebrow")}</span>
+                      <h2 id="docx-leave-dialog-title" className={styles.leaveDialogTitle}>
+                          {t("docx.leaveGuard.title")}
+                      </h2>
+                      <p id="docx-leave-dialog-description" className={styles.leaveDialogDescription}>
+                          {t("docx.leaveGuard.description")}
+                      </p>
+                  </div>
+                  <div className={styles.leaveDialogActions}>
+                      <Button variant="secondary" onClick={() => navigationBlocker.reset()}>
+                          {t("docx.leaveGuard.cancel")}
+                      </Button>
+                      <Button variant="primary" onClick={() => navigationBlocker.proceed()}>
+                          {t("docx.leaveGuard.confirm")}
+                      </Button>
+                  </div>
+              </div>
+          </div>
+      )}
+      </>
   );
 }

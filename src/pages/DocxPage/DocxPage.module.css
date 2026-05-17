@@ -258,6 +258,64 @@
   background-color: var(--md-sys-color-surface-container-low) !important;
 }
 
+.leaveDialogBackdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background: color-mix(in srgb, var(--md-sys-color-scrim) 38%, transparent);
+  backdrop-filter: blur(6px);
+}
+
+.leaveDialog {
+  width: min(100%, 30rem);
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding: 1.5rem;
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: 1.75rem;
+  background: var(--md-sys-color-surface-container-high);
+  box-shadow: var(--md-sys-elevation-level3);
+}
+
+.leaveDialogBody {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+.leaveDialogEyebrow {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--md-sys-color-primary);
+}
+
+.leaveDialogTitle {
+  margin: 0;
+  font-size: 1.5rem;
+  line-height: 1.2;
+  color: var(--md-sys-color-on-surface);
+}
+
+.leaveDialogDescription {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.leaveDialogActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
 @media (max-width: 1200px) {
   .page {
     grid-template-columns: 400px minmax(0, 1fr);
@@ -274,5 +332,9 @@
   .leftColumn, .rightColumn {
     height: auto;
     overflow: visible;
+  }
+
+  .leaveDialogActions {
+    flex-direction: column-reverse;
   }
 }
