@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import styles from './HelpPage.module.css';
 import { Panel } from '../../shared/ui/Panel/Panel';
+import { BuyMeCoffee } from '../../shared/ui/BuyMeCoffee/BuyMeCoffee';
 
 export function HelpPage() {
   const { t } = useTranslation();
@@ -144,6 +145,11 @@ export function HelpPage() {
               ))}
             </div>
           </section>
+
+          {/* Buy Me Coffee Section - Moved Higher */}
+          <div className={styles.buyMeCoffeeWrapper}>
+            <BuyMeCoffee />
+          </div>
 
           {/* FAQ Section */}
           <section className={`${styles.card} ${styles.fullWidth}`}>

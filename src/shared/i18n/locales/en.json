@@ -434,5 +434,13 @@
         "text": "Text & Labels"
       }
     }
+  },
+  "support": {
+    "title": "Support the project",
+    "description": "Barcode Studio is a tool for generating, grouping, and exporting production-ready barcodes directly in your browser.",
+    "privacy": "Your files are not sent to external servers. Sensitive data is not collected or aggregated.",
+    "buyMeACoffee": "If the app saves you time or helps you with your work, you can symbolically buy me a coffee. It is a voluntary form of support that helps me develop the project, add new features, and keep the tool in good shape.",
+    "signal": "Every coffee is a signal that Barcode Studio is useful and worth developing further.",
+    "thanks": "Thank you for every bit of support. ☕"
   }
 }

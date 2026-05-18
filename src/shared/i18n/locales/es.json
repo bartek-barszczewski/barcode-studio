@@ -434,5 +434,13 @@
         "text": "Texto y etiquetas"
       }
     }
+  },
+  "support": {
+    "title": "Apoya el proyecto",
+    "description": "Barcode Studio es una herramienta para generar, agrupar y exportar códigos de barras listos para producción directamente en su navegador.",
+    "privacy": "Sus archivos no se envían a servidores externos. No se recopilan ni agregan datos confidenciales.",
+    "buyMeACoffee": "Si la aplicación le ahorra tiempo o le ayuda con su trabajo, puede invitarme a un café simbólicamente. Es una forma de apoyo voluntaria que me ayuda a desarrollar el proyecto, añadir nuevas funciones y mantener la herramienta en buenas condiciones.",
+    "signal": "Cada café es una señal de que Barcode Studio es útil y vale la pena seguir desarrollándolo.",
+    "thanks": "Gracias por todo el apoyo. ☕"
   }
 }
