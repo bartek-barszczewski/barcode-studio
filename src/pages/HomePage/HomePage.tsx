@@ -11,6 +11,7 @@ import {
 } from 'lucide-react'
 import { Button } from '../../shared/ui/Button/Button'
 import { Panel } from '../../shared/ui/Panel/Panel'
+import { BuyMeCoffee } from '../../shared/ui/BuyMeCoffee/BuyMeCoffee'
 import styles from './HomePage.module.css'
 
 const featureIconMap = {
@@ -151,6 +152,10 @@ export function HomePage() {
           </div>
         </Panel>
       </section>
+
+      <div className={styles.buyMeCoffeeWrapper}>
+        <BuyMeCoffee />
+      </div>
 
       <footer className={styles.footer}>
         <div className={styles.footerIntro}>

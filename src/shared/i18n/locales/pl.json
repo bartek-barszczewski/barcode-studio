@@ -434,5 +434,13 @@
       "docxTitle": "Przetwarzanie DOCX",
       "docxBody": "Czytaj tekst z plikow Word i generuj nowe dokumenty z kodami."
     }
+  },
+  "support": {
+    "title": "Wesprzyj projekt",
+    "description": "Barcode Studio to narzędzie do generowania, grupowania i eksportowania gotowych do produkcji kodów kreskowych bezpośrednio w przeglądarce.",
+    "privacy": "Twoje pliki nie są wysyłane na zewnętrzne serwery. Wrażliwe dane nie są zbierane ani agregowane.",
+    "buyMeACoffee": "Jeśli aplikacja oszczędza Twój czas lub pomaga Ci w pracy, możesz symbolicznie postawić mi kawę. To dobrowolna forma wsparcia, która pomaga mi rozwijać projekt, dodawać nowe funkcje i utrzymywać narzędzie w dobrej formie.",
+    "signal": "Każda kawa to sygnał, że Barcode Studio jest przydatne i warto je dalej rozwijać.",
+    "thanks": "Dziękuję za każde wsparcie. ☕"
   }
 }
