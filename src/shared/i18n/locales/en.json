@@ -276,7 +276,7 @@
     "sections": {
       "generator": {
         "title": "Single Generator",
-        "body": "A tool for creating precise codes. You can download them as SVG (vector) or PNG (raster). SVG is recommended for professional printing as it doesn't lose quality when scaled."
+        "body": "A tool for creating precise codes. You can download them as SVG (vector) or PNG (raster). The 'Custom text' feature allows you to override the label under the code without changing the encoded data."
       },
       "xlsx": {
         "title": "Sheet Processing (XLSX)",
@@ -285,7 +285,7 @@
           "step1": "1. Upload a .xlsx file in the XLSX section.",
           "step2": "2. Click the column that contains the data (e.g., EAN numbers).",
           "step3": "3. Click an empty column where the codes should appear.",
-          "step4": "4. Click 'Generate' – the app will insert barcode images directly into the cells."
+          "step4": "4. Click 'Generate' – the app will insert barcodes directly into the cells, using text from the sheet as labels."
         }
       },
       "docx": {
@@ -293,17 +293,17 @@
         "workflow": {
           "title": "Working with a DOCX document:",
           "step1": "1. Choose the barcode type, then upload a .docx file with text values to encode.",
-          "step2": "2. Adjust the barcode appearance: height, bar width, scale, margins, colors, and text visibility.",
+          "step2": "2. Adjust the appearance: height, bar width, colors, and text visibility (labels are pulled from the document).",
           "step3": "3. Check the preview, print it, or click 'Generate' to download a new DOCX file with barcodes."
         }
       },
       "barcodeSet": {
         "title": "Managing Barcode Sets (Bulk)",
-        "body": "A tool for bulk barcode management. You can add, remove, and edit multiple widgets simultaneously.",
+        "body": "A tool for bulk barcode management. You can add, remove, and edit multiple widgets simultaneously, giving each unique data and a custom label text.",
         "features": {
           "title": "Key features:",
           "nav": "Navigation: Use the dot menu on the right to quickly jump between barcode groups (every 5 items).",
-          "edit": "Editing: Click the pencil icon to open the side settings panel for a specific barcode.",
+          "edit": "Editing: Click the pencil icon to open the side panel and change data, appearance, or 'Custom text' for a specific code.",
           "print": "Print All: The printer button generates a print-ready A4 grid featuring all barcodes.",
           "shortcut": "Keyboard Shortcut: Ctrl+P automatically triggers the bulk print functionality."
         }

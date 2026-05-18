@@ -1,0 +1,438 @@
+{
+  "navigation": {
+    "ariaLabel": "Navigazione principale",
+    "brand": "Barcode Studio",
+    "home": "Home",
+    "generator": "Generatore",
+    "xlsx": "XLSX",
+    "docx": "DOCX",
+    "barcodeSet": "Set di codici",
+    "help": "Aiuto",
+    "languageToggle": "Cambia lingua"
+  },
+  "home": {
+    "eyebrow": "Spazio di lavoro per codici a barre per operatori veloci",
+    "title": "Genera, raggruppa ed esporta codici a barre pronti per la produzione.",
+    "description": "Barcode Studio gestisce ogni flusso di lavoro nel browser: etichette singole, set di codici a barre massivi, riscrittura XLSX e output DOCX senza inviare i tuoi file da nessuna parte.",
+    "primaryAction": "Apri Generatore",
+    "secondaryAction": "Vedi Aiuto",
+    "sectionLabel": "Landing MD3",
+    "spotlightTitle": "Costruito per il reale flusso di documenti",
+    "spotlightDescription": "Uno spazio di lavoro per anteprime rapide, output pronto per la stampa e elaborazione locale di file privati.",
+    "browserFirstMetric": "Flusso di lavoro incentrato sul browser",
+    "spotlightPoints": {
+      "generator": "Design di codici a barre singoli con esportazione SVG e PNG",
+      "set": "Editing massivo con navigazione rapida e layout di stampa",
+      "xlsx": "Anteprima di fogli di calcolo con inserimento di codici a barre nelle celle",
+      "docx": "Elaborazione DOCX che trasforma il testo in codici renderizzati"
+    },
+    "slogans": {
+      "title": "Perché i team lo adottano",
+      "items": [
+        "Uno schermo veloce per ogni scenario di codici a barre.",
+        "Costruito per la qualità di stampa, non solo per le anteprime su schermo.",
+        "Privato per design perché i file rimangono nel browser.",
+        "Pronto per gli operatori che necessitano di produttività, chiarezza e controllo."
+      ]
+    },
+    "video": {
+      "title": "Slot video",
+      "description": "Spazio riservato per la tua presentazione YouTube o demo del prodotto.",
+      "placeholder": "Inserisci qui il tuo link YouTube"
+    },
+    "footer": {
+      "eyebrow": "Pronto a lavorare",
+      "title": "Passa direttamente dalla landing all'azione",
+      "description": "Scegli il flusso di lavoro più adatto al tuo compito e mantieni le operazioni di codici a barre, fogli di calcolo e documenti in un unico spazio di lavoro coerente.",
+      "badge": "Elaborazione locale. Nessun caricamento su server.",
+      "linksLabel": "Link rapidi Home"
+    },
+    "featureCards": {
+      "title": "Flussi di lavoro principali",
+      "generatorTitle": "Generatore singolo",
+      "generatorBody": "Regola il tipo di codice a barre, le dimensioni, i colori e il formato di esportazione in un unico pannello.",
+      "setTitle": "Set di codici",
+      "setBody": "Gestisci lotti più grandi con schede persistenti e layout pronti per la stampa.",
+      "xlsxTitle": "Elaborazione XLSX",
+      "xlsxBody": "Anteprima di fogli di calcolo, mappatura delle colonne sorgente e riscrittura delle immagini dei codici a barre.",
+      "docxTitle": "Elaborazione DOCX",
+      "docxBody": "Leggi il testo dai file Word e genera nuovi documenti con codici a barre."
+    }
+  },
+  "barcode": {
+    "types": {
+      "CODE128": "Code 128",
+      "EAN13": "EAN-13",
+      "EAN8": "EAN-8",
+      "UPCA": "UPC-A",
+      "UPCE": "UPC-E",
+      "CODE39": "Code 39",
+      "CODE93": "Code 93",
+      "CODABAR": "Codabar",
+      "ITF": "Interleaved 2 of 5 (ITF)",
+      "DATAMATRIX": "Data Matrix",
+      "PDF417": "PDF417",
+      "AZTEC": "Aztec Code",
+      "PHARMACODE": "Pharmacode",
+      "QR": "QR Code"
+    },
+    "validation": {
+      "required": "Il valore non può essere vuoto.",
+      "ean13Digits": "EAN-13 può contenere solo cifre.",
+      "ean13Length": "EAN-13 richiede esattamente 13 cifre.",
+      "ean8Digits": "EAN-8 può contenere solo cifre.",
+      "ean8Length": "EAN-8 richiede esattamente 8 cifre.",
+      "upcaDigits": "UPC-A può contenere solo cifre.",
+      "upcaLength": "UPC-A richiede 11 o 12 cifre.",
+      "upceDigits": "UPC-E può contenere solo cifre.",
+      "upceLength": "UPC-E richiede da 6 a 8 cifre.",
+      "code39Invalid": "Il Code 39 supporta solo cifre, lettere maiuscole e i caratteri: - . $ / + % e lo spazio.",
+      "codabarInvalid": "Il Codabar deve iniziare e finire con A, B, C o D e contenere cifre o i caratteri: - $ : / . +",
+      "itfDigits": "ITF richiede solo cifre.",
+      "itfEven": "ITF richiede un numero pari di cifre.",
+      "pharmacodeDigits": "Il Pharmacode richiede solo cifre.",
+      "pharmacodeRange": "Il Pharmacode deve essere un numero compreso tra 3 e 131070.",
+      "unsupportedType": "Tipo di codice a barre non supportato.",
+      "generationFailed": "Impossibile generare il codice a barre per i dati forniti.",
+      "renderFailed": "Errore di generazione del codice a barre.",
+      "invalid": "Valore del codice a barre non valido."
+    }
+  },
+  "generator": {
+    "panelTitle": "Codice singolo",
+    "panelDescription": "Inserisci i dati, scegli un tipo di codice a barre e regola l'aspetto.",
+    "fields": {
+      "type": "Tipo di codice",
+      "value": "Dati da codificare",
+      "displayValue": "Testo personalizzato",
+      "format": "Formato",
+      "rotation": "Rotazione",
+      "barColor": "Colore del codice",
+      "backgroundColor": "Sfondo",
+      "height": "Altezza",
+      "margin": "Margine",
+      "barWidth": "Larghezza barra",
+      "fontSize": "Dimensione carattere",
+      "scale": "Scala",
+      "text": "Testo sotto il codice"
+    },
+    "placeholders": {
+      "type": "Scegli il tipo di codice",
+      "value": "Inserisci o incolla un valore"
+    },
+    "textOptions": {
+      "show": "Mostra sotto il codice",
+      "hide": "Non mostrare"
+    },
+    "actions": {
+      "generate": "Genera",
+      "generating": "Generazione...",
+      "capture": "Cattura codice",
+      "downloadSvg": "Scarica SVG",
+      "downloadPng": "Scarica PNG",
+      "print": "Stampa"
+    },
+    "preview": {
+      "title": "Anteprima",
+      "description": "Il codice generato apparirà qui.",
+      "toolbarLabel": "Azioni di anteprima"
+    },
+    "previewFrameToggle": "Attiva anteprima cornice",
+    "exportErrors": {
+      "svg": "Impossibile scaricare il file SVG.",
+      "png": "Impossibile scaricare il file PNG.",
+      "capture": "Impossibile catturare il codice.",
+      "print": "Impossibile aprire la vista di stampa."
+    }
+  },
+  "barcodePreview": {
+    "ariaLabel": "Anteprima codice a barre",
+    "empty": "L'anteprima apparirà dopo la generazione di un codice.",
+    "metadata": {
+      "type": "Tipo:",
+      "format": "Formato:",
+      "status": "Stato:"
+    },
+    "status": {
+      "ready": "Pronto",
+      "error": "Errore",
+      "empty": "Nessuno"
+    }
+  },
+  "searchableSelect": {
+    "placeholder": "Cerca...",
+    "empty": "Nessun risultato trovato."
+  },
+  "dropzone": {
+    "defaultTitle": "Trascina il file qui",
+    "defaultDescription": "La gestione del caricamento verrà aggiunta in seguito."
+  },
+  "xlsx": {
+    "title": "XLSX",
+    "description": "Carica un foglio di calcolo, seleziona i dati e genera un nuovo file con i codici.",
+    "batch": {
+      "title": "Lotto XLSX",
+      "description": "Carica un foglio e configura le colonne.",
+      "instruction": "Scegli un file .xlsx per avviare il processo a lotti."
+    },
+    "dropzone": {
+      "selectFile": "Scegli file XLSX",
+      "changeFile": "Clicca per cambiare file",
+      "dropOrClick": "Trascina e rilascia o clicca"
+    },
+    "appearance": {
+      "title": "Aspetto del codice",
+      "description": "Impostazioni visive per i codici generati."
+    },
+    "actions": {
+      "deselect": "Deseleziona"
+    },
+    "placement": {
+      "label": "Posizione rispetto al testo",
+      "options": {
+        "topLeft": "In alto a sinistra",
+        "top": "In alto",
+        "topRight": "In alto a destra",
+        "left": "A sinistra",
+        "right": "A destra",
+        "bottomLeft": "In basso a sinistra",
+        "bottom": "In basso",
+        "bottomRight": "In basso a destra"
+      }
+    },
+    "leaveGuard": {
+      "eyebrow": "Lavoro non salvato",
+      "title": "Lasciare la scheda XLSX?",
+      "description": "Se lasci questa scheda ora, la configurazione e l'anteprima XLSX correnti andranno perse.",
+      "cancel": "Annulla",
+      "confirm": "OK"
+    },
+    "preview": {
+      "title": "Anteprima foglio",
+      "titleWithSheet": "Anteprima: {{sheetName}}",
+      "header": "L'anteprima mostra le prime 1000 righe. Clicca sulla colonna dei dati, quindi su una colonna di destinazione vuota.",
+      "placeholder": "Carica un file .xlsx per vedere l'anteprima."
+    },
+    "success": {
+      "generated": "Generati con successo {{count}} codici."
+    },
+    "errors": {
+      "onlyXlsx": "Sono accettati solo file .xlsx.",
+      "loadFailed": "Errore durante il caricamento del file.",
+      "generateFailed": "Errore durante la generazione del file.",
+      "unknown": "Errore sconosciuto.",
+      "occupiedCellShort": "Cella occupata",
+      "sheetMissingInFile": "Impossibile trovare il foglio nel file.",
+      "sheetNotFound": "Il foglio \"{{sheetName}}\" non è stato trovato.",
+      "noDataInColumn": "Nessun dato nella colonna selezionata.",
+      "invalidAppearance": "Impostazioni dell'aspetto non valide.",
+      "sameColumns": "La colonna sorgente e la colonna di destinazione non mogą essere le stesse.",
+      "targetColumnMustBeEmpty": "La colonna di destinazione deve essere vuota per le righe selezionate.",
+      "occupiedCellsList": "Celle occupate: {{cells}}",
+      "noSheets": "Nessun foglio nel file.",
+      "targetCellNotEmpty": "La cella della colonna di destinazione (riga {{rowNumber}}) non è vuota."
+    }
+  },
+  "docx": {
+    "title": "DOCX",
+    "description": "Carica un documento, indica i dati nell'anteprima e genera un nuovo DOCX.",
+    "leaveGuard": {
+      "eyebrow": "Lavoro non salvato",
+      "title": "Lasciare la scheda DOCX?",
+      "description": "Se lasci questa scheda ora, la configurazione e l'anteprima DOCX correnti andranno perse.",
+      "cancel": "Annulla",
+      "confirm": "OK"
+    },
+    "dropzoneTitle": "Trascina un file DOCX qui o scegline uno dal disco",
+    "dropzoneDescription": "Verranno elaborate tutte le righe di testo del documento.",
+    "previewTitle": "Anteprima",
+    "previewPlaceholder": "L'anteprima del documento apparirà qui",
+    "dropzone": {
+      "selectFile": "Scegli file DOCX",
+      "changeFile": "Clicca per cambiare file",
+      "dropOrClick": "Trascina e rilascia o clicca"
+    },
+    "preview": {
+      "noLines": "Nessuna riga di testo trovata nel documento.",
+      "textColumn": "Testo",
+      "placeholder": "Carica un file .docx per vedere l'anteprima."
+    },
+    "errors": {
+      "onlyDocx": "Sono accettati solo file .docx.",
+      "loadFailed": "Errore durante il caricamento del file.",
+      "generateFailed": "Errore durante la generazione del file."
+    },
+    "success": {
+      "generated": "Generati con successo {{count}} codici a barre."
+    },
+    "actions": {
+      "print": "Stampa",
+      "deselect": "Deseleziona"
+    }
+  },
+  "help": {
+    "title": "Centro assistenza e documentazione",
+    "description": "Guida completa alle funzionalità di Barcode Studio. Scopri come preparare i file e generare codici in modo ottimale.",
+    "sections": {
+      "generator": {
+        "title": "Generatore singolo",
+        "body": "Uno strumento per creare codici precisi. Puoi scaricarli come SVG (vettoriale) o PNG (raster). La funzione 'Testo personalizzato' ti consente di sovrascrivere l'etichetta sotto il codice senza modificare i dati codificati."
+      },
+      "xlsx": {
+        "title": "Elaborazione fogli (XLSX)",
+        "workflow": {
+          "title": "Istruzioni passo-passo:",
+          "step1": "1. Carica un file .xlsx nella sezione XLSX.",
+          "step2": "2. Clicca sulla colonna che contiene i dati (es. numeri EAN).",
+          "step3": "3. Clicca su una colonna vuota dove dovrebbero apparire i codici.",
+          "step4": "4. Clicca su 'Genera': l'app inserirà i codici a barre direttamente nelle celle, utilizzando il testo del foglio come etichette."
+        }
+      },
+      "docx": {
+        "title": "Editor di documenti (DOCX)",
+        "workflow": {
+          "title": "Lavorare con un documento DOCX:",
+          "step1": "1. Scegli il tipo di codice a barre, quindi carica un file .docx con valori testuali da codificare.",
+          "step2": "2. Regola l'aspetto: altezza, larghezza barra, colori e visibilità del testo (le etichette vengono estratte dal documento).",
+          "step3": "3. Controlla l'anteprima, stampala o clicca su 'Genera' per scaricare un nuovo file DOCX con i codici a barre."
+        }
+      },
+      "barcodeSet": {
+        "title": "Gestione dei set di codici (Bulk)",
+        "body": "Uno strumento per la gestione massiva dei codici a barre. Puoi aggiungere, rimuovere e modificare più widget contemporaneamente, assegnando a ciascuno dati univoci e un testo dell'etichetta personalizzato.",
+        "features": {
+          "title": "Caratteristiche principali:",
+          "nav": "Navigazione: usa il menu a punti sulla destra per saltare rapidamente tra i gruppi di codici a barre (ogni 5 elementi).",
+          "edit": "Modifica: clicca sull'icona della matita per aprire il pannello delle impostazioni laterale per un codice specifico e modificare dati, aspetto o 'Testo personalizzato'.",
+          "print": "Stampa tutto: il pulsante della stampante genera una griglia A4 pronta per la stampa con tutti i codici.",
+          "shortcut": "Scorciatoia da tastiera: Ctrl+P attiva automaticamente la funzionalità di stampa massiva."
+        }
+      },
+      "printing": {
+        "title": "Regole di stampa",
+        "body": "Per la migliore qualità:\n1. Nella finestra di stampa del browser, disabilita 'Intestazioni e piè di pagina'.\n2. Imposta i 'Margini' su 'Nessuno' o 'Minimi' se il documento DOCX ha i suoi margini.\n3. La scala deve essere al 100% per mantenere le dimensioni A4."
+      },
+      "troubleshooting": {
+        "title": "Risoluzione dei problemi",
+        "eanError": "Errore EAN-13/8: questi codici richiedono solo cifre. L'ultima cifra di controllo verrà calcolata automaticamente se ne fornisci una in meno di quella richiesta.",
+        "invisibleCode": "Il codice è invisibile? Controlla se il colore del codice è lo stesso dello sfondo."
+      },
+      "standards": {
+        "title": "Standard e requisiti",
+        "intro": "Ogni standard di codice a barre ha requisiti specifici per il tipo e la lunghezza dei dati.",
+        "types": {
+          "CODE128": {
+            "name": "Code 128",
+            "desc": "Lo standard più universale. Supporta tutti i caratteri ASCII (lettere, numeri, simboli). Ideale per logistica ed etichette interne."
+          },
+          "EAN13": {
+            "name": "EAN-13 / EAN-8",
+            "desc": "Standard per la vendita al dettaglio. Richiede solo cifre. EAN-13 (12-13 cifre), EAN-8 (7-8 cifre). L'ultima cifra è un checksum."
+          },
+          "QR": {
+            "name": "Codice QR / Data Matrix",
+            "desc": "Codici 2D. Possono memorizzare enormi quantità di dati, inclusi link URL e testi lunghi. Altamente resistenti ai danni."
+          },
+          "CODE39": {
+            "name": "Code 39",
+            "desc": "Supporta lettere maiuscole, cifre e alcuni caratteri speciali (- . $ / + % spazio). Frequentemente utilizzato nell'industria automobilistica."
+          },
+          "ITF": {
+            "name": "ITF (Interleaved 2 of 5)",
+            "desc": "Solo cifre, deve essere un numero pari. Un codice numerico molto denso."
+          },
+          "CODE93": {
+            "name": "Code 93",
+            "desc": "Maggiore densità rispetto al Code 39. Supporta il set completo deicaratteri ASCII."
+          },
+          "UPC": {
+            "name": "UPC-A / UPC-E",
+            "desc": "Standard statunitensi. UPC-A (11-12 cifre), UPC-E (6-8 cifre). Utilizzati principalmente nella vendita al dettaglio negli USA e in Canada."
+          },
+          "CODABAR": {
+            "name": "Codabar",
+            "desc": "Utilizzato in biblioteche e banche del sangue. Deve iniziare e finire con le lettere A, B, C o D."
+          },
+          "PHARMACODE": {
+            "name": "Pharmacode",
+            "desc": "Codice specializzato per l'industria farmaceutica. Supporta solo numeri interi da 3 a 131070."
+          },
+          "DATAMATRIX": {
+            "name": "Data Matrix",
+            "desc": "Un codice 2D molto piccolo e denso. Comune nelle industrie elettronica e medica."
+          },
+          "PDF417": {
+            "name": "PDF417",
+            "desc": "Un codice 2D lineare utilizzato su documenti d'identità e biglietti. Può memorizzare grandi quantità di testo."
+          },
+          "AZTEC": {
+            "name": "Codice Aztec",
+            "desc": "Un codice 2D ad alta densità simile al QR. Comunemente usato nei biglietti ferroviari e aerei."
+          }
+        }
+      },
+      "faq": {
+        "title": "Domande frequenti",
+        "q1": "I miei dati sono al sicuro?",
+        "a1": "Sì, tutta l'elaborazione avviene localmente nel tuo browser. Nessun file o dato viene inviato a un server.",
+        "q2": "Perché non posso caricare un file .xls?",
+        "a2": "Supportiamo solo il formato moderno .xlsx. I vecchi file .xls devono prima essere salvati come .xlsx in Excel."
+      }
+    }
+  },
+  "barcodeSet": {
+    "title": "Set di codici",
+    "description": "Crea e gestisci più codici a barre in un unico spazio di lavoro.",
+    "itemTitle": "Codice a barre n. {{index}}",
+    "appearance": {
+      "title": "Aspetto",
+      "toggle": "Impostazioni aspetto"
+    },
+    "actions": {
+      "add": "Aggiungi codice",
+      "remove": "Rimuovi",
+      "duplicate": "Duplica",
+      "duplicateLast": "Duplica l'ultimo",
+      "print": "Stampa",
+      "printAll": "Stampa tutto",
+      "clearAll": "Cancella tutto",
+      "edit": "Modifica",
+      "previous": "Precedente",
+      "next": "Successivo",
+      "import": "Importa",
+      "export": "Esporta",
+      "importText": "Importa da testo",
+      "exportJson": "Esporta set",
+      "importJson": "Importa set",
+      "resetSaved": "Ripristina set salvato"
+    },
+    "view": {
+      "compact": "Vista compatta",
+      "full": "Vista completa"
+    },
+    "import": {
+      "title": "Importa codici a barre",
+      "textPlaceholder": "Un codice a barre per riga...",
+      "replace": "Sostituisci attuali",
+      "append": "Aggiungi agli attuali",
+      "success": "{{count}} codici a barre importati con successo.",
+      "error": "Formato file non valido.",
+      "jsonHint": "Carica un file .json precedentemente esportato."
+    },
+    "status": {
+      "ready": "Pronto",
+      "empty": "Vuoto",
+      "invalid": "Non valido"
+    },
+    "sidebar": {
+      "title": "Impostazioni codice",
+      "editing": "Modifica codice a barre n. {{index}}",
+      "sections": {
+        "data": "Dati e contenuto",
+        "barcode": "Standard del codice",
+        "appearance": "Aspetto e dimensioni",
+        "text": "Testo ed etichette"
+      }
+    }
+  }
+}

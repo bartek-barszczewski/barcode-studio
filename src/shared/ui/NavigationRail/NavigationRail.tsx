@@ -1,5 +1,6 @@
 import { NavLink } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import { useState, useEffect, useRef } from 'react'
 import clsx from 'clsx'
 import {
   CircleHelp,
@@ -9,6 +10,7 @@ import {
   Languages,
   Library,
   ScanBarcode,
+  Check,
 } from 'lucide-react'
 import styles from './NavigationRail.module.css'
 
@@ -21,12 +23,41 @@ const navItems = [
   { to: '/help', labelKey: 'navigation.help', icon: CircleHelp },
 ]
 
+const languages = [
+  { code: 'pl', label: 'Polski' },
+  { code: 'en', label: 'English' },
+  { code: 'de', label: 'Deutsch' },
+  { code: 'es', label: 'Español' },
+  { code: 'fr', label: 'Français' },
+  { code: 'it', label: 'Italiano' },
+  { code: 'ja', label: '日本語' },
+]
+
 export function NavigationRail() {
   const { i18n, t } = useTranslation()
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const menuRef = useRef<HTMLDivElement>(null)
 
-  const handleLanguageToggle = () => {
-    void i18n.changeLanguage(i18n.language === 'pl' ? 'en' : 'pl')
+  const handleLanguageChange = (code: string) => {
+    void i18n.changeLanguage(code)
+    setIsMenuOpen(false)
   }
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setIsMenuOpen(false)
+      }
+    }
+
+    if (isMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside)
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [isMenuOpen])
 
   return (
     <aside className={styles.rail}>
@@ -59,17 +90,37 @@ export function NavigationRail() {
       </nav>
 
       <div className={styles.bottomSection}>
-        <button
-          aria-label={t('navigation.languageToggle')}
-          className={styles.languageButton}
-          onClick={handleLanguageToggle}
-          type="button"
-        >
-          <div className={styles.iconContainer}>
-            <Languages aria-hidden="true" size={20} />
-          </div>
-          <span className={styles.label}>PL/EN</span>
-        </button>
+        <div className={styles.languageWrapper} ref={menuRef}>
+          <button
+            aria-label={t('navigation.languageToggle')}
+            className={styles.languageButton}
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            type="button"
+          >
+            <div className={styles.iconContainer}>
+              <Languages aria-hidden="true" size={20} />
+            </div>
+            <span className={styles.label}>{i18n.language.toUpperCase()}</span>
+          </button>
+
+          {isMenuOpen && (
+            <div className={styles.languageMenu}>
+              {languages.map((lang) => (
+                <button
+                  key={lang.code}
+                  className={clsx(
+                    styles.menuItem,
+                    i18n.language === lang.code && styles.activeMenuItem
+                  )}
+                  onClick={() => handleLanguageChange(lang.code)}
+                >
+                  <span style={{ flex: 1 }}>{lang.label}</span>
+                  {i18n.language === lang.code && <Check size={16} />}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </aside>
   )
