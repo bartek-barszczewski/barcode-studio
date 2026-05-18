@@ -95,11 +95,13 @@ export const printDocxPreview = async (paperElement: HTMLElement): Promise<void>
   frameDocument.close()
 
   await new Promise<void>((resolve) => {
-    window.setTimeout(resolve, 50)
+    // Wait for styles and barcodes to settle
+    window.setTimeout(resolve, 250)
   })
 
   frameWindow.focus()
   frameWindow.print()
 
-  window.setTimeout(cleanup, 1000)
+  // Keep frame a bit longer to ensure print dialog doesn't break
+  window.setTimeout(cleanup, 2000)
 }
