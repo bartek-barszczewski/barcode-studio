@@ -396,6 +396,8 @@
       "printAll": "Print all",
       "clearAll": "Clear all",
       "edit": "Edit",
+      "previous": "Previous",
+      "next": "Next",
       "import": "Import",
       "export": "Export",
       "importText": "Import from text",

@@ -347,6 +347,8 @@
       "printAll": "Drukuj wszystko",
       "clearAll": "Wyczyść wszystko",
       "edit": "Edytuj",
+      "previous": "Poprzedni",
+      "next": "Następny",
       "import": "Importuj",
       "export": "Eksportuj",
       "importText": "Importuj z tekstu",

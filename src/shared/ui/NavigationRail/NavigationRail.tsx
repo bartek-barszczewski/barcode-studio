@@ -33,7 +33,6 @@ export function NavigationRail() {
       <div className={styles.topSection}>
         <NavLink className={styles.brand} to="/home">
           <ScanBarcode aria-hidden="true" size={32} />
-          <span className={styles.brandText}>{t('navigation.brand')}</span>
         </NavLink>
       </div>
 
@@ -49,6 +48,7 @@ export function NavigationRail() {
               key={item.to}
               to={item.to}
             >
+              <div className={styles.activeIndicator} />
               <div className={styles.iconContainer}>
                 <Icon aria-hidden="true" size={24} />
               </div>
@@ -65,8 +65,10 @@ export function NavigationRail() {
           onClick={handleLanguageToggle}
           type="button"
         >
-          <Languages aria-hidden="true" size={20} />
-          <span className={styles.label}>PL / EN</span>
+          <div className={styles.iconContainer}>
+            <Languages aria-hidden="true" size={20} />
+          </div>
+          <span className={styles.label}>PL/EN</span>
         </button>
       </div>
     </aside>

@@ -1,6 +1,6 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Plus, Minus, Printer, Trash2 } from 'lucide-react'
+import { Plus, Minus, Printer, Trash2, ChevronUp, ChevronDown } from 'lucide-react'
 import { useBarcodeSet } from '../../hooks/useBarcodeSet'
 import { Button } from '../../../../shared/ui/Button/Button'
 import { BarcodeSetCard } from './BarcodeSetCard'
@@ -28,6 +28,7 @@ export function BarcodeSetView() {
   const [isPrinting, setIsPrinting] = useState(false)
   const [activeItemIndex, setActiveItemIndex] = useState(0)
   const [isProgrammaticScroll, setIsProgrammaticScroll] = useState(false)
+  const prevItemsLengthRef = useRef(items.length)
 
   // Use IntersectionObserver for high-performance scroll tracking
   useEffect(() => {
@@ -62,6 +63,22 @@ export function BarcodeSetView() {
 
     return () => observer.disconnect()
   }, [items.length, isProgrammaticScroll])
+
+  // Sync selection when items change (add/remove) and ensure drawer stays open
+  useEffect(() => {
+    if (isDrawerOpen) {
+      const currentExists = items.find(i => i.id === selectedItemId)
+      
+      // If a new item was added OR the currently selected item was removed
+      if (items.length > prevItemsLengthRef.current || !currentExists) {
+        const lastItem = items[items.length - 1]
+        if (lastItem) {
+          setSelectedItemId(lastItem.id)
+        }
+      }
+    }
+    prevItemsLengthRef.current = items.length
+  }, [items, isDrawerOpen, selectedItemId])
 
   // Calculate indicator position (only for every 5th dot)
   const activeDotIndex = Math.floor(activeItemIndex / 5)
@@ -111,17 +128,24 @@ export function BarcodeSetView() {
   const selectedItem = items.find(i => i.id === selectedItemId) || null
   const selectedIndex = items.findIndex(i => i.id === selectedItemId)
 
-  // Ensure selection persists if drawer is open but item index changes (e.g. duplicate)
-  useEffect(() => {
-    if (isDrawerOpen && !items.find(i => i.id === selectedItemId)) {
-      // Use a timeout to avoid synchronous setState warning in effect
-      const timer = setTimeout(() => setIsDrawerOpen(false), 0)
-      return () => clearTimeout(timer)
+  const handleNavigate = useCallback((direction: 'up' | 'down') => {
+    if (items.length <= 1 || selectedIndex === -1) return
+
+    let nextIndex = selectedIndex
+    if (direction === 'up') {
+      nextIndex = (selectedIndex - 1 + items.length) % items.length
+    } else {
+      nextIndex = (selectedIndex + 1) % items.length
     }
-  }, [items, selectedItemId, isDrawerOpen])
+
+    const nextItem = items[nextIndex]
+    if (nextItem) {
+      setSelectedItemId(nextItem.id)
+      scrollToItem(nextIndex)
+    }
+  }, [items, selectedIndex, scrollToItem])
 
   const handleAddItem = () => {
-    setIsDrawerOpen(false)
     addItem()
     
     // Smooth scroll to bottom after state update
@@ -134,7 +158,6 @@ export function BarcodeSetView() {
   }
 
   const handleRemoveLastItem = () => {
-    setIsDrawerOpen(false)
     removeLastItem()
   }
 
@@ -177,11 +200,22 @@ export function BarcodeSetView() {
         e.preventDefault()
         void handlePrintAll()
       }
+      
+      // Arrow navigation when sidebar is open
+      if (isDrawerOpen) {
+        if (e.key === 'ArrowUp') {
+          e.preventDefault()
+          handleNavigate('up')
+        } else if (e.key === 'ArrowDown') {
+          e.preventDefault()
+          handleNavigate('down')
+        }
+      }
     }
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [handlePrintAll]) // Optimized dependencies
+  }, [handlePrintAll, isDrawerOpen, handleNavigate]) // Optimized dependencies
 
   return (
     <div className={`${styles.container} ${isDrawerOpen ? styles.containerWithDrawer : ''}`}>
@@ -279,6 +313,25 @@ export function BarcodeSetView() {
           })}
         </nav>
       )}
+
+      <div className={`${styles.sidebarNavArrows} ${isDrawerOpen ? styles.sidebarNavArrowsVisible : ''}`}>
+        <button 
+          className={styles.navArrowButton} 
+          onClick={() => handleNavigate('up')}
+          aria-label={t('barcodeSet.actions.previous')}
+          title={t('barcodeSet.actions.previous')}
+        >
+          <ChevronUp size={28} />
+        </button>
+        <button 
+          className={styles.navArrowButton} 
+          onClick={() => handleNavigate('down')}
+          aria-label={t('barcodeSet.actions.next')}
+          title={t('barcodeSet.actions.next')}
+        >
+          <ChevronDown size={28} />
+        </button>
+      </div>
 
       <BarcodeSetSettingsSidebar
         item={selectedItem}
