@@ -1,0 +1,438 @@
+{
+  "navigation": {
+    "ariaLabel": "メインナビゲーション",
+    "brand": "Barcode Studio",
+    "home": "ホーム",
+    "generator": "ジェネレーター",
+    "xlsx": "XLSX",
+    "docx": "DOCX",
+    "barcodeSet": "バーコードセット",
+    "help": "ヘルプ",
+    "languageToggle": "言語を切り替え"
+  },
+  "home": {
+    "eyebrow": "高速オペレーター向けバーコードワークスペース",
+    "title": "生産準備が整ったバーコードを生成、一括処理、エクスポート。",
+    "description": "Barcode Studioは、個別のラベル、大量のバーコードセット、XLSXへの書き戻し、DOCX出力をすべてブラウザ内で完結させます。ファイルをどこにも送信しません。",
+    "primaryAction": "ジェネレーターを開く",
+    "secondaryAction": "ヘルプを見る",
+    "sectionLabel": "MD3 ランディング",
+    "spotlightTitle": "実際のドキュメントフロー向けに構築",
+    "spotlightDescription": "高速プレビュー、印刷準備完了の出力、プライベートなローカルファイル処理のためのワークスペース。",
+    "browserFirstMetric": "ブラウザファーストのワークフロー",
+    "spotlightPoints": {
+      "generator": "SVGおよびPNGエクスポートを備えた個別バーコードデザイン",
+      "set": "高速ナビゲーションと印刷レイアウトによる一括編集",
+      "xlsx": "セルへのバーコード挿入を備えたスプレッドシートプレビュー",
+      "docx": "テキストをレンダリングされたコードに変換するDOCX処理"
+    },
+    "slogans": {
+      "title": "チームに採用される理由",
+      "items": [
+        "あらゆるバーコードシナリオに対応する高速な画面。",
+        "画面プレビューだけでなく、印刷品質を考慮して構築。",
+        "ファイルがブラウザ内に留まるため、設計からプライバシーを保護。",
+        "スループット、明快さ、コントロールを必要とするオペレーターに最適。"
+      ]
+    },
+    "video": {
+      "title": "ビデオスロット",
+      "description": "YouTubeのウォークスルーまたは製品デモ用の予約スペース。",
+      "placeholder": "ここにYouTubeリンクを埋め込む"
+    },
+    "footer": {
+      "eyebrow": "準備完了",
+      "title": "ランディングからアクションへ直接移動",
+      "description": "タスクに合ったワークフローを選択し、バーコード、スプレッドシート、ドキュメントの操作を一貫したワークスペース内に保持します。",
+      "badge": "ローカル処理。サーバーへのアップロードなし。",
+      "linksLabel": "ホームクイックリンク"
+    },
+    "featureCards": {
+      "title": "コアワークフロー",
+      "generatorTitle": "個別ジェネレーター",
+      "generatorBody": "バーコードの種類、寸法、色、エクスポート形式を1つのパネルで調整。",
+      "setTitle": "バーコードセット",
+      "setBody": "永続的なカードと印刷準備完了のレイアウトで大量のバッチを管理。",
+      "xlsxTitle": "XLSX処理",
+      "xlsxBody": "スプレッドシートをプレビューし、ソース列をマップして、バーコード画像を書き戻します。",
+      "docxTitle": "DOCX処理",
+      "docxBody": "Wordファイルからテキストを読み取り、バーコード付きの新しいドキュメントを生成。"
+    }
+  },
+  "barcode": {
+    "types": {
+      "CODE128": "Code 128",
+      "EAN13": "EAN-13",
+      "EAN8": "EAN-8",
+      "UPCA": "UPC-A",
+      "UPCE": "UPC-E",
+      "CODE39": "Code 39",
+      "CODE93": "Code 93",
+      "CODABAR": "Codabar",
+      "ITF": "Interleaved 2 of 5 (ITF)",
+      "DATAMATRIX": "Data Matrix",
+      "PDF417": "PDF417",
+      "AZTEC": "Aztec Code",
+      "PHARMACODE": "Pharmacode",
+      "QR": "QRコード"
+    },
+    "validation": {
+      "required": "値を空にすることはできません。",
+      "ean13Digits": "EAN-13は数字のみを含めることができます。",
+      "ean13Length": "EAN-13は正確に13桁である必要があります。",
+      "ean8Digits": "EAN-8は数字のみを含めることができます。",
+      "ean8Length": "EAN-8は正確に8桁である必要があります。",
+      "upcaDigits": "UPC-Aは数字のみを含めることができます。",
+      "upcaLength": "UPC-Aは11桁または12桁である必要があります。",
+      "upceDigits": "UPC-Eは数字のみを含めることができます。",
+      "upceLength": "UPC-Eは6桁から8桁である必要があります。",
+      "code39Invalid": "Code 39は、数字、大文字、および文字：- . $ / + % とスペースのみをサポートします。",
+      "codabarInvalid": "CodabarはA、B、C、またはDで始まり終わる必要があり、数字または文字：- $ : / . + を含める必要があります。",
+      "itfDigits": "ITFは数字のみが必要です。",
+      "itfEven": "ITFは偶数桁数である必要があります。",
+      "pharmacodeDigits": "Pharmacodeは数字のみが必要です。",
+      "pharmacodeRange": "Pharmacodeは3から131070までの数値である必要があります。",
+      "unsupportedType": "サポートされていないバーコードの種類。",
+      "generationFailed": "指定されたデータのバーコードを生成できませんでした。",
+      "renderFailed": "バーコード生成エラー。",
+      "invalid": "無効なバーコード値。"
+    }
+  },
+  "generator": {
+    "panelTitle": "個別コード",
+    "panelDescription": "データを入力し、バーコードの種類を選択して、外観を調整します。",
+    "fields": {
+      "type": "バーコードの種類",
+      "value": "エンコードするデータ",
+      "displayValue": "カスタムテキスト",
+      "format": "形式",
+      "rotation": "回転",
+      "barColor": "コードの色",
+      "backgroundColor": "背景",
+      "height": "高さ",
+      "margin": "余白",
+      "barWidth": "バーの太さ",
+      "fontSize": "文字サイズ",
+      "scale": "スケール",
+      "text": "バーコード下のテキスト"
+    },
+    "placeholders": {
+      "type": "バーコードの種類を選択",
+      "value": "値を入力または貼り付け"
+    },
+    "textOptions": {
+      "show": "バーコード下に表示",
+      "hide": "表示しない"
+    },
+    "actions": {
+      "generate": "生成",
+      "generating": "生成中...",
+      "capture": "コードをキャプチャ",
+      "downloadSvg": "SVGをダウンロード",
+      "downloadPng": "PNGをダウンロード",
+      "print": "印刷"
+    },
+    "preview": {
+      "title": "プレビュー",
+      "description": "生成されたコードがここに表示されます。",
+      "toolbarLabel": "プレビューアクション"
+    },
+    "previewFrameToggle": "フレームプレビューを有効にする",
+    "exportErrors": {
+      "svg": "SVGファイルをダウンロードできませんでした。",
+      "png": "PNGファイルをダウンロードできませんでした。",
+      "capture": "コードをキャプチャできませんでした。",
+      "print": "印刷ビューを開けませんでした。"
+    }
+  },
+  "barcodePreview": {
+    "ariaLabel": "バーコードプレビュー",
+    "empty": "プレビューはコードを生成した後に表示されます。",
+    "metadata": {
+      "type": "種類:",
+      "format": "形式:",
+      "status": "ステータス:"
+    },
+    "status": {
+      "ready": "準備完了",
+      "error": "エラー",
+      "empty": "なし"
+    }
+  },
+  "searchableSelect": {
+    "placeholder": "検索...",
+    "empty": "結果が見つかりません。"
+  },
+  "dropzone": {
+    "defaultTitle": "ここにファイルをドロップ",
+    "defaultDescription": "アップロード処理は後で追加されます。"
+  },
+  "xlsx": {
+    "title": "XLSX",
+    "description": "スプレッドシートを読み込み、データを選択して、コード付きの新しいファイルを生成します。",
+    "batch": {
+      "title": "XLSX一括処理",
+      "description": "シートを読み込み、列を構成します。",
+      "instruction": "一括処理を開始するには、.xlsxファイルを選択してください。"
+    },
+    "dropzone": {
+      "selectFile": "XLSXファイルを選択",
+      "changeFile": "クリックしてファイルを変更",
+      "dropOrClick": "ドラッグ＆ドロップまたはクリック"
+    },
+    "appearance": {
+      "title": "バーコードの外観",
+      "description": "生成されるバーコードの視覚設定。"
+    },
+    "actions": {
+      "deselect": "選択解除"
+    },
+    "placement": {
+      "label": "テキストに対する位置",
+      "options": {
+        "topLeft": "左上",
+        "top": "上",
+        "topRight": "右上",
+        "left": "左",
+        "right": "右",
+        "bottomLeft": "左下",
+        "bottom": "下",
+        "bottomRight": "右下"
+      }
+    },
+    "leaveGuard": {
+      "eyebrow": "保存されていない作業",
+      "title": "XLSXタブを離れますか？",
+      "description": "今このタブを離れると、現在のXLSX構成とプレビューは失われます。",
+      "cancel": "キャンセル",
+      "confirm": "OK"
+    },
+    "preview": {
+      "title": "シートプレビュー",
+      "titleWithSheet": "プレビュー: {{sheetName}}",
+      "header": "プレビューには最初の1000行が表示されます。データ列をクリックしてから、空のターゲット列をクリックしてください。",
+      "placeholder": ".xlsxファイルを読み込んでプレビューを表示します。"
+    },
+    "success": {
+      "generated": "{{count}} 個のコードが正常に生成されました。"
+    },
+    "errors": {
+      "onlyXlsx": ".xlsxファイルのみが許可されます。",
+      "loadFailed": "ファイルの読み込み中にエラーが発生しました。",
+      "generateFailed": "ファイルの生成中にエラーが発生しました。",
+      "unknown": "不明なエラーが発生しました。",
+      "occupiedCellShort": "セルが使用中",
+      "sheetMissingInFile": "ファイル内にシートが見つかりませんでした。",
+      "sheetNotFound": "シート \"{{sheetName}}\" が見つかりませんでした。",
+      "noDataInColumn": "選択された列にデータがありません。",
+      "invalidAppearance": "無効な外観設定です。",
+      "sameColumns": "ソース列とターゲット列を同じにすることはできません。",
+      "targetColumnMustBeEmpty": "選択された行のターゲット列は空である必要があります。",
+      "occupiedCellsList": "使用中のセル: {{cells}}",
+      "noSheets": "ファイル内にシートがありません。",
+      "targetCellNotEmpty": "ターゲット列のセル（{{rowNumber}} 行目）が空ではありません。"
+    }
+  },
+  "docx": {
+    "title": "DOCX",
+    "description": "ドキュメントを読み込み、プレビューでデータを指定して、新しいDOCXを生成します。",
+    "leaveGuard": {
+      "eyebrow": "保存されていない作業",
+      "title": "DOCXタブを離れますか？",
+      "description": "今このタブを離れると、現在のDOCX構成とプレビューは失われます。",
+      "cancel": "キャンセル",
+      "confirm": "OK"
+    },
+    "dropzoneTitle": "ここにDOCXファイルをドラッグするか、ディスクから選択してください",
+    "dropzoneDescription": "ドキュメント内のすべてのテキスト行が処理されます。",
+    "previewTitle": "プレビュー",
+    "previewPlaceholder": "ドキュメントのプレビューがここに表示されます",
+    "dropzone": {
+      "selectFile": "DOCXファイルを選択",
+      "changeFile": "クリックしてファイルを変更",
+      "dropOrClick": "ドラッグ＆ドロップまたはクリック"
+    },
+    "preview": {
+      "noLines": "ドキュメント内にテキスト行が見つかりませんでした。",
+      "textColumn": "テキスト",
+      "placeholder": ".docxファイルを読み込んでプレビューを表示します。"
+    },
+    "errors": {
+      "onlyDocx": ".docxファイルのみが許可されます。",
+      "loadFailed": "ファイルの読み込み中にエラーが発生しました。",
+      "generateFailed": "ファイルの生成中にエラーが発生しました。"
+    },
+    "success": {
+      "generated": "{{count}} 個のバーコードが正常に生成されました。"
+    },
+    "actions": {
+      "print": "印刷",
+      "deselect": "選択解除"
+    }
+  },
+  "help": {
+    "title": "ヘルプセンターとドキュメント",
+    "description": "Barcode Studio機能の完全なガイド。ファイルを最適に準備し、コードを生成する方法を学びます。",
+    "sections": {
+      "generator": {
+        "title": "個別ジェネレーター",
+        "body": "正確なコードを作成するためのツール。SVG（ベクター）またはPNG（ラスター）としてダウンロードできます。「カスタムテキスト」機能を使用すると、エンコードされたデータを変更せずに、コード下のラベルを上書きできます。"
+      },
+      "xlsx": {
+        "title": "シート処理（XLSX）",
+        "workflow": {
+          "title": "ステップバイステップの指示：",
+          "step1": "1. XLSXセクションで.xlsxファイルをアップロードします。",
+          "step2": "2. データが含まれている列（EAN番号など）をクリックします。",
+          "step3": "3. コードを表示する空の列をクリックします。",
+          "step4": "4. 「生成」をクリックします。アプリはシートのテキストをラベルとして使用し、バーコード画像をセルに直接挿入します。"
+        }
+      },
+      "docx": {
+        "title": "ドキュメントエディター（DOCX）",
+        "workflow": {
+          "title": "DOCXドキュメントの操作：",
+          "step1": "1. バーコードの種類を選択し、エンコードするテキスト値が含まれる.docxファイルをアップロードします。",
+          "step2": "2. 外観（高さ、バーの太さ、色、テキストの表示設定）を調整します（ラベルはドキュメントから取得されます）。",
+          "step3": "3. プレビューを確認して印刷するか、「生成」をクリックしてバーコード付きの新しいDOCXファイルをダウンロードします。"
+        }
+      },
+      "barcodeSet": {
+        "title": "バーコードセットの管理（一括）",
+        "body": "バーコードの一括管理用ツール。複数のウィジェットを同時に追加、削除、編集でき、それぞれに固有のデータとカスタムラベルテキストを指定できます。",
+        "features": {
+          "title": "主な機能：",
+          "nav": "ナビゲーション：右側のドットメニューを使用して、バーコードグループ間（5アイテムごと）をすばやくジャンプします。",
+          "edit": "編集：鉛筆アイコンをクリックして特定のバーコードのサイド設定パネルを開き、データ、外観、または「カスタムテキスト」を変更します。",
+          "print": "すべて印刷：プリンターボタンは、すべてのバーコードを含む印刷準備が整ったA4グリッドを生成します。",
+          "shortcut": "キーボードショートカット：Ctrl+Pで一括印刷機能が自動的にトリガーされます。"
+        }
+      },
+      "printing": {
+        "title": "印刷ルール",
+        "body": "最高の品質を得るために：\n1. ブラウザの印刷ウィンドウで「ヘッダーとフッター」を無効にします。\n2. DOCXドキュメントに独自の余白がある場合は、「余白」を「なし」または「最小」に設定します。\n3. A4サイズを維持するために、スケールは100%にする必要があります。"
+      },
+      "troubleshooting": {
+        "title": "トラブルシューティング",
+        "eanError": "EAN-13/8エラー：これらのコードには数字のみが必要です。必要な桁数より1桁少なく入力すると、最後のチェックデジットが自動的に計算されます。",
+        "invisibleCode": "コードが見えませんか？コードの色が背景と同じでないか確認してください。"
+      },
+      "standards": {
+        "title": "標準と要件",
+        "intro": "各バーコード標準には、データの種類と長さに関する特定の要件があります。",
+        "types": {
+          "CODE128": {
+            "name": "Code 128",
+            "desc": "最も汎用的な標準。すべてのASCII文字（文字、数字、記号）をサポートします。物流や社内ラベルに最適です。"
+          },
+          "EAN13": {
+            "name": "EAN-13 / EAN-8",
+            "desc": "小売標準。数字のみが必要です。EAN-13（12〜13桁）、EAN-8（7〜8桁）。最後の桁はチェックサムです。"
+          },
+          "QR": {
+            "name": "QRコード / Data Matrix",
+            "desc": "2Dコード。URLリンクや長いテキストを含む膨大な量のデータを保存できます。損傷に非常に強いです。"
+          },
+          "CODE39": {
+            "name": "Code 39",
+            "desc": "大文字、数字、およびいくつかの特殊文字（- . $ / + % スペース）をサポートします。自動車業界で頻繁に使用されます。"
+          },
+          "ITF": {
+            "name": "ITF (Interleaved 2 of 5)",
+            "desc": "数字のみで、偶数桁である必要があります。非常に高密度の数値コードです。"
+          },
+          "CODE93": {
+            "name": "Code 93",
+            "desc": "Code 39と比較して密度が高まっています。フルASCII文字セットをサポートします。"
+          },
+          "UPC": {
+            "name": "UPC-A / UPC-E",
+            "desc": "米国標準。UPC-A（11〜12桁）、UPC-E（6〜8桁）。主に米国とカナダの小売業で使用されています。"
+          },
+          "CODABAR": {
+            "name": "Codabar",
+            "desc": "図書館や血液銀行で使用されています。文字A、B、C、またはDで始まり終わる必要があります。"
+          },
+          "PHARMACODE": {
+            "name": "Pharmacode",
+            "desc": "製薬業界向けの専門コード。3から131070までの整数のみをサポートします。"
+          },
+          "DATAMATRIX": {
+            "name": "Data Matrix",
+            "desc": "非常に小さく高密度の2Dコード。電子機器や医療業界で一般的です。"
+          },
+          "PDF417": {
+            "name": "PDF417",
+            "desc": "身分証明書やチケットに使用される線形2Dコード。大量のテキストを保存できます。"
+          },
+          "AZTEC": {
+            "name": "Aztec Code",
+            "desc": "QRに似た高密度の2Dコード。鉄道や航空券で一般的に使用されています。"
+          }
+        }
+      },
+      "faq": {
+        "title": "よくある質問",
+        "q1": "データは安全ですか？",
+        "a1": "はい、すべての処理はブラウザ内でローカルに行われます。ファイルやデータがサーバーに送信されることはありません。",
+        "q2": ".xlsファイルをアップロードできないのはなぜですか？",
+        "a2": "最新の.xlsx形式のみをサポートしています。古い.xlsファイルは、Excelでまず.xlsxとして保存する必要があります。"
+      }
+    }
+  },
+  "barcodeSet": {
+    "title": "バーコードセット",
+    "description": "1つのワークスペースで複数のバーコードを作成および管理します。",
+    "itemTitle": "バーコード #{{index}}",
+    "appearance": {
+      "title": "外観",
+      "toggle": "外観設定"
+    },
+    "actions": {
+      "add": "バーコードを追加",
+      "remove": "削除",
+      "duplicate": "複製",
+      "duplicateLast": "最後を複製",
+      "print": "印刷",
+      "printAll": "すべて印刷",
+      "clearAll": "すべてクリア",
+      "edit": "編集",
+      "previous": "前へ",
+      "next": "次へ",
+      "import": "インポート",
+      "export": "エクスポート",
+      "importText": "テキストからインポート",
+      "exportJson": "セットをエクスポート",
+      "importJson": "セットをインポート",
+      "resetSaved": "保存されたセットをリセット"
+    },
+    "view": {
+      "compact": "コンパクト表示",
+      "full": "全表示"
+    },
+    "import": {
+      "title": "バーコードをインポート",
+      "textPlaceholder": "1行に1つのバーコード...",
+      "replace": "現在を置換",
+      "append": "現在に追加",
+      "success": "{{count}} 個のバーコードが正常にインポートされました。",
+      "error": "無効なファイル形式です。",
+      "jsonHint": "以前にエクスポートした.jsonファイルをアップロードしてください。"
+    },
+    "status": {
+      "ready": "準備完了",
+      "empty": "空",
+      "invalid": "無効"
+    },
+    "sidebar": {
+      "title": "バーコード設定",
+      "editing": "バーコード #{{index}} を編集しています",
+      "sections": {
+        "data": "データとコンテンツ",
+        "barcode": "バーコード標準",
+        "appearance": "外観と寸法",
+        "text": "テキストとラベル"
+      }
+    }
+  }
+}

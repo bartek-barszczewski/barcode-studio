@@ -1,0 +1,438 @@
+{
+  "navigation": {
+    "ariaLabel": "Hauptnavigation",
+    "brand": "Barcode Studio",
+    "home": "Home",
+    "generator": "Generator",
+    "xlsx": "XLSX",
+    "docx": "DOCX",
+    "barcodeSet": "Barcode-Set",
+    "help": "Hilfe",
+    "languageToggle": "Sprache ändern"
+  },
+  "home": {
+    "eyebrow": "Barcode-Arbeitsbereich für schnelle Bediener",
+    "title": "Generieren, stapeln und exportieren Sie produktionsbereite Barcodes.",
+    "description": "Barcode Studio hält jeden Workflow im Browser: Einzeletiketten, Bulk-Barcode-Sets, XLSX-Rückschreibung und DOCX-Ausgabe, ohne Ihre Dateien irgendwohin zu senden.",
+    "primaryAction": "Generator öffnen",
+    "secondaryAction": "Hilfe ansehen",
+    "sectionLabel": "MD3 Landingpage",
+    "spotlightTitle": "Gebaut für realen Dokumentenfluss",
+    "spotlightDescription": "Ein Arbeitsbereich für schnelle Vorschauen, druckfertige Ausgaben und private lokale Dateiverarbeitung.",
+    "browserFirstMetric": "Browser-basierter Workflow",
+    "spotlightPoints": {
+      "generator": "Einzelerstellung von Barcodes mit SVG- und PNG-Export",
+      "set": "Massenbearbeitung mit Schnellnavigation und Drucklayout",
+      "xlsx": "Tabellenkalkulationsvorschau mit Barcode-Einfügung in Zellen",
+      "docx": "DOCX-Verarbeitung, die Text wahlweise in Codes umwandelt"
+    },
+    "slogans": {
+      "title": "Warum Teams es nutzen",
+      "items": [
+        "Ein schneller Bildschirm für jedes Barcode-Szenario.",
+        "Gebaut für Druckqualität, nicht nur für Bildschirmvorschauen.",
+        "Privat durch Design, da Dateien im Browser bleiben.",
+        "Bereit für Bediener, die Durchsatz, Klarheit und Kontrolle benötigen."
+      ]
+    },
+    "video": {
+      "title": "Video-Slot",
+      "description": "Reservierter Platz für Ihren YouTube-Walkthrough oder Ihre Produktdemo.",
+      "placeholder": "Betten Sie hier Ihren YouTube-Link ein"
+    },
+    "footer": {
+      "eyebrow": "Bereit zum Arbeiten",
+      "title": "Gehen Sie direkt von der Landingpage zur Aktion",
+      "description": "Wählen Sie den Workflow, der zu Ihrer Aufgabe passt, und halten Sie Barcode-, Tabellen- und Dokumentenoperationen in einem konsistenten Arbeitsbereich.",
+      "badge": "Lokale Verarbeitung. Kein Server-Upload.",
+      "linksLabel": "Home-Schnelllinks"
+    },
+    "featureCards": {
+      "title": "Kern-Workflows",
+      "generatorTitle": "Einzel-Generator",
+      "generatorBody": "Passen Sie Barcode-Typ, Dimensionen, Farben und Exportformat in einem Panel an.",
+      "setTitle": "Barcode-Set",
+      "setBody": "Verwalten Sie größere Chargen mit persistenten Karten und druckfertigen Layouts.",
+      "xlsxTitle": "XLSX-Verarbeitung",
+      "xlsxBody": "Vorschau von Tabellenkalkulationen, Zuweisung von Quellspalten und Zurückschreiben von Barcode-Bildern.",
+      "docxTitle": "DOCX-Verarbeitung",
+      "docxBody": "Lesen Sie Text aus Word-Dateien und generieren Sie neue Dokumente mit Barcodes."
+    }
+  },
+  "barcode": {
+    "types": {
+      "CODE128": "Code 128",
+      "EAN13": "EAN-13",
+      "EAN8": "EAN-8",
+      "UPCA": "UPC-A",
+      "UPCE": "UPC-E",
+      "CODE39": "Code 39",
+      "CODE93": "Code 93",
+      "CODABAR": "Codabar",
+      "ITF": "Interleaved 2 of 5 (ITF)",
+      "DATAMATRIX": "Data Matrix",
+      "PDF417": "PDF417",
+      "AZTEC": "Aztec Code",
+      "PHARMACODE": "Pharmacode",
+      "QR": "QR Code"
+    },
+    "validation": {
+      "required": "Wert darf nicht leer sein.",
+      "ean13Digits": "EAN-13 darf nur Ziffern enthalten.",
+      "ean13Length": "EAN-13 erfordert genau 13 Ziffern.",
+      "ean8Digits": "EAN-8 darf nur Ziffern enthalten.",
+      "ean8Length": "EAN-8 erfordert genau 8 Ziffern.",
+      "upcaDigits": "UPC-A darf nur Ziffern enthalten.",
+      "upcaLength": "UPC-A erfordert 11 oder 12 Ziffern.",
+      "upceDigits": "UPC-E darf nur Ziffern enthalten.",
+      "upceLength": "UPC-E erfordert 6 bis 8 Ziffern.",
+      "code39Invalid": "Code 39 unterstützt nur Ziffern, Großbuchstaben und die Zeichen: - . $ / + % sowie Leerzeichen.",
+      "codabarInvalid": "Codabar muss mit A, B, C oder D beginnen und enden und Ziffern oder Zeichen enthalten: - $ : / . +",
+      "itfDigits": "ITF erfordert nur Ziffern.",
+      "itfEven": "ITF erfordert eine gerade Anzahl von Ziffern.",
+      "pharmacodeDigits": "Pharmacode erfordert nur Ziffern.",
+      "pharmacodeRange": "Pharmacode muss eine Zahl von 3 bis 131070 sein.",
+      "unsupportedType": "Nicht unterstützter Barcode-Typ.",
+      "generationFailed": "Barcode konnte für die angegebenen Daten nicht generiert werden.",
+      "renderFailed": "Fehler bei der Barcode-Generierung.",
+      "invalid": "Ungültiger Barcode-Wert."
+    }
+  },
+  "generator": {
+    "panelTitle": "Einzelner Code",
+    "panelDescription": "Daten eingeben, Barcode-Typ wählen und Aussehen anpassen.",
+    "fields": {
+      "type": "Barcode-Typ",
+      "value": "Zu kodierende Daten",
+      "displayValue": "Eigener Text",
+      "format": "Format",
+      "rotation": "Drehung",
+      "barColor": "Code-Farbe",
+      "backgroundColor": "Hintergrund",
+      "height": "Höhe",
+      "margin": "Rand",
+      "barWidth": "Strichbreite",
+      "fontSize": "Schriftgröße",
+      "scale": "Skalierung",
+      "text": "Text unter Barcode"
+    },
+    "placeholders": {
+      "type": "Barcode-Typ wählen",
+      "value": "Wert eingeben oder einfügen"
+    },
+    "textOptions": {
+      "show": "Unter Barcode anzeigen",
+      "hide": "Nicht anzeigen"
+    },
+    "actions": {
+      "generate": "Generieren",
+      "generating": "Generiere...",
+      "capture": "Code erfassen",
+      "downloadSvg": "SVG herunterladen",
+      "downloadPng": "PNG herunterladen",
+      "print": "Drucken"
+    },
+    "preview": {
+      "title": "Vorschau",
+      "description": "Der generierte Code wird hier angezeigt.",
+      "toolbarLabel": "Vorschau-Aktionen"
+    },
+    "previewFrameToggle": "Rahmenvorschau aktivieren",
+    "exportErrors": {
+      "svg": "SVG-Datei konnte nicht heruntergeladen werden.",
+      "png": "PNG-Datei konnte nicht heruntergeladen werden.",
+      "capture": "Code konnte nicht erfasst werden.",
+      "print": "Druckansicht konnte nicht geöffnet werden."
+    }
+  },
+  "barcodePreview": {
+    "ariaLabel": "Barcode-Vorschau",
+    "empty": "Die Vorschau erscheint nach der Generierung eines Codes.",
+    "metadata": {
+      "type": "Typ:",
+      "format": "Format:",
+      "status": "Status:"
+    },
+    "status": {
+      "ready": "Bereit",
+      "error": "Fehler",
+      "empty": "Keiner"
+    }
+  },
+  "searchableSelect": {
+    "placeholder": "Suche...",
+    "empty": "Keine Ergebnisse gefunden."
+  },
+  "dropzone": {
+    "defaultTitle": "Datei hier ablegen",
+    "defaultDescription": "Upload-Handling wird später hinzugefügt."
+  },
+  "xlsx": {
+    "title": "XLSX",
+    "description": "Tabellenkalkulation laden, Daten auswählen und neue Datei mit Codes generieren.",
+    "batch": {
+      "title": "XLSX-Stapel",
+      "description": "Blatt laden und Spalten konfigurieren.",
+      "instruction": "Wählen Sie eine .xlsx-Datei aus, um den Stapelprozess zu starten."
+    },
+    "dropzone": {
+      "selectFile": "XLSX-Datei wählen",
+      "changeFile": "Klicken, um Datei zu ändern",
+      "dropOrClick": "Drag & Drop oder Klicken"
+    },
+    "appearance": {
+      "title": "Barcode-Aussehen",
+      "description": "Visuelle Einstellungen für generierte Codes."
+    },
+    "actions": {
+      "deselect": "Abwählen"
+    },
+    "placement": {
+      "label": "Position relativ zum Text",
+      "options": {
+        "topLeft": "Oben links",
+        "top": "Oben",
+        "topRight": "Oben rechts",
+        "left": "Links",
+        "right": "Rechts",
+        "bottomLeft": "Unten links",
+        "bottom": "Unten",
+        "bottomRight": "Unten rechts"
+      }
+    },
+    "leaveGuard": {
+      "eyebrow": "Ungespeicherte Arbeit",
+      "title": "XLSX-Tab verlassen?",
+      "description": "Wenn Sie diesen Tab jetzt verlassen, gehen die aktuelle XLSX-Konfiguration und die Vorschau verloren.",
+      "cancel": "Abbrechen",
+      "confirm": "OK"
+    },
+    "preview": {
+      "title": "Blattvorschau",
+      "titleWithSheet": "Vorschau: {{sheetName}}",
+      "header": "Die Vorschau zeigt die ersten 1000 Zeilen. Klicken Sie auf die Datenspalte, dann auf eine leere Zielspalte.",
+      "placeholder": "Laden Sie eine .xlsx-Datei, um die Vorschau zu sehen."
+    },
+    "success": {
+      "generated": "{{count}} Codes erfolgreich generiert."
+    },
+    "errors": {
+      "onlyXlsx": "Nur .xlsx-Dateien werden akzeptiert.",
+      "loadFailed": "Fehler beim Laden der Datei.",
+      "generateFailed": "Fehler beim Generieren der Datei.",
+      "unknown": "Unbekannter Fehler.",
+      "occupiedCellShort": "Zelle belegt",
+      "sheetMissingInFile": "Blatt konnte in der Datei nicht gefunden werden.",
+      "sheetNotFound": "Blatt \"{{sheetName}}\" wurde nicht gefunden.",
+      "noDataInColumn": "Keine Daten in der ausgewählten Spalte.",
+      "invalidAppearance": "Ungültige Aussehens-Einstellungen.",
+      "sameColumns": "Quell- und Zielspalte dürfen nicht identisch sein.",
+      "targetColumnMustBeEmpty": "Zielspalte muss für die ausgewählten Zeilen leer sein.",
+      "occupiedCellsList": "Belegte Zellen: {{cells}}",
+      "noSheets": "Keine Blätter in der Datei.",
+      "targetCellNotEmpty": "Die Zelle in der Zielspalte (Zeile {{rowNumber}}) ist nie leer."
+    }
+  },
+  "docx": {
+    "title": "DOCX",
+    "description": "Dokument laden, Daten in der Vorschau markieren und neues DOCX generieren.",
+    "leaveGuard": {
+      "eyebrow": "Ungespeicherte Arbeit",
+      "title": "DOCX-Tab verlassen?",
+      "description": "Wenn Sie diesen Tab jetzt verlassen, gehen die aktuelle DOCX-Konfiguration und die Vorschau verloren.",
+      "cancel": "Abbrechen",
+      "confirm": "OK"
+    },
+    "dropzoneTitle": "DOCX-Datei hierher ziehen oder vom Datenträger auswählen",
+    "dropzoneDescription": "Alle Textzeilen aus dem Dokument werden verarbeitet.",
+    "previewTitle": "Vorschau",
+    "previewPlaceholder": "Dokumentvorschau erscheint hier",
+    "dropzone": {
+      "selectFile": "DOCX-Datei wählen",
+      "changeFile": "Klicken, um Datei zu ändern",
+      "dropOrClick": "Drag & Drop oder Klicken"
+    },
+    "preview": {
+      "noLines": "Keine Textzeilen im Dokument gefunden.",
+      "textColumn": "Text",
+      "placeholder": "Laden Sie eine .docx-Datei, um die Vorschau zu sehen."
+    },
+    "errors": {
+      "onlyDocx": "Nur .docx-Dateien werden akzeptiert.",
+      "loadFailed": "Fehler beim Laden der Datei.",
+      "generateFailed": "Fehler beim Generieren der Datei."
+    },
+    "success": {
+      "generated": "{{count}} Barcodes erfolgreich generiert."
+    },
+    "actions": {
+      "print": "Drucken",
+      "deselect": "Abwählen"
+    }
+  },
+  "help": {
+    "title": "Hilfe-Center & Dokumentation",
+    "description": "Vollständiger Leitfaden zu den Funktionen von Barcode Studio. Erfahren Sie, wie Sie Dateien optimal vorbereiten und Codes generieren.",
+    "sections": {
+      "generator": {
+        "title": "Einzel-Generator",
+        "body": "Ein Werkzeug zur Erstellung präziser Codes. Sie können diese als SVG (Vektor) oder PNG (Raster) herunterladen. Die Funktion 'Eigener Text' ermöglicht es Ihnen, das Etikett unter dem Code zu überschreiben, ohne die kodierten Daten zu ändern."
+      },
+      "xlsx": {
+        "title": "Tabellenverarbeitung (XLSX)",
+        "workflow": {
+          "title": "Schritt-für-Schritt-Anleitung:",
+          "step1": "1. Laden Sie eine .xlsx-Datei im Bereich XLSX hoch.",
+          "step2": "2. Klicken Sie auf die Spalte, die die Daten enthält (z. B. EAN-Nummern).",
+          "step3": "3. Klicken Sie auf eine leere Spalte, in der die Codes erscheinen sollen.",
+          "step4": "4. Klicken Sie auf 'Generieren' – die App fügt Barcodes direkt in die Zellen ein und verwendet den Text aus der Tabelle als Etiketten."
+        }
+      },
+      "docx": {
+        "title": "Dokumenten-Editor (DOCX)",
+        "workflow": {
+          "title": "Arbeiten mit einem DOCX-Dokument:",
+          "step1": "1. Wählen Sie den Barcode-Typ und laden Sie dann eine .docx-Datei mit Textwerten zum Kodieren hoch.",
+          "step2": "2. Passen Sie das Aussehen an: Höhe, Strichbreite, Farben und Textsichtbarkeit (Etiketten werden aus dem Dokument gezogen).",
+          "step3": "3. Überprüfen Sie die Vorschau, drucken Sie sie aus oder klicken Sie auf 'Generieren', um eine neue DOCX-Datei mit Barcodes herunterzuladen."
+        }
+      },
+      "barcodeSet": {
+        "title": "Verwalten von Barcode-Sets (Bulk)",
+        "body": "Ein Werkzeug zur Massenverwaltung von Barcodes. Sie können mehrere Widgets gleichzeitig hinzufügen, entfernen und bearbeiten, wobei jedes seine eigenen Daten und einen benutzerdefinierten Etikettentext erhält.",
+        "features": {
+          "title": "Hauptmerkmale:",
+          "nav": "Navigation: Verwenden Sie das Punktmenü auf der rechten Seite, um schnell zwischen Barcode-Gruppen (alle 5 Elemente) zu springen.",
+          "edit": "Bearbeiten: Klicken Sie auf das Stiftsymbol, um das seitliche Einstellungsfenster für einen bestimmten Barcode zu öffnen und Daten, Aussehen oder 'Eigener Text' zu ändern.",
+          "print": "Alle drucken: Die Drucker-Schaltfläche generiert ein druckfertiges A4-Gitter mit allen Barcodes.",
+          "shortcut": "Tastenkombination: Strg+P löst automatisch die Massendruckfunktion aus."
+        }
+      },
+      "printing": {
+        "title": "Druckregeln",
+        "body": "Für beste Qualität:\n1. Deaktivieren Sie im Druckfenster des Browsers 'Kopf- und Fußzeilen'.\n2. Stellen Sie 'Ränder' auf 'Keine' oder 'Minimal' ein, wenn das DOCX-Dokument eigene Ränder hat.\n3. Die Skalierung sollte 100% betragen, um die A4-Dimensionen beizubehalten."
+      },
+      "troubleshooting": {
+        "title": "Fehlerbehebung",
+        "eanError": "EAN-13/8-Fehler: Diese Codes erfordern nur Ziffern. Die letzte Prüfziffer wird automatisch berechnet, wenn Sie eine weniger als erforderlich angeben.",
+        "invisibleCode": "Code ist unsichtbar? Prüfen Sie, ob die Code-Farbe mit dem Hintergrund identisch ist."
+      },
+      "standards": {
+        "title": "Standards und Anforderungen",
+        "intro": "Jeder Barcode-Standard hat spezifische Anforderungen an Typ und Länge der Daten.",
+        "types": {
+          "CODE128": {
+            "name": "Code 128",
+            "desc": "Der universellste Standard. Unterstützt alle ASCII-Zeichen (Buchstaben, Zahlen, Symbole). Ideal für Logistik und interne Etiketten."
+          },
+          "EAN13": {
+            "name": "EAN-13 / EAN-8",
+            "desc": "Handelsstandard. Erfordert nur Ziffern. EAN-13 (12-13 Ziffern), EAN-8 (7-8 Ziffern). Die letzte Ziffer jest eine Prüfsumme."
+          },
+          "QR": {
+            "name": "QR Code / Data Matrix",
+            "desc": "2D-Codes. Können riesige Datenmengen speichern, einschließlich URLs und lange Texte. Hochgradig beschädigungsresistent."
+          },
+          "CODE39": {
+            "name": "Code 39",
+            "desc": "Unterstützt Großbuchstaben, Ziffern und einige Sonderzeichen (- . $ / + % Leerzeichen). Häufig in der Automobilindustrie verwendet."
+          },
+          "ITF": {
+            "name": "ITF (Interleaved 2 of 5)",
+            "desc": "Nur Ziffern, es muss eine gerade Anzahl sein. Ein sehr dichter numerischer Code."
+          },
+          "CODE93": {
+            "name": "Code 93",
+            "desc": "Erhöhte Dichte im Vergleich zu Code 39. Unterstützt den vollständigen ASCII-Zeichensatz."
+          },
+          "UPC": {
+            "name": "UPC-A / UPC-E",
+            "desc": "US-Standards. UPC-A (11-12 Ziffern), UPC-E (6-8 Ziffern). Hauptsächlich im Einzelhandel in den USA und Kanada verwendet."
+          },
+          "CODABAR": {
+            "name": "Codabar",
+            "desc": "Verwendet in Bibliotheken und Blutbanken. Muss mit den Buchstaben A, B, C oder D beginnen und enden."
+          },
+          "PHARMACODE": {
+            "name": "Pharmacode",
+            "desc": "Spezialisierter Code für die pharmazeutische Industrie. Unterstützt nur Ganzzahlen von 3 bis 131070."
+          },
+          "DATAMATRIX": {
+            "name": "Data Matrix",
+            "desc": "Ein sehr kleiner und dichter 2D-Code. Verbreitet in der Elektronik- und Medizinindustrie."
+          },
+          "PDF417": {
+            "name": "PDF417",
+            "desc": "Ein linearer 2D-Code, der auf Ausweisdokumenten und Tickets verwendet wird. Kann große Textmengen speichern."
+          },
+          "AZTEC": {
+            "name": "Aztec Code",
+            "desc": "Ein hochdichter 2D-Code, der QR ähnelt. Häufig bei Bahn- und Flugtickets verwendet."
+          }
+        }
+      },
+      "faq": {
+        "title": "Häufig gestellte Fragen",
+        "q1": "Sind meine Daten sicher?",
+        "a1": "Ja, die gesamte Verarbeitung erfolgt lokal in Ihrem Browser. Es werden keine Dateien oder Daten an einen Server gesendet.",
+        "q2": "Warum kann ich keine .xls-Datei hochladen?",
+        "a2": "Wir unterstützen nur das moderne .xlsx-Format. Ältere .xls-Dateien müssen zuerst in Excel als .xlsx gespeichert werden."
+      }
+    }
+  },
+  "barcodeSet": {
+    "title": "Barcode-Set",
+    "description": "Erstellen und verwalten Sie mehrere Barcodes in einem Arbeitsbereich.",
+    "itemTitle": "Barcode Nr. {{index}}",
+    "appearance": {
+      "title": "Aussehen",
+      "toggle": "Aussehens-Einstellungen"
+    },
+    "actions": {
+      "add": "Barcode hinzufügen",
+      "remove": "Entfernen",
+      "duplicate": "Duplizieren",
+      "duplicateLast": "Letzten duplizieren",
+      "print": "Drucken",
+      "printAll": "Alles drucken",
+      "clearAll": "Alles löschen",
+      "edit": "Bearbeiten",
+      "previous": "Vorheriger",
+      "next": "Nächster",
+      "import": "Importieren",
+      "export": "Exportieren",
+      "importText": "Aus Text importieren",
+      "exportJson": "Set exportieren",
+      "importJson": "Set importieren",
+      "resetSaved": "Gespeichertes Set zurücksetzen"
+    },
+    "view": {
+      "compact": "Kompakte Ansicht",
+      "full": "Vollständige Ansicht"
+    },
+    "import": {
+      "title": "Barcodes importieren",
+      "textPlaceholder": "Ein Barcode pro Zeile...",
+      "replace": "Aktuelle ersetzen",
+      "append": "An aktuelle anhängen",
+      "success": "{{count}} Barcodes erfolgreich importiert.",
+      "error": "Ungültiges Dateiformat.",
+      "jsonHint": "Laden Sie eine zuvor exportierte .json-Datei hoch."
+    },
+    "status": {
+      "ready": "Bereit",
+      "empty": "Leer",
+      "invalid": "Ungültig"
+    },
+    "sidebar": {
+      "title": "Barcode-Einstellungen",
+      "editing": "Bearbeite Barcode Nr. {{index}}",
+      "sections": {
+        "data": "Daten & Inhalt",
+        "barcode": "Barcode-Standard",
+        "appearance": "Aussehen & Dimensionen",
+        "text": "Text & Etiketten"
+      }
+    }
+  }
+}

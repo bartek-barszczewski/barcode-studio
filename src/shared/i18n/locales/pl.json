@@ -227,7 +227,7 @@
     "sections": {
       "generator": {
         "title": "Generator Pojedynczy",
-        "body": "Narzędzie do tworzenia precyzyjnych kodów. Możesz pobrać je jako SVG (wektorowe) lub PNG (rastrowe). SVG jest zalecane do profesjonalnego druku, ponieważ nie traci jakości przy skalowaniu."
+        "body": "Narzędzie do tworzenia precyzyjnych kodów. Możesz pobrać je jako SVG (wektorowe) lub PNG (rastrowe). Funkcja 'Własny tekst' pozwala na nadpisanie etykiety pod kodem bez zmiany zakodowanych danych."
       },
       "xlsx": {
         "title": "Praca z Arkuszami (XLSX)",
@@ -236,7 +236,7 @@
           "step1": "1. Wgraj plik .xlsx w sekcji XLSX.",
           "step2": "2. Kliknij kolumnę, która zawiera dane (np. numery EAN).",
           "step3": "3. Kliknij pustą kolumnę, w której mają pojawić się kody.",
-          "step4": "4. Kliknij 'Generuj' – aplikacja wstawi obrazy kodów bezpośrednio do komórek."
+          "step4": "4. Kliknij 'Generuj' – aplikacja wstawi kody bezpośrednio do komórek, używając tekstów z arkusza jako etykiet."
         }
       },
       "docx": {
@@ -244,17 +244,17 @@
         "workflow": {
           "title": "Praca z dokumentem DOCX:",
           "step1": "1. Wybierz typ kodu, a następnie wgraj plik .docx z tekstami do zakodowania.",
-          "step2": "2. Ustaw wygląd kodów: wysokość, grubość kreski, skalę, marginesy, kolory i widoczność tekstu.",
+          "step2": "2. Ustaw wygląd kodów: wysokość, grubość kreski, kolory i widoczność tekstu (etykiety są pobierane z dokumentu).",
           "step3": "3. Sprawdź podgląd, wydrukuj go albo kliknij 'Generuj', aby pobrać nowy plik DOCX z kodami."
         }
       },
       "barcodeSet": {
         "title": "Zarządzanie Zestawem (Bulk)",
-        "body": "Narzędzie do masowego zarządzania kodami. Możesz dodawać, usuwać i edytować wiele widżetów jednocześnie.",
+        "body": "Narzędzie do masowego zarządzania kodami. Możesz dodawać, usuwać i edytować wiele widżetów jednocześnie, nadając każdemu z nich unikalne dane oraz własny tekst etykiety.",
         "features": {
           "title": "Kluczowe funkcje:",
           "nav": "Nawigacja: Użyj kropkowego menu po prawej stronie, aby szybko przeskakiwać między grupami kodów (co 5 sztuk).",
-          "edit": "Edycja: Kliknij ikonę ołówka, aby otworzyć boczny panel ustawień dla konkretnego kodu.",
+          "edit": "Edycja: Kliknij ikonę ołówka, aby otworzyć panel boczny i zmienić dane, wygląd lub 'Własny tekst' dla konkretnego kodu.",
           "print": "Drukuj wszystko: Przycisk drukarki generuje gotową do druku siatkę A4 ze wszystkimi kodami.",
           "shortcut": "Skrót klawiszowy: Ctrl+P automatycznie wywołuje drukowanie zestawu kodów."
         }
