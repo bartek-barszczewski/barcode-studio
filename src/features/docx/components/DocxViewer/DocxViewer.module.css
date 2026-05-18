@@ -64,7 +64,7 @@
 
 .barcodeWrapper {
   display: flex;
-  justify-content: inherit;
+  justify-content: flex-start;
   margin-top: 4pt;
   width: 100%;
   min-width: 0;
@@ -123,19 +123,31 @@
 
   .paper {
     width: 210mm !important;
-    height: 297mm !important;
+    min-height: 297mm !important;
     padding: 20mm !important;
     margin: 0 !important;
     box-shadow: none !important;
     border: none !important;
     overflow: visible !important;
-    display: block !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12pt !important;
+    background: white !important;
   }
 
   .block {
     page-break-inside: avoid;
     break-inside: avoid;
     padding: 0 !important;
-    margin-bottom: 12pt !important;
+    margin-bottom: 0 !important;
+    display: flex !important;
+    gap: 8px !important;
+  }
+
+  .content {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8pt !important;
+    flex: 1 !important;
   }
 }
