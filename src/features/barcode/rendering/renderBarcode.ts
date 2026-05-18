@@ -222,10 +222,26 @@ const renderBwipBarcode = (input: BarcodeFormState): string => {
       bwipTextSize > 0 &&
       bwipTextSize < BWIP_MAX_TEXT_SIZE
 
+    // EAN and UPC have special checksum requirements.
+    // If a user provides the full length (e.g. 13 for EAN13), 
+    // BWIP validates the last digit. If it fails, it throws an error.
+    // To make it more user friendly, if we detect the full length, 
+    // we can trim the last digit and let BWIP recalculate it.
+    let textToRender = input.value
+    if (input.type === 'EAN13' && textToRender.length === 13) {
+      textToRender = textToRender.substring(0, 12)
+    } else if (input.type === 'EAN8' && textToRender.length === 8) {
+      textToRender = textToRender.substring(0, 7)
+    } else if (input.type === 'UPCA' && textToRender.length === 12) {
+      textToRender = textToRender.substring(0, 11)
+    } else if (input.type === 'UPCE' && textToRender.length === 8) {
+      textToRender = textToRender.substring(0, 7)
+    }
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const options: any = {
       bcid,
-      text: input.value,
+      text: textToRender,
       scale: bwipScale,
       height: bwipHeight,
       barcolor: input.barColor.replace('#', ''),

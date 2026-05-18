@@ -39,10 +39,10 @@ export const validateBarcodeValue = (
     }
     const len = normalizedValue.length
     if (type === 'UPCA' && (len < 11 || len > 12)) {
-      return invalid('UPC-A wymaga 11 lub 12 cyfr.')
+      return invalid('UPC-A wymaga 11 lub 12 cyfr (12-sta cyfra to suma kontrolna).')
     }
     if (type === 'EAN13' && (len < 12 || len > 13)) {
-      return invalid('EAN-13 wymaga 12 lub 13 cyfr.')
+      return invalid('EAN-13 wymaga 12 lub 13 cyfr (13-sta cyfra to suma kontrolna).')
     }
     return valid()
   }
@@ -53,10 +53,10 @@ export const validateBarcodeValue = (
     }
     const len = normalizedValue.length
     if (type === 'UPCE' && (len < 6 || len > 8)) {
-      return invalid('UPC-E wymaga od 6 do 8 cyfr.')
+      return invalid('UPC-E wymaga od 6 do 8 cyfr (ostatnia to suma kontrolna).')
     }
     if (type === 'EAN8' && (len < 7 || len > 8)) {
-      return invalid('EAN-8 wymaga 7 lub 8 cyfr.')
+      return invalid('EAN-8 wymaga 7 lub 8 cyfr (8-ma cyfra to suma kontrolna).')
     }
     return valid()
   }
