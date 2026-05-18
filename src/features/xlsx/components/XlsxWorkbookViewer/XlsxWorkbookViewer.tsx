@@ -18,6 +18,7 @@ interface XlsxWorkbookViewerProps {
     barColor: string;
     backgroundColor: string;
     showText: boolean;
+    displayValue?: string;
   };
 }
 

@@ -54,6 +54,7 @@ export const BARCODE_TEST_VALUES: Record<BarcodeType, string> = {
 export const DEFAULT_BARCODE_FORM_STATE: BarcodeFormState = {
   type: 'CODE128',
   value: BARCODE_TEST_VALUES.CODE128,
+  displayValue: '',
   rotation: 0,
   barColor: '#0A0F0D',
   backgroundColor: '#FFFFFF',

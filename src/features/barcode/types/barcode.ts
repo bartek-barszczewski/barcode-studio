@@ -19,6 +19,7 @@ export type BarcodeRotation = 0 | 90 | 180 | 270
 export type BarcodeFormState = {
   type: BarcodeType
   value: string
+  displayValue?: string
   rotation: BarcodeRotation
   barColor: string
   backgroundColor: string

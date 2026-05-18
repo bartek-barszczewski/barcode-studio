@@ -3,6 +3,7 @@ import type { BarcodeType, BarcodeRotation } from './barcode'
 export type BarcodeSetItem = {
   id: string
   value: string
+  displayValue?: string
   type: BarcodeType
   options: {
     height: number

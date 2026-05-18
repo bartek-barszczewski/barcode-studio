@@ -7,6 +7,7 @@ export function mapBarcodeSetItemToFormState(
   return {
     type: item.type,
     value: item.value,
+    displayValue: item.displayValue,
     rotation: item.options.rotation,
     barColor: item.options.foreground,
     backgroundColor: item.options.background,
@@ -23,6 +24,7 @@ export function createDefaultBarcodeSetItem(): BarcodeSetItem {
   return {
     id: crypto.randomUUID(),
     value: '12345678',
+    displayValue: '',
     type: 'CODE128',
     options: {
       height: 32,
