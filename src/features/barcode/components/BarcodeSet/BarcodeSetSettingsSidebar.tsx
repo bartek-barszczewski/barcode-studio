@@ -79,6 +79,14 @@ export function BarcodeSetSettingsSidebar({
                   maxLength={512}
                 />
               </Field>
+              <Field label={t('generator.fields.displayValue')} htmlFor="drawer-display-value">
+                <TextInput
+                  id="drawer-display-value"
+                  value={item.displayValue || ''}
+                  onChange={(e) => onUpdate(item.id, { displayValue: e.target.value })}
+                  maxLength={512}
+                />
+              </Field>
             </section>
 
             <section className={styles.drawerSection}>

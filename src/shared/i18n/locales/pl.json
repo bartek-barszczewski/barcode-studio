@@ -55,6 +55,7 @@
     "fields": {
       "type": "Typ kodu",
       "value": "Dane do zakodowania",
+      "displayValue": "Własny tekst",
       "format": "Format",
       "rotation": "Obrót",
       "barColor": "Kolor kodu",

@@ -55,6 +55,14 @@ export function BarcodeForm({
         />
       </Field>
 
+      <Field label={t('generator.fields.displayValue')} htmlFor="barcode-display-value">
+        <TextInput
+          id="barcode-display-value"
+          onChange={(event) => updateField('displayValue', event.target.value)}
+          value={formState.displayValue || ''}
+        />
+      </Field>
+
       {updateShowPreviewFrame && (
         <label className={styles.previewFrameToggle}>
           <input

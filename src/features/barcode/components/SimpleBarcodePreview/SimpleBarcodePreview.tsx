@@ -5,6 +5,7 @@ import styles from './SimpleBarcodePreview.module.css';
 
 interface SimpleBarcodePreviewProps {
   value: string;
+  displayValue?: string;
   type: BarcodeType;
   barColor: string;
   backgroundColor: string;
@@ -18,6 +19,7 @@ interface SimpleBarcodePreviewProps {
 
 export const SimpleBarcodePreview: React.FC<SimpleBarcodePreviewProps> = memo(({
   value,
+  displayValue,
   type,
   barColor,
   backgroundColor,
@@ -37,6 +39,7 @@ export const SimpleBarcodePreview: React.FC<SimpleBarcodePreviewProps> = memo(({
         setError(false);
         const settings: BarcodeFormState = {
           value,
+          displayValue,
           type,
           barColor,
           backgroundColor,
@@ -45,7 +48,7 @@ export const SimpleBarcodePreview: React.FC<SimpleBarcodePreviewProps> = memo(({
           height,
           barWidth,
           margin,
-          scale, // Respect the scale prop!
+          scale,
           rotation: 0,
         };
 
@@ -58,7 +61,7 @@ export const SimpleBarcodePreview: React.FC<SimpleBarcodePreviewProps> = memo(({
     };
 
     render();
-  }, [value, type, barColor, backgroundColor, showText, fontSize, height, barWidth, margin, scale]);
+  }, [value, displayValue, type, barColor, backgroundColor, showText, fontSize, height, barWidth, margin, scale]);
 
   if (error) {
     return <div className={styles.previewContainer}><span className={styles.errorLabel}>!</span></div>;

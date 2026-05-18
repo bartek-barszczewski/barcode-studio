@@ -30,7 +30,6 @@ const BWIP_JS_FORMATS: Partial<Record<BarcodeType, string>> = {
 const BWIP_MAX_TEXT_SIZE = 25
 const TEXT_WIDTH_RATIO = 0.92
 const ESTIMATED_TEXT_CHAR_WIDTH = 0.58
-const MIN_FITTED_FONT_RATIO = 0.55
 
 const getRenderScale = (scale: number) =>
   Number.isFinite(scale) && scale > 0 ? scale : 1
@@ -63,6 +62,9 @@ const assertSvgColor = (color: string, fieldName: string) => {
 const injectTextToSvg = (svg: string, input: BarcodeFormState): string => {
   if (!input.showText) return svg
 
+  const textToDisplay = input.displayValue || input.value
+  if (!textToDisplay) return svg
+
   const viewBoxMatch = svg.match(/viewBox="([^"]+)"/)
   if (!viewBoxMatch) return svg
 
@@ -75,31 +77,35 @@ const injectTextToSvg = (svg: string, input: BarcodeFormState): string => {
   const renderedHeight = parseSvgNumberAttribute(svg, 'height') ?? height
   const unitsPerPixelX = width / renderedWidth
   const unitsPerPixelY = height / renderedHeight
+  
   const maxTextWidth = width * TEXT_WIDTH_RATIO
-  const desiredFontSize = input.fontSize * scale * unitsPerPixelX
+  const desiredFontSize = input.fontSize * scale * unitsPerPixelY
   const estimatedTextWidth =
-    input.value.length * desiredFontSize * ESTIMATED_TEXT_CHAR_WIDTH
-  const fittedFontSize =
-    estimatedTextWidth > maxTextWidth && input.value.length > 0
-      ? Math.max(
-          maxTextWidth / (input.value.length * ESTIMATED_TEXT_CHAR_WIDTH),
-          desiredFontSize * MIN_FITTED_FONT_RATIO,
-        )
-      : desiredFontSize
-  const textLength =
-    estimatedTextWidth > maxTextWidth
-      ? ` textLength="${formatSvgNumber(maxTextWidth)}" lengthAdjust="spacing"`
-      : ''
+    textToDisplay.length * desiredFontSize * ESTIMATED_TEXT_CHAR_WIDTH
+
+  let newWidth = width
+  let newMinX = minX
+
+  if (estimatedTextWidth > maxTextWidth) {
+    newWidth = estimatedTextWidth / TEXT_WIDTH_RATIO
+    newMinX = minX - (newWidth - width) / 2
+  }
+
+  const fittedFontSize = desiredFontSize
   const spacing = 8 * scale * unitsPerPixelY
   const extraHeight = fittedFontSize * 1.25 + spacing
+  
   const extraRenderedHeight = extraHeight / unitsPerPixelY
+  const extraRenderedWidth = (newWidth - width) / unitsPerPixelX
+  
   const newHeight = height + extraHeight
-  const newViewBox = [minX, minY, width, newHeight]
+  const newViewBox = [newMinX, minY, newWidth, newHeight]
     .map(formatSvgNumber)
     .join(' ')
+    
   const textX = minX + width / 2
   const textY = minY + height + spacing + fittedFontSize
-  const textElement = `<text x="${formatSvgNumber(textX)}" y="${formatSvgNumber(textY)}" fill="${input.barColor}" font-family="Arial, sans-serif" font-size="${formatSvgNumber(fittedFontSize)}" text-anchor="middle"${textLength}>${escapeSvgText(input.value)}</text>`
+  const textElement = `<text x="${formatSvgNumber(textX)}" y="${formatSvgNumber(textY)}" fill="${input.barColor}" font-family="Arial, sans-serif" font-size="${formatSvgNumber(fittedFontSize)}" text-anchor="middle">${escapeSvgText(textToDisplay)}</text>`
 
   let updatedSvg = svg.replace(/viewBox="[^"]+"/, `viewBox="${newViewBox}"`)
 
@@ -108,6 +114,14 @@ const injectTextToSvg = (svg: string, input: BarcodeFormState): string => {
     (_, p1, p2) =>
       p1 + formatSvgNumber(Number.parseFloat(p2) + extraRenderedHeight),
   )
+
+  if (updatedSvg.match(/<svg[^>]+width="/)) {
+    updatedSvg = updatedSvg.replace(
+      /(<svg[^>]+width=")(\d+\.?\d*)/,
+      (_, p1, p2) =>
+        p1 + formatSvgNumber(Number.parseFloat(p2) + extraRenderedWidth),
+    )
+  }
 
   return updatedSvg.replace('</svg>', `${textElement}</svg>`)
 }
@@ -204,6 +218,7 @@ const renderBwipBarcode = (input: BarcodeFormState): string => {
     const useBuiltInText =
       supportsBuiltInText &&
       input.showText &&
+      !input.displayValue &&
       bwipTextSize > 0 &&
       bwipTextSize < BWIP_MAX_TEXT_SIZE
 
