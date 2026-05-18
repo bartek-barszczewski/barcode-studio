@@ -13,7 +13,7 @@ A professional-grade bulk barcode management and generation suite. Designed for 
 - **100% Privacy:** All processing happens locally in your browser. No data or files are ever sent to a server.
 - **Print Optimization:** Automatic A4 grid generation with scannability assurance and cutting guides.
 - **Keyboard Shortcuts:** Power-user features like `Ctrl+P` for instant bulk printing.
-- **Multi-language Support:** English (default) and Polish.
+- **Multi-language Support:** English, Polish, German, Spanish, French, Italian, and Japanese.
 
 ## 🛠 Tech Stack
 
@@ -22,6 +22,12 @@ A professional-grade bulk barcode management and generation suite. Designed for 
 - **Icons:** Lucide React
 - **I18n:** i18next
 - **Rendering:** BWIP-JS for accurate barcode symbology
+
+## ☕ Support the Project
+
+If Barcode Studio saves you time or helps you with your work, you can symbolically buy me a coffee. It is a voluntary form of support that helps me develop the project, add new features, and keep the tool in good shape.
+
+**[Buy Me a Coffee ☕](https://www.naffy.io/bjart-bersvik/barcode-studio-buyme-a-coffee)**
 
 ## 📦 Getting Started
 
