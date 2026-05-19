@@ -49,7 +49,7 @@ export const readWorkbook = async (arrayBuffer: ArrayBuffer): Promise<WorkbookPr
   });
 
   // We want to build a rectangular preview
-  for (let r = 1; r <= Math.min(rowCount, 1000); r++) { // Limit preview to 1000 rows for performance
+  for (let r = 1; r <= Math.min(rowCount, 50); r++) { // Limit preview to 1000 rows for performance
     const rowData: CellPreview[] = [];
     const worksheetRow = worksheet.getRow(r);
     
