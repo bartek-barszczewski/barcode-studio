@@ -10,10 +10,13 @@ import {
   ArrowUp,
   ArrowUpLeft,
   ArrowUpRight,
+  Bold,
   CheckCircle2,
   FileSpreadsheet,
+  Italic,
   Type,
   UploadCloud,
+  Printer,
 } from 'lucide-react';
 import { saveAs } from 'file-saver';
 import type { BarcodeType } from '../../features/barcode/types/barcode';
@@ -27,14 +30,38 @@ import { SearchableSelect } from '../../shared/ui/SearchableSelect/SearchableSel
 import { BARCODE_TYPE_OPTIONS } from '../../features/barcode/constants/barcodeTypes';
 import { validateBarcodeValue } from '../../features/barcode/validation/barcodeValidation';
 import { createOutputFileName, writeWorkbookWithBarcodes } from '../../features/xlsx/utils/writeWorkbookWithBarcodes';
+import { preparePrintCards } from '../../features/xlsx/utils/preparePrintData';
+import { openPrintCardsDocument } from '../../features/xlsx/utils/openPrintCardsDocument';
 import { Button } from '../../shared/ui/Button/Button';
 import { Field } from '../../shared/ui/Field/Field';
 import { TextInput } from '../../shared/ui/TextInput/TextInput';
 import { SelectInput } from '../../shared/ui/SelectInput/SelectInput';
+import { Slider } from '../../shared/ui/Slider/Slider';
 import { toNumber } from '../../shared/utils/number';
 import ExcelJS from 'exceljs';
 import { getColumnLetter } from '../../features/xlsx/utils/columnUtils';
 import clsx from 'clsx';
+
+const MAX_BARCODE_SCALE = 2.5;
+const MAX_BARCODE_HEIGHT = 512;
+const MAX_BARCODE_MARGIN = 128;
+const MAX_BARCODE_BAR_WIDTH = 4;
+const MIN_BARCODE_BAR_WIDTH = 0.75;
+const BARCODE_BAR_WIDTH_STEP = 0.25;
+const MAX_BARCODE_FONT_SIZE = 128;
+const MAX_TEXT_ROTATION = 360;
+const TEXT_ROTATION_STEP = 5;
+
+const TEXT_POSITION_OPTIONS: Array<{
+  value: 'top' | 'bottom' | 'left' | 'right';
+  icon: typeof ArrowUp;
+  labelKey: string;
+}> = [
+  { value: 'top', icon: ArrowUp, labelKey: 'generator.textEditor.positions.top' },
+  { value: 'left', icon: ArrowLeft, labelKey: 'generator.textEditor.positions.left' },
+  { value: 'right', icon: ArrowRight, labelKey: 'generator.textEditor.positions.right' },
+  { value: 'bottom', icon: ArrowDown, labelKey: 'generator.textEditor.positions.bottom' },
+];
 
 const getCellTextValue = (value: ExcelJS.CellValue): string => {
   if (value === null || value === undefined) {
@@ -123,6 +150,7 @@ export function XlsxPage() {
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [isPreparingPrint, setIsPreparingPrint] = useState(false);
   const [progress, setProgress] = useState<{ current: number; total: number } | null>(null);
   const [barcodeType, setBarcodeType] = useState<BarcodeType>('CODE128');
   const [placement, setPlacement] = useState<XlsxPlacement>('right');
@@ -130,31 +158,37 @@ export function XlsxPage() {
     rotation: 0 as const,
     barColor: '#0A0F0D',
     backgroundColor: '#FFFFFF',
-    height: 32,
+    transparentBackground: false,
+    height: 64,
     margin: 8,
-    barWidth: 3,
-    fontSize: 20,
+    barWidth: 1,
+    fontSize: 16,
     scale: 1,
-    showText: false,
+    showText: true,
+    textBold: false,
+    textItalic: false,
+    textPosition: 'bottom' as const,
+    textRotation: 0,
   });
 
-  const hasUnsavedChanges = originalFile !== null && !isGenerating;
+  const isBusy = isGenerating || isPreparingPrint;
+  const hasUnsavedChanges = originalFile !== null && !isBusy;
   const navigationBlocker = useBlocker(({ currentLocation, nextLocation }) => {
     return hasUnsavedChanges && currentLocation.pathname !== nextLocation.pathname;
   });
 
   const isSettingsValid = useMemo(() => {
     return (
-      barcodeStyle.height >= 4 &&
-      barcodeStyle.height <= 400 &&
-      barcodeStyle.barWidth >= 1 &&
-      barcodeStyle.barWidth <= 12 &&
+      barcodeStyle.height >= 1 &&
+      barcodeStyle.height <= 512 &&
+      barcodeStyle.barWidth >= MIN_BARCODE_BAR_WIDTH &&
+      barcodeStyle.barWidth <= MAX_BARCODE_BAR_WIDTH &&
       barcodeStyle.scale >= 0.5 &&
-      barcodeStyle.scale <= 4 &&
-      barcodeStyle.fontSize >= 4 &&
-      barcodeStyle.fontSize <= 48 &&
+      barcodeStyle.scale <= 2.5 &&
+      barcodeStyle.fontSize >= 8 &&
+      barcodeStyle.fontSize <= 128 &&
       barcodeStyle.margin >= 0 &&
-      barcodeStyle.margin <= 80
+      barcodeStyle.margin <= 128
     );
   }, [barcodeStyle]);
 
@@ -198,7 +232,7 @@ export function XlsxPage() {
   };
 
   const handleReplaceFileClick = () => {
-    if (isGenerating || !replaceFileInputRef.current) return;
+    if (isBusy || !replaceFileInputRef.current) return;
 
     replaceFileInputRef.current.value = '';
     replaceFileInputRef.current.click();
@@ -456,9 +490,47 @@ export function XlsxPage() {
     }
   };
 
+  const handlePrintCards = async () => {
+    if (!originalFile || !workbook) {
+      return;
+    }
+
+    setIsPreparingPrint(true);
+      setError(null);
+      setSuccessMessage(null);
+
+    try {
+      const cards = await preparePrintCards(
+        originalFile,
+        workbook.activeSheetName,
+        barcodeType,
+        barcodeStyle,
+      );
+      await openPrintCardsDocument(cards, `${originalFile.name.replace(/\.xlsx$/i, '')} - Print cards`);
+      setSuccessMessage(
+        t('xlsx.success.printReady', {
+          count: cards.length,
+          defaultValue: 'Prepared {{count}} cards for print.',
+        }),
+      );
+    } catch (err) {
+      setError(err instanceof Error ? err.message : t('xlsx.errors.unknown'));
+    } finally {
+      setIsPreparingPrint(false);
+    }
+  };
+
   const updateStyleField = (key: keyof typeof barcodeStyle, value: unknown) => {
     setBarcodeStyle((prev) => ({ ...prev, [key]: value }));
   };
+
+  const textPosition = barcodeStyle.textPosition ?? 'bottom';
+  const textRotation = barcodeStyle.textRotation ?? 0;
+  const textBold = Boolean(barcodeStyle.textBold);
+  const textItalic = Boolean(barcodeStyle.textItalic);
+  const transparentBackgroundLabel = t('generator.fields.transparentBackground', {
+    defaultValue: 'Przezroczystość',
+  });
 
   return (
     <>
@@ -476,16 +548,19 @@ export function XlsxPage() {
                 type="file"
                 accept=".xlsx"
                 onChange={handleReplaceFileChange}
-                disabled={isGenerating}
+                disabled={isBusy}
                 hidden
               />
               <div className={styles.field}>
                 <label className={styles.label}>{t('generator.fields.type')}</label>
                 <SearchableSelect
-                  options={BARCODE_TYPE_OPTIONS}
+                  options={BARCODE_TYPE_OPTIONS.map((option) => ({
+                    ...option,
+                    label: t(`barcode.types.${option.value}`),
+                  }))}
                   value={barcodeType}
                   onChange={(value) => setBarcodeType(value as BarcodeType)}
-                  disabled={isGenerating}
+                  disabled={isBusy}
                 />
               </div>
 
@@ -509,130 +584,273 @@ export function XlsxPage() {
             compact
           >
             <div className={styles.appearanceBody}>
-              <div className={styles.settingsGrid}>
-                <Field label={t('generator.fields.height')} htmlFor="xlsx-height">
-                  <TextInput
-                    id="xlsx-height"
-                    type="number"
-                    min={4}
-                    max={400}
-                    step={2}
-                    value={barcodeStyle.height}
-                    onChange={(event) =>
-                      updateStyleField(
-                        'height',
-                        toNumber(event.target.value, barcodeStyle.height, 4, 400),
-                      )
-                    }
-                    disabled={isGenerating}
+              <div className={styles.toggles}>
+                <label className={styles.checkboxToggle}>
+                  <input
+                    checked={barcodeStyle.showText}
+                    className={styles.checkboxInput}
+                    onChange={(event) => updateStyleField('showText', event.target.checked)}
+                    type="checkbox"
+                    disabled={isGenerating || isPreparingPrint}
                   />
-                </Field>
-                <Field label={t('generator.fields.barWidth')} htmlFor="xlsx-barwidth">
-                  <TextInput
-                    id="xlsx-barwidth"
-                    type="number"
-                    min={1}
-                    max={12}
-                    step={1}
-                    value={barcodeStyle.barWidth}
+                  <span aria-hidden="true" className={styles.checkboxControl}>
+                    <span className={styles.checkboxMark} />
+                  </span>
+                  <span className={styles.checkboxLabel}>{t('generator.fields.text')}</span>
+                </label>
+
+                <label className={styles.checkboxToggle}>
+                  <input
+                    checked={Boolean(barcodeStyle.transparentBackground)}
+                    className={styles.checkboxInput}
                     onChange={(event) =>
-                      updateStyleField(
-                        'barWidth',
-                        toNumber(event.target.value, barcodeStyle.barWidth, 1, 12),
-                      )
+                      updateStyleField('transparentBackground', event.target.checked)
                     }
-                    disabled={isGenerating}
+                    type="checkbox"
+                    disabled={isGenerating || isPreparingPrint}
                   />
-                </Field>
-                <Field label={t('generator.fields.scale')} htmlFor="xlsx-scale">
-                  <TextInput
-                    id="xlsx-scale"
-                    type="number"
-                    min={0.5}
-                    max={4}
-                    step={0.25}
-                    value={barcodeStyle.scale}
+                  <span aria-hidden="true" className={styles.checkboxControl}>
+                    <span className={styles.checkboxMark} />
+                  </span>
+                  <span className={styles.checkboxLabel}>{transparentBackgroundLabel}</span>
+                </label>
+              </div>
+
+              <section
+                className={clsx(
+                  styles.textEditorCard,
+                  !barcodeStyle.showText && styles.textEditorCardDisabled,
+                )}
+              >
+                <div className={styles.textEditorHeader}>
+                  <Type aria-hidden="true" className={styles.textEditorBadge} size={16} />
+                  <div className={styles.textEditorCopy}>
+                    <h3 className={styles.textEditorTitle}>{t('generator.textEditor.title')}</h3>
+                    <p className={styles.textEditorDescription}>
+                      {t('generator.textEditor.description')}
+                    </p>
+                  </div>
+                </div>
+
+                <div className={styles.textEditorGrid}>
+                  <div className={styles.editorBlock}>
+                    <span className={styles.editorLabel}>{t('generator.fields.textStyle')}</span>
+                    <div className={styles.iconToggleGroup}>
+                      <button
+                        aria-label={t('generator.textEditor.bold')}
+                        aria-pressed={textBold}
+                        className={clsx(styles.iconToggle, textBold && styles.iconToggleActive)}
+                        disabled={!barcodeStyle.showText || isGenerating || isPreparingPrint}
+                        onClick={() => updateStyleField('textBold', !textBold)}
+                        title={t('generator.textEditor.bold')}
+                        type="button"
+                      >
+                        <Bold size={16} />
+                      </button>
+
+                      <button
+                        aria-label={t('generator.textEditor.italic')}
+                        aria-pressed={textItalic}
+                        className={clsx(
+                          styles.iconToggle,
+                          textItalic && styles.iconToggleActive,
+                        )}
+                        disabled={!barcodeStyle.showText || isGenerating || isPreparingPrint}
+                        onClick={() => updateStyleField('textItalic', !textItalic)}
+                        title={t('generator.textEditor.italic')}
+                        type="button"
+                      >
+                        <Italic size={16} />
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className={styles.editorBlock}>
+                    <span className={styles.editorLabel}>
+                      {t('generator.fields.textPosition')}
+                    </span>
+                    <div className={styles.iconToggleGroup}>
+                      {TEXT_POSITION_OPTIONS.map(({ value, icon: Icon, labelKey }) => (
+                        <button
+                          key={value}
+                          aria-label={t(labelKey)}
+                          aria-pressed={textPosition === value}
+                          className={clsx(
+                            styles.iconToggle,
+                            textPosition === value && styles.iconToggleActive,
+                          )}
+                          disabled={
+                            !barcodeStyle.showText || isGenerating || isPreparingPrint
+                          }
+                          onClick={() => updateStyleField('textPosition', value)}
+                          title={t(labelKey)}
+                          type="button"
+                        >
+                          <Icon size={16} />
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className={styles.rotationBlock}>
+                    <Slider
+                      disabled={!barcodeStyle.showText || isGenerating || isPreparingPrint}
+                      id="xlsx-text-rotation"
+                      label={t('generator.fields.textRotation')}
+                      max={MAX_TEXT_ROTATION}
+                      min={0}
+                      onChange={(event) =>
+                        updateStyleField(
+                          'textRotation',
+                          toNumber(event.target.value, textRotation, 0, MAX_TEXT_ROTATION),
+                        )
+                      }
+                      step={TEXT_ROTATION_STEP}
+                      suffix="°"
+                      value={textRotation}
+                    />
+                  </div>
+                </div>
+              </section>
+
+              <div className={styles.fieldGrid}>
+                <Field label={t('generator.fields.rotation')} htmlFor="xlsx-rotation">
+                  <SelectInput
+                    id="xlsx-rotation"
                     onChange={(event) =>
-                      updateStyleField(
-                        'scale',
-                        toNumber(event.target.value, barcodeStyle.scale, 0.5, 4),
-                      )
+                      updateStyleField('rotation', Number.parseInt(event.target.value, 10))
                     }
-                    disabled={isGenerating}
-                  />
+                    value={barcodeStyle.rotation}
+                    disabled={isGenerating || isPreparingPrint}
+                  >
+                    <option value="0">0°</option>
+                    <option value="90">90°</option>
+                    <option value="180">180°</option>
+                    <option value="270">270°</option>
+                  </SelectInput>
                 </Field>
-                <Field label={t('generator.fields.fontSize')} htmlFor="xlsx-fontsize">
-                  <TextInput
-                    id="xlsx-fontsize"
-                    type="number"
-                    min={4}
-                    max={128}
-                    step={1}
-                    value={barcodeStyle.fontSize}
-                    onChange={(event) =>
-                      updateStyleField(
-                        'fontSize',
-                        toNumber(event.target.value, barcodeStyle.fontSize, 4, 128),
-                      )
-                    }
-                    disabled={isGenerating}
-                  />
-                </Field>
-                <Field label={t('generator.fields.margin')} htmlFor="xlsx-margin">
-                  <TextInput
-                    id="xlsx-margin"
-                    type="number"
-                    min={0}
-                    max={80}
-                    step={4}
-                    value={barcodeStyle.margin}
-                    onChange={(event) =>
-                      updateStyleField(
-                        'margin',
-                        toNumber(event.target.value, barcodeStyle.margin, 0, 80),
-                      )
-                    }
-                    disabled={isGenerating}
-                  />
-                </Field>
+
+                <Slider
+                  id="xlsx-scale"
+                  label={t('generator.fields.scale')}
+                  max={MAX_BARCODE_SCALE}
+                  min={0.5}
+                  onChange={(event) =>
+                    updateStyleField(
+                      'scale',
+                      toNumber(event.target.value, barcodeStyle.scale, 0.5, MAX_BARCODE_SCALE),
+                    )
+                  }
+                  step={0.25}
+                  suffix="x"
+                  value={barcodeStyle.scale}
+                  disabled={isGenerating || isPreparingPrint}
+                />
+              </div>
+
+              <div className={styles.fieldGrid}>
                 <Field label={t('generator.fields.barColor')} htmlFor="xlsx-barcolor">
                   <TextInput
                     id="xlsx-barcolor"
+                    onChange={(event) => updateStyleField('barColor', event.target.value)}
                     type="color"
                     value={barcodeStyle.barColor}
-                    onChange={(event) => updateStyleField('barColor', event.target.value)}
-                    disabled={isGenerating}
+                    disabled={isGenerating || isPreparingPrint}
                   />
                 </Field>
-                <Field
-                  label={t('generator.fields.backgroundColor')}
-                  htmlFor="xlsx-bgcolor"
-                >
+
+                <Field label={t('generator.fields.backgroundColor')} htmlFor="xlsx-bgcolor">
                   <TextInput
                     id="xlsx-bgcolor"
+                    onChange={(event) => updateStyleField('backgroundColor', event.target.value)}
                     type="color"
                     value={barcodeStyle.backgroundColor}
-                    onChange={(event) => updateStyleField('backgroundColor', event.target.value)}
-                    disabled={isGenerating}
+                    disabled={isGenerating || isPreparingPrint}
                   />
                 </Field>
-                <Field
-                  label={t('generator.fields.text')}
-                  htmlFor="xlsx-showtext"
-                >
-                  <SelectInput
-                    id="xlsx-showtext"
-                    value={barcodeStyle.showText ? 'show' : 'hide'}
-                    onChange={(event) =>
-                      updateStyleField('showText', event.target.value === 'show')
-                    }
-                    disabled={isGenerating}
-                  >
-                    <option value="show">{t('generator.textOptions.show')}</option>
-                    <option value="hide">{t('generator.textOptions.hide')}</option>
-                  </SelectInput>
-                </Field>
               </div>
+
+              <div className={styles.fieldGrid}>
+                <Slider
+                  id="xlsx-height"
+                  label={t('generator.fields.height')}
+                  max={MAX_BARCODE_HEIGHT}
+                  min={1}
+                  onChange={(event) =>
+                    updateStyleField(
+                      'height',
+                      toNumber(event.target.value, barcodeStyle.height, 1, MAX_BARCODE_HEIGHT),
+                    )
+                  }
+                  step={1}
+                  suffix="px"
+                  value={barcodeStyle.height}
+                  disabled={isGenerating || isPreparingPrint}
+                />
+
+                <Slider
+                  id="xlsx-margin"
+                  label={t('generator.fields.margin')}
+                  max={MAX_BARCODE_MARGIN}
+                  min={0}
+                  onChange={(event) =>
+                    updateStyleField(
+                      'margin',
+                      toNumber(event.target.value, barcodeStyle.margin, 0, MAX_BARCODE_MARGIN),
+                    )
+                  }
+                  step={1}
+                  suffix="px"
+                  value={barcodeStyle.margin}
+                  disabled={isGenerating || isPreparingPrint}
+                />
+              </div>
+
+              <div className={styles.fieldGrid}>
+                <Slider
+                  id="xlsx-bar-width"
+                  label={t('generator.fields.barWidth')}
+                  max={MAX_BARCODE_BAR_WIDTH}
+                  min={MIN_BARCODE_BAR_WIDTH}
+                  onChange={(event) =>
+                    updateStyleField(
+                      'barWidth',
+                      toNumber(
+                        event.target.value,
+                        barcodeStyle.barWidth,
+                        MIN_BARCODE_BAR_WIDTH,
+                        MAX_BARCODE_BAR_WIDTH,
+                      ),
+                    )
+                  }
+                  step={BARCODE_BAR_WIDTH_STEP}
+                  value={barcodeStyle.barWidth}
+                  disabled={isGenerating || isPreparingPrint}
+                />
+
+                <Slider
+                  id="xlsx-font-size"
+                  label={t('generator.fields.fontSize')}
+                  max={MAX_BARCODE_FONT_SIZE}
+                  min={8}
+                  onChange={(event) =>
+                    updateStyleField(
+                      'fontSize',
+                      toNumber(
+                        event.target.value,
+                        barcodeStyle.fontSize,
+                        8,
+                        MAX_BARCODE_FONT_SIZE,
+                      ),
+                    )
+                  }
+                  step={1}
+                  suffix="px"
+                  value={barcodeStyle.fontSize}
+                  disabled={isGenerating || isPreparingPrint}
+                />
+              </div>
+
               <div className={styles.placementField}>
                 <label className={styles.label}>{t('xlsx.placement.label')}</label>
                 <div className={styles.placementMatrix}>
@@ -646,7 +864,7 @@ export function XlsxPage() {
                       title={t(labelKey)}
                       aria-label={t(labelKey)}
                       onClick={() => setPlacement(value)}
-                      disabled={isGenerating}
+                      disabled={isGenerating || isPreparingPrint}
                     >
                       <Icon size={16} />
                     </button>
@@ -661,7 +879,7 @@ export function XlsxPage() {
                       title={t(labelKey)}
                       aria-label={t(labelKey)}
                       onClick={() => setPlacement(value)}
-                      disabled={isGenerating}
+                      disabled={isGenerating || isPreparingPrint}
                     >
                       <Icon size={16} />
                     </button>
@@ -679,7 +897,7 @@ export function XlsxPage() {
                       title={t(labelKey)}
                       aria-label={t(labelKey)}
                       onClick={() => setPlacement(value)}
-                      disabled={isGenerating}
+                      disabled={isGenerating || isPreparingPrint}
                     >
                       <Icon size={16} />
                     </button>
@@ -694,7 +912,7 @@ export function XlsxPage() {
                       title={t(labelKey)}
                       aria-label={t(labelKey)}
                       onClick={() => setPlacement(value)}
-                      disabled={isGenerating}
+                      disabled={isGenerating || isPreparingPrint}
                     >
                       <Icon size={16} />
                     </button>
@@ -702,9 +920,7 @@ export function XlsxPage() {
                 </div>
               </div>
               {!isSettingsValid && (
-                <div className={styles.error}>
-                  {t('xlsx.errors.invalidAppearance')}
-                </div>
+                <div className={styles.error}>{t('xlsx.errors.invalidAppearance')}</div>
               )}
             </div>
 
@@ -713,28 +929,42 @@ export function XlsxPage() {
                 <Button
                   variant="accent"
                   onClick={handleReplaceFileClick}
-                  disabled={isGenerating}
+                  disabled={isGenerating || isPreparingPrint}
                   fullWidth
                   className={styles.changeFileButton}
                 >
                   <UploadCloud size={18} />
                   {t('xlsx.dropzone.changeFile')}
                 </Button>
-                <Button
-                  variant="primary"
-                  onClick={handleGenerate}
-                  fullWidth
-                  disabled={!isValidToGenerate || isGenerating}
-                  progress={
-                    isGenerating && progress
-                      ? (progress.current / progress.total) * 100
-                      : undefined
-                  }
-                >
-                  {isGenerating
-                    ? `${Math.round(((progress?.current ?? 0) / (progress?.total ?? 1)) * 100)}%`
-                    : t('generator.actions.generate')}
-                </Button>
+                <div className={styles.actionsRow}>
+                  <Button
+                    variant="primary"
+                    onClick={handleGenerate}
+                    fullWidth
+                    disabled={!isValidToGenerate || isGenerating || isPreparingPrint}
+                    progress={
+                      isGenerating && progress
+                        ? (progress.current / progress.total) * 100
+                        : undefined
+                    }
+                  >
+                    {isGenerating
+                      ? `${Math.round(((progress?.current ?? 0) / (progress?.total ?? 1)) * 100)}%`
+                      : t('generator.actions.generate')}
+                  </Button>
+                  <Button
+                    variant="secondary"
+                    onClick={handlePrintCards}
+                    fullWidth
+                    disabled={isGenerating || isPreparingPrint}
+                    progress={isPreparingPrint ? 100 : undefined}
+                  >
+                    <Printer size={18} />
+                    {isPreparingPrint
+                      ? t('xlsx.print.preparing')
+                      : t('xlsx.actions.printCards')}
+                  </Button>
+                </div>
               </>
             )}
           </Panel>
@@ -775,7 +1005,7 @@ export function XlsxPage() {
                   originalFile ? t('xlsx.dropzone.changeFile') : t('xlsx.dropzone.dropOrClick')
                 }
                 fileIcon={<FileSpreadsheet />}
-                disabled={isGenerating}
+                disabled={isGenerating || isPreparingPrint}
                 iconClusterClassName={styles.xlsxDropzoneIconCluster}
                 titleClassName={styles.xlsxDropzoneTitle}
                 descriptionClassName={styles.xlsxDropzoneDescription}
@@ -784,7 +1014,6 @@ export function XlsxPage() {
           </Panel>
         </div>
       </div>
-
       {navigationBlocker.state === 'blocked' && (
         <div
           className={styles.leaveDialogBackdrop}

@@ -43,7 +43,12 @@ export function GeneratorPage() {
 
     try {
       setExportError(null)
-      await exportBarcodeAsPng(previewState.svg, 'barcode')
+      await exportBarcodeAsPng(
+        previewState.svg,
+        'barcode',
+        previewSettings.scale,
+        Boolean(previewSettings.transparentBackground),
+      )
     } catch {
       setExportError(t('generator.exportErrors.png'))
     }
@@ -58,6 +63,7 @@ export function GeneratorPage() {
         title={t('generator.panelTitle')}
         description={t('generator.panelDescription')}
         className={styles.controlsPanel}
+        contentClassName={styles.controlsPanelContent}
       >
         <BarcodeForm
           formState={formState}
@@ -104,8 +110,8 @@ export function GeneratorPage() {
 
         <div className={styles.previewBox}>
           <BarcodePreview
+            className={styles.generatorPreview}
             error={previewState.error}
-            rotation={previewSettings.rotation}
             showPreviewFrame={showPreviewFrame}
             svg={previewState.svg}
             typeLabel={t(`barcode.types.${previewSettings.type}`)}

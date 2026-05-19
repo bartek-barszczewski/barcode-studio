@@ -19,9 +19,9 @@ function BarcodeSvg({ value, type, style }: BarcodeSvgProps) {
     const generate = async () => {
       try {
         const svgString = await renderBarcodeToSvgString({
-          value: value || ' ',
-          type,
           ...style,
+          type,
+          value: value || ' ',
         });
         ReactSetSvg(svgString);
       } catch {

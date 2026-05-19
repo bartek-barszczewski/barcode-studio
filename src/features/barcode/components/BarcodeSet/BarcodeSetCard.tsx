@@ -22,6 +22,7 @@ interface BarcodeSetCardProps {
   onEdit: (id: string) => void
   onRemove: (id: string) => void
   isActive?: boolean
+  showPreviewFrame: boolean
 }
 
 export const BarcodeSetCard = memo(function BarcodeSetCard({
@@ -30,6 +31,7 @@ export const BarcodeSetCard = memo(function BarcodeSetCard({
   onEdit,
   onRemove,
   isActive,
+  showPreviewFrame,
 }: BarcodeSetCardProps) {
   const { t } = useTranslation()
   const { svg, error: previewError } = useBarcodeItemPreview(item)
@@ -62,7 +64,12 @@ export const BarcodeSetCard = memo(function BarcodeSetCard({
   const handleDownloadPng = async (e: React.MouseEvent) => {
     e.stopPropagation()
     if (!svg) return
-    await exportBarcodeAsPng(svg, getBaseFilename(), item.options.scale)
+    await exportBarcodeAsPng(
+      svg,
+      getBaseFilename(),
+      item.options.scale,
+      Boolean(item.options.transparentBackground),
+    )
   }
 
   const handleRemove = (e: React.MouseEvent) => {
@@ -80,10 +87,9 @@ export const BarcodeSetCard = memo(function BarcodeSetCard({
       <div className={styles.cardPreviewContainer}>
         <BarcodePreview
           svg={svg}
-          rotation={item.options.rotation}
           error={previewError}
           showMetadata={false}
-          showPreviewFrame={false}
+          showPreviewFrame={showPreviewFrame}
           isWidget={true}
           className={styles.widgetPreview}
         />

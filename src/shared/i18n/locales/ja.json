@@ -67,7 +67,9 @@
       "UPCA": "UPC-A",
       "UPCE": "UPC-E",
       "CODE39": "Code 39",
+      "CODE39EXT": "Code 39 Extended",
       "CODE93": "Code 93",
+      "CODE93EXT": "Code 93 Extended",
       "CODABAR": "Codabar",
       "ITF": "Interleaved 2 of 5 (ITF)",
       "DATAMATRIX": "Data Matrix",
@@ -125,7 +127,7 @@
       "hide": "表示しない"
     },
     "actions": {
-      "generate": "生成",
+      "generate": "生成 XLSX",
       "generating": "生成中...",
       "capture": "コードをキャプチャ",
       "downloadSvg": "SVGをダウンロード",
@@ -337,6 +339,10 @@
             "name": "Code 39",
             "desc": "大文字、数字、およびいくつかの特殊文字（- . $ / + % スペース）をサポートします。自動車業界で頻繁に使用されます。"
           },
+          "CODE39EXT": {
+            "name": "Code 39 Extended",
+            "desc": "Code 39 の拡張版です。小文字や追加記号を含む完全な ASCII セットをサポートしますが、そのぶんシンボルは長くなります。"
+          },
           "ITF": {
             "name": "ITF (Interleaved 2 of 5)",
             "desc": "数字のみで、偶数桁である必要があります。非常に高密度の数値コードです。"
@@ -344,6 +350,10 @@
           "CODE93": {
             "name": "Code 93",
             "desc": "Code 39と比較して密度が高まっています。フルASCII文字セットをサポートします。"
+          },
+          "CODE93EXT": {
+            "name": "Code 93 Extended",
+            "desc": "完全な ASCII データ向けの Code 93 拡張版です。文字と記号が混在するデータでは Code 39 Extended よりコンパクトです。"
           },
           "UPC": {
             "name": "UPC-A / UPC-E",

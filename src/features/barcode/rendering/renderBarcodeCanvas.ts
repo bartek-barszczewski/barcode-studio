@@ -2,6 +2,15 @@
 import bwipjs from 'bwip-js';
 import QRCode from 'qrcode';
 import type { BarcodeFormState, BarcodeType } from '../types/barcode';
+import {
+  getBarcodeTextLayout,
+  getBarcodeTextMetrics,
+  getBarcodeTextValue,
+  getRenderScale,
+  shouldRenderCustomText,
+  supportsNativeTextLayout,
+  TEXT_FONT_FAMILY,
+} from './barcodeText';
 
 const HEX_COLOR_PATTERN = /^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/;
 
@@ -12,7 +21,9 @@ const BWIP_JS_FORMATS: Partial<Record<BarcodeType, string>> = {
   UPCA: 'upca',
   UPCE: 'upce',
   CODE39: 'code39',
+  CODE39EXT: 'code39ext',
   CODE93: 'code93',
+  CODE93EXT: 'code93ext',
   CODABAR: 'rationalizedCodabar',
   ITF: 'interleaved2of5',
   DATAMATRIX: 'datamatrix',
@@ -23,7 +34,8 @@ const BWIP_JS_FORMATS: Partial<Record<BarcodeType, string>> = {
 
 const BWIP_MAX_TEXT_SIZE = 25;
 
-const getRenderScale = (scale: number) => (Number.isFinite(scale) && scale > 0 ? scale : 1);
+const isFixedSquareMatrixCode = (type: BarcodeType) =>
+  type === 'DATAMATRIX' || type === 'AZTEC';
 
 const assertColor = (color: string, fieldName: string) => {
   if (!HEX_COLOR_PATTERN.test(color)) {
@@ -37,14 +49,22 @@ const injectTextToCanvas = (
   originalWidth: number,
   originalHeight: number
 ) => {
-  if (!input.showText) return canvas;
+  if (!shouldRenderCustomText(input)) return canvas;
 
-  const scale = getRenderScale(input.scale);
-  const fontSize = input.fontSize * scale;
-  const spacing = 8 * scale;
-  const extraHeight = fontSize + spacing;
+  const metrics = getBarcodeTextMetrics(input);
+  const layout = getBarcodeTextLayout(
+    { minX: 0, minY: 0, width: originalWidth, height: originalHeight },
+    metrics,
+  );
+  const newMinX = Math.min(0, layout.minX);
+  const newMinY = Math.min(0, layout.minY);
+  const newMaxX = Math.max(originalWidth, layout.maxX);
+  const newMaxY = Math.max(originalHeight, layout.maxY);
 
-  const newCanvas = new OffscreenCanvas(originalWidth, originalHeight + extraHeight);
+  const newCanvas = new OffscreenCanvas(
+    Math.ceil(newMaxX - newMinX),
+    Math.ceil(newMaxY - newMinY),
+  );
   const newCtx = newCanvas.getContext('2d');
   if (!newCtx) throw new Error('Nie można utworzyć kontekstu 2d.');
 
@@ -53,14 +73,18 @@ const injectTextToCanvas = (
   newCtx.fillRect(0, 0, newCanvas.width, newCanvas.height);
 
   // Draw original image
-  newCtx.drawImage(canvas, 0, 0);
+  newCtx.drawImage(canvas, -newMinX, -newMinY);
 
   // Draw text
+  newCtx.save();
   newCtx.fillStyle = input.barColor;
-  newCtx.font = `${fontSize}px Arial, sans-serif`;
+  newCtx.font = `${metrics.fontStyle} ${metrics.fontWeight} ${metrics.fontSize}px ${TEXT_FONT_FAMILY}`;
   newCtx.textAlign = 'center';
-  newCtx.textBaseline = 'top';
-  newCtx.fillText(input.value, originalWidth / 2, originalHeight + spacing / 2);
+  newCtx.textBaseline = 'middle';
+  newCtx.translate(layout.x - newMinX, layout.y - newMinY);
+  newCtx.rotate((metrics.rotation * Math.PI) / 180);
+  newCtx.fillText(getBarcodeTextValue(input), 0, 0);
+  newCtx.restore();
 
   return newCanvas;
 };
@@ -83,6 +107,38 @@ const renderQrCodeCanvas = async (input: BarcodeFormState): Promise<OffscreenCan
   return injectTextToCanvas(canvas, input, canvas.width, canvas.height);
 };
 
+const forceSquareMatrixCanvas = (
+  canvas: OffscreenCanvas,
+  input: BarcodeFormState,
+): OffscreenCanvas => {
+  const side = Math.max(1, canvas.height);
+
+  if (canvas.width === side && canvas.height === side) {
+    return canvas;
+  }
+
+  const squareCanvas = new OffscreenCanvas(side, side);
+  const context = squareCanvas.getContext('2d');
+
+  if (!context) {
+    throw new Error('Nie można utworzyć kontekstu 2d.');
+  }
+
+  if (!input.transparentBackground) {
+    context.fillStyle = input.backgroundColor;
+    context.fillRect(0, 0, side, side);
+  }
+
+  const drawScale = side / Math.max(canvas.width, canvas.height);
+  const drawWidth = canvas.width * drawScale;
+  const drawHeight = canvas.height * drawScale;
+  const offsetX = (side - drawWidth) / 2;
+  const offsetY = (side - drawHeight) / 2;
+
+  context.drawImage(canvas, offsetX, offsetY, drawWidth, drawHeight);
+  return squareCanvas;
+};
+
 const renderBwipBarcodeCanvas = (input: BarcodeFormState): OffscreenCanvas => {
   const bcid = BWIP_JS_FORMATS[input.type];
   if (!bcid) {
@@ -99,13 +155,26 @@ const renderBwipBarcodeCanvas = (input: BarcodeFormState): OffscreenCanvas => {
   const useBuiltInText =
     supportsBuiltInText &&
     input.showText &&
+    !input.displayValue &&
+    supportsNativeTextLayout(input) &&
     bwipTextSize > 0 &&
     bwipTextSize < BWIP_MAX_TEXT_SIZE;
+
+  let textToRender = input.value;
+  if (input.type === 'EAN13' && textToRender.length === 13) {
+    textToRender = textToRender.substring(0, 12);
+  } else if (input.type === 'EAN8' && textToRender.length === 8) {
+    textToRender = textToRender.substring(0, 7);
+  } else if (input.type === 'UPCA' && textToRender.length === 12) {
+    textToRender = textToRender.substring(0, 11);
+  } else if (input.type === 'UPCE' && textToRender.length === 8) {
+    textToRender = textToRender.substring(0, 7);
+  }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const options: any = {
     bcid,
-    text: input.value,
+    text: textToRender,
     scale: bwipScale,
     height: bwipHeight,
     barcolor: input.barColor.replace('#', ''),
@@ -136,11 +205,15 @@ const renderBwipBarcodeCanvas = (input: BarcodeFormState): OffscreenCanvas => {
     throw new Error(friendlyMessage || 'Błąd generowania kodu.', { cause: error });
   }
 
-  if (useBuiltInText) {
-    return canvas;
+  const renderedCanvas = useBuiltInText
+    ? canvas
+    : injectTextToCanvas(canvas, input, canvas.width, canvas.height);
+
+  if (isFixedSquareMatrixCode(input.type)) {
+    return forceSquareMatrixCanvas(renderedCanvas, input);
   }
 
-  return injectTextToCanvas(canvas, input, canvas.width, canvas.height);
+  return renderedCanvas;
 };
 
 export const renderBarcodeToOffscreenCanvas = async (

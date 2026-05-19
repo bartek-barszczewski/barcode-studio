@@ -3,6 +3,7 @@ import type { WorkbookPreview } from '../../types/xlsx';
 import styles from './XlsxWorkbookViewer.module.css';
 import clsx from 'clsx';
 import { SimpleBarcodePreview } from '../../../barcode/components/SimpleBarcodePreview/SimpleBarcodePreview';
+import type { BarcodeRotation } from '../../../barcode/types/barcode';
 
 interface XlsxWorkbookViewerProps {
   workbook: WorkbookPreview;
@@ -18,7 +19,12 @@ interface XlsxWorkbookViewerProps {
     barColor: string;
     backgroundColor: string;
     showText: boolean;
+    rotation: BarcodeRotation;
     displayValue?: string;
+    textBold?: boolean;
+    textItalic?: boolean;
+    textPosition?: 'top' | 'bottom' | 'left' | 'right';
+    textRotation?: number;
   };
 }
 

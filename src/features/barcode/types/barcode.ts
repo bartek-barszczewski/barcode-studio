@@ -5,7 +5,9 @@ export type BarcodeType =
   | 'UPCA'
   | 'UPCE'
   | 'CODE39'
+  | 'CODE39EXT'
   | 'CODE93'
+  | 'CODE93EXT'
   | 'CODABAR'
   | 'ITF'
   | 'DATAMATRIX'
@@ -15,6 +17,7 @@ export type BarcodeType =
   | 'QR'
 
 export type BarcodeRotation = 0 | 90 | 180 | 270
+export type BarcodeTextPosition = 'top' | 'bottom' | 'left' | 'right'
 
 export type BarcodeFormState = {
   type: BarcodeType
@@ -23,12 +26,17 @@ export type BarcodeFormState = {
   rotation: BarcodeRotation
   barColor: string
   backgroundColor: string
+  transparentBackground?: boolean
   height: number
   margin: number
   barWidth: number
   fontSize: number
   scale: number
   showText: boolean
+  textBold?: boolean
+  textItalic?: boolean
+  textPosition?: BarcodeTextPosition
+  textRotation?: number
 }
 
 export type ValidationResult = {

@@ -1,6 +1,23 @@
 import type { BarcodeSetItem } from '../types/barcodeSet'
 import type { BarcodeFormState } from '../types/barcode'
 
+const DEFAULT_BARCODE_SET_OPTIONS: BarcodeSetItem['options'] = {
+  height: 32,
+  barWidth: 3,
+  scale: 1,
+  margin: 8,
+  rotation: 0,
+  foreground: '#000000',
+  background: '#ffffff',
+  transparentBackground: false,
+  textMode: 'below',
+  fontSize: 20,
+  textBold: false,
+  textItalic: false,
+  textPosition: 'bottom',
+  textRotation: 0,
+}
+
 export function mapBarcodeSetItemToFormState(
   item: BarcodeSetItem,
 ): BarcodeFormState {
@@ -16,7 +33,12 @@ export function mapBarcodeSetItemToFormState(
     barWidth: item.options.barWidth,
     fontSize: item.options.fontSize,
     scale: item.options.scale,
+    transparentBackground: Boolean(item.options.transparentBackground),
     showText: item.options.textMode !== 'hidden',
+    textBold: Boolean(item.options.textBold),
+    textItalic: Boolean(item.options.textItalic),
+    textPosition: item.options.textPosition ?? 'bottom',
+    textRotation: item.options.textRotation ?? 0,
   }
 }
 
@@ -26,16 +48,24 @@ export function createDefaultBarcodeSetItem(): BarcodeSetItem {
     value: '12345678',
     displayValue: '',
     type: 'CODE128',
+    options: { ...DEFAULT_BARCODE_SET_OPTIONS },
+  }
+}
+
+export function normalizeBarcodeSetItem(item: BarcodeSetItem): BarcodeSetItem {
+  return {
+    ...item,
+    displayValue: item.displayValue ?? '',
     options: {
-      height: 32,
-      barWidth: 3,
-      scale: 1,
-      margin: 8,
-      rotation: 0,
-      foreground: '#000000',
-      background: '#ffffff',
-      textMode: 'below',
-      fontSize: 20,
+      ...DEFAULT_BARCODE_SET_OPTIONS,
+      ...item.options,
+      textMode: item.options.textMode === 'hidden' ? 'hidden' : 'below',
+      transparentBackground: Boolean(item.options.transparentBackground),
+      textBold: Boolean(item.options.textBold),
+      textItalic: Boolean(item.options.textItalic),
+      textPosition: item.options.textPosition ?? 'bottom',
+      textRotation:
+        typeof item.options.textRotation === 'number' ? item.options.textRotation : 0,
     },
   }
 }

@@ -13,6 +13,9 @@ import {
 import styles from './HelpPage.module.css';
 import { Panel } from '../../shared/ui/Panel/Panel';
 import { BuyMeCoffee } from '../../shared/ui/BuyMeCoffee/BuyMeCoffee';
+import { BARCODE_TYPE_OPTIONS } from '../../features/barcode/constants/barcodeTypes';
+
+const HELP_STANDARD_KEYS = BARCODE_TYPE_OPTIONS.map(({ value }) => value);
 
 export function HelpPage() {
   const { t } = useTranslation();
@@ -67,6 +70,14 @@ export function HelpPage() {
                 <li>{t('help.sections.xlsx.workflow.step2')}</li>
                 <li>{t('help.sections.xlsx.workflow.step3')}</li>
                 <li>{t('help.sections.xlsx.workflow.step4')}</li>
+              </ul>
+            </div>
+            <div className={styles.workflow}>
+              <strong>{t('help.sections.xlsx.printCards.title')}</strong>
+              <ul>
+                <li>{t('help.sections.xlsx.printCards.step1')}</li>
+                <li>{t('help.sections.xlsx.printCards.step2')}</li>
+                <li>{t('help.sections.xlsx.printCards.step3')}</li>
               </ul>
             </div>
           </section>
@@ -124,20 +135,7 @@ export function HelpPage() {
             </div>
             <p className={styles.introText}>{t('help.sections.standards.intro')}</p>
             <div className={styles.standardsGrid}>
-              {[
-                'CODE128',
-                'EAN13',
-                'QR',
-                'CODE39',
-                'CODE93',
-                'ITF',
-                'UPC',
-                'CODABAR',
-                'PHARMACODE',
-                'DATAMATRIX',
-                'PDF417',
-                'AZTEC',
-              ].map((key) => (
+              {HELP_STANDARD_KEYS.map((key) => (
                 <div key={key} className={styles.standardItem}>
                   <strong>{t(`help.sections.standards.types.${key}.name`)}</strong>
                   <p>{t(`help.sections.standards.types.${key}.desc`)}</p>

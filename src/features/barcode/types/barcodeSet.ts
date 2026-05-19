@@ -1,4 +1,8 @@
-import type { BarcodeType, BarcodeRotation } from './barcode'
+import type {
+  BarcodeRotation,
+  BarcodeTextPosition,
+  BarcodeType,
+} from './barcode'
 
 export type BarcodeSetItem = {
   id: string
@@ -13,7 +17,12 @@ export type BarcodeSetItem = {
     rotation: BarcodeRotation
     foreground: string
     background: string
+    transparentBackground?: boolean
     textMode: 'hidden' | 'below'
     fontSize: number
+    textBold?: boolean
+    textItalic?: boolean
+    textPosition?: BarcodeTextPosition
+    textRotation?: number
   }
 }

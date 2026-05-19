@@ -28,8 +28,17 @@ export const validateBarcodeValue = (
     return invalid('Wartość nie może być pusta.')
   }
 
-  // QR, CODE128, DATAMATRIX, PDF417, AZTEC, CODE93 can take most characters
-  if (type === 'QR' || type === 'CODE128' || type === 'DATAMATRIX' || type === 'PDF417' || type === 'AZTEC' || type === 'CODE93') {
+  // QR, CODE128, DATAMATRIX, PDF417, AZTEC, CODE93, CODE39EXT and CODE93EXT can take most characters
+  if (
+    type === 'QR' ||
+    type === 'CODE128' ||
+    type === 'DATAMATRIX' ||
+    type === 'PDF417' ||
+    type === 'AZTEC' ||
+    type === 'CODE39EXT' ||
+    type === 'CODE93' ||
+    type === 'CODE93EXT'
+  ) {
     return valid()
   }
 

@@ -18,7 +18,9 @@
       "UPCA": "UPC-A",
       "UPCE": "UPC-E",
       "CODE39": "Code 39",
+      "CODE39EXT": "Code 39 Extended",
       "CODE93": "Code 93",
+      "CODE93EXT": "Code 93 Extended",
       "CODABAR": "Codabar",
       "ITF": "Interleaved 2 of 5 (ITF)",
       "DATAMATRIX": "Data Matrix",
@@ -65,7 +67,10 @@
       "barWidth": "Grubość kreski",
       "fontSize": "Rozmiar napisu",
       "scale": "Skala",
-      "text": "Tekst pod kodem"
+      "text": "Tekst pod kodem",
+      "textStyle": "Styl tekstu",
+      "textPosition": "Pozycja tekstu",
+      "textRotation": "Obrót tekstu"
     },
     "placeholders": {
       "type": "Wybierz typ kodu",
@@ -75,8 +80,20 @@
       "show": "Pokaż pod kodem",
       "hide": "Nie pokazuj"
     },
+    "textEditor": {
+      "title": "Styl tekstu",
+      "description": "Dopasuj wyróżnienie, pozycję i kąt etykiety.",
+      "bold": "Pogrubienie",
+      "italic": "Pochylenie",
+      "positions": {
+        "top": "Góra",
+        "left": "Lewo",
+        "right": "Prawo",
+        "bottom": "Dół"
+      }
+    },
     "actions": {
-      "generate": "Generuj",
+      "generate": "Generuj XLSX",
       "generating": "Generowanie...",
       "capture": "Zrzut kodu",
       "downloadSvg": "Pobierz SVG",
@@ -136,7 +153,11 @@
       "description": "Ustawienia wizualne generowanych kodów."
     },
     "actions": {
-      "deselect": "Odznacz"
+      "deselect": "Odznacz",
+      "printCards": "Drukuj karty"
+    },
+    "print": {
+      "preparing": "Przygotowywanie kart do druku..."
     },
     "placement": {
       "label": "Pozycja względem tekstu",
@@ -165,13 +186,17 @@
       "placeholder": "Załaduj plik .xlsx, aby zobaczyć podgląd."
     },
     "success": {
-      "generated": "Pomyślnie wygenerowano {{count}} kodów."
+      "generated": "Pomyślnie wygenerowano {{count}} kodów.",
+      "printReady": "Przygotowano {{count}} kart do druku."
     },
     "errors": {
       "onlyXlsx": "Zaakceptowane są tylko pliki .xlsx.",
       "loadFailed": "Błąd podczas wczytywania pliku.",
       "generateFailed": "Błąd podczas generowania pliku.",
       "unknown": "Nieznany błąd.",
+      "noPrintData": "Nie znaleziono danych do druku w pierwszych dwóch kolumnach.",
+      "invalidPrintData": "Druk kart wymaga poprawnych wartości w kolumnach A i B dla każdego drukowanego wiersza. Nieprawidłowe komórki: {{cells}}.",
+      "printWindowBlocked": "Przeglądarka zablokowała okno podglądu wydruku. Zezwól na pop-upy i spróbuj ponownie.",
       "occupiedCellShort": "Komórka zajęta",
       "sheetMissingInFile": "Nie można znaleźć arkusza w pliku.",
       "sheetNotFound": "Arkusz \"{{sheetName}}\" nie został znaleziony.",
@@ -237,6 +262,12 @@
           "step2": "2. Kliknij kolumnę, która zawiera dane (np. numery EAN).",
           "step3": "3. Kliknij pustą kolumnę, w której mają pojawić się kody.",
           "step4": "4. Kliknij 'Generuj' – aplikacja wstawi kody bezpośrednio do komórek, używając tekstów z arkusza jako etykiet."
+        },
+        "printCards": {
+          "title": "Opcja Print cards:",
+          "step1": "1. Użyj 'Drukuj karty', gdy w dwóch pierwszych kolumnach arkusza znajdują się wartości do wydruku na każdej karcie.",
+          "step2": "2. Każdy drukowany wiersz tworzy jedną kartę z dwoma kodami kreskowymi, gdzie kolumna A jest wartością główną, a kolumna B wartością dodatkową.",
+          "step3": "3. Obszar na kody ma stałe 85.60 x 53.98 mm, tekst informacyjny trafia poza obszar cięcia, a grubość kreski w tym trybie jest zawsze zablokowana na 1."
         }
       },
       "docx": {
@@ -277,16 +308,32 @@
             "desc": "Najbardziej uniwersalny standard. Obsługuje wszystkie znaki ASCII (litery, cyfry, symbole). Idealny do logistyki i etykiet wewnętrznych."
           },
           "EAN13": {
-            "name": "EAN-13 / EAN-8",
-            "desc": "Standard handlowy. Wymaga tylko cyfr. EAN-13 (12-13 cyfr), EAN-8 (7-8 cyfr). Ostatnia cyfra to suma kontrolna."
+            "name": "EAN-13",
+            "desc": "Standard handlowy dla opakowań produktów. Wymaga wyłącznie cyfr. Możesz podać 12 lub 13 cyfr, a ostatnia cyfra pełni rolę sumy kontrolnej."
+          },
+          "EAN8": {
+            "name": "EAN-8",
+            "desc": "Kompaktowy wariant handlowy dla mniejszych opakowań. Wymaga samych cyfr i używa 7 lub 8 cyfr, gdzie ostatnia jest sumą kontrolną."
+          },
+          "UPCA": {
+            "name": "UPC-A",
+            "desc": "Północnoamerykański standard detaliczny. Tylko cyfry, zwykle 11 lub 12 znaków, często spotykany na opakowaniach produktów."
+          },
+          "UPCE": {
+            "name": "UPC-E",
+            "desc": "Skrócony wariant UPC dla małych etykiet. Numeryczny, zwykle 6 do 8 cyfr, przy zachowaniu zgodności z detalicznym standardem UPC."
           },
           "QR": {
-            "name": "QR Code / Data Matrix",
-            "desc": "Kody 2D. Mogą przechowywać ogromne ilości danych, w tym linki URL i długie teksty. Odporne na uszkodzenia."
+            "name": "QR Code",
+            "desc": "Kod 2D zoptymalizowany pod szybkie skanowanie. Dobrze przenosi adresy URL, długie teksty i mieszane dane, więc sprawdza się jako uniwersalny wybór."
           },
           "CODE39": {
             "name": "Code 39",
             "desc": "Obsługuje wielkie litery, cyfry i kilka znaków specjalnych (- . $ / + % spacja). Często używany w przemyśle motoryzacyjnym."
+          },
+          "CODE39EXT": {
+            "name": "Code 39 Extended",
+            "desc": "Rozszerzony wariant Code 39. Obsługuje pełny zestaw ASCII, w tym małe litery i dodatkowe symbole, kosztem dłuższego symbolu."
           },
           "ITF": {
             "name": "ITF (Interleaved 2 of 5)",
@@ -296,9 +343,9 @@
             "name": "Code 93",
             "desc": "Zwiększona gęstość w porównaniu do Code 39. Obsługuje pełny zestaw znaków ASCII."
           },
-          "UPC": {
-            "name": "UPC-A / UPC-E",
-            "desc": "Standardy amerykańskie. UPC-A (11-12 cyfr), UPC-E (6-8 cyfr). Używane głównie w handlu detalicznym w USA i Kanadzie."
+          "CODE93EXT": {
+            "name": "Code 93 Extended",
+            "desc": "Rozszerzony wariant Code 93 dla pełnych danych ASCII. Jest bardziej zwarty niż Code 39 Extended przy mieszanym tekście i symbolach."
           },
           "CODABAR": {
             "name": "Codabar",

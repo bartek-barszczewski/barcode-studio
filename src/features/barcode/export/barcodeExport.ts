@@ -113,6 +113,7 @@ export const downloadPngFromSvg = async (
   svg: string,
   filename: string,
   scale = 1,
+  transparentBackground = false,
 ): Promise<void> => {
   const svgBlob = new Blob([svg], { type: SVG_MIME_TYPE })
   const svgUrl = URL.createObjectURL(svgBlob)
@@ -133,8 +134,10 @@ export const downloadPngFromSvg = async (
     canvas.width = Math.ceil(width)
     canvas.height = Math.ceil(height)
 
-    context.fillStyle = '#ffffff'
-    context.fillRect(0, 0, canvas.width, canvas.height)
+    if (!transparentBackground) {
+      context.fillStyle = '#ffffff'
+      context.fillRect(0, 0, canvas.width, canvas.height)
+    }
     context.drawImage(image, 0, 0, canvas.width, canvas.height)
 
     const pngBlob = await canvasToBlob(canvas)
