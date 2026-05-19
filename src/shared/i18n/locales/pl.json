@@ -65,7 +65,10 @@
       "barWidth": "Grubość kreski",
       "fontSize": "Rozmiar napisu",
       "scale": "Skala",
-      "text": "Tekst pod kodem"
+      "text": "Tekst pod kodem",
+      "textStyle": "Styl tekstu",
+      "textPosition": "Pozycja tekstu",
+      "textRotation": "Obrót tekstu"
     },
     "placeholders": {
       "type": "Wybierz typ kodu",
@@ -74,6 +77,18 @@
     "textOptions": {
       "show": "Pokaż pod kodem",
       "hide": "Nie pokazuj"
+    },
+    "textEditor": {
+      "title": "Styl tekstu",
+      "description": "Dopasuj wyróżnienie, pozycję i kąt etykiety.",
+      "bold": "Pogrubienie",
+      "italic": "Pochylenie",
+      "positions": {
+        "top": "Góra",
+        "left": "Lewo",
+        "right": "Prawo",
+        "bottom": "Dół"
+      }
     },
     "actions": {
       "generate": "Generuj",

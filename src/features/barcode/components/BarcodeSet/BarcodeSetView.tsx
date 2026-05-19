@@ -255,6 +255,7 @@ export function BarcodeSetView() {
             onEdit={handleEdit}
             onRemove={removeItem}
             isActive={selectedItemId === item.id && isDrawerOpen}
+            showPreviewFrame={false}
           />
         ))}
       </div>

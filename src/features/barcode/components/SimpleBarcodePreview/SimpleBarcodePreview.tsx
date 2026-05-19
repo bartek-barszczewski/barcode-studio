@@ -1,6 +1,10 @@
 import React, { useEffect, useState, memo } from 'react';
 import { renderBarcodeToSvgString } from '../../rendering/renderBarcode';
-import type { BarcodeType, BarcodeFormState } from '../../types/barcode';
+import type {
+  BarcodeFormState,
+  BarcodeTextPosition,
+  BarcodeType,
+} from '../../types/barcode';
 import styles from './SimpleBarcodePreview.module.css';
 
 interface SimpleBarcodePreviewProps {
@@ -15,6 +19,10 @@ interface SimpleBarcodePreviewProps {
   barWidth: number;
   margin: number;
   scale: number;
+  textBold?: boolean;
+  textItalic?: boolean;
+  textPosition?: BarcodeTextPosition;
+  textRotation?: number;
 }
 
 export const SimpleBarcodePreview: React.FC<SimpleBarcodePreviewProps> = memo(({
@@ -29,6 +37,10 @@ export const SimpleBarcodePreview: React.FC<SimpleBarcodePreviewProps> = memo(({
   barWidth,
   margin,
   scale,
+  textBold,
+  textItalic,
+  textPosition,
+  textRotation,
 }) => {
   const [svg, setSvg] = useState<string | null>(null);
   const [error, setError] = useState(false);
@@ -50,6 +62,10 @@ export const SimpleBarcodePreview: React.FC<SimpleBarcodePreviewProps> = memo(({
           margin,
           scale,
           rotation: 0,
+          textBold,
+          textItalic,
+          textPosition,
+          textRotation,
         };
 
         const svgString = await renderBarcodeToSvgString(settings);
@@ -61,7 +77,7 @@ export const SimpleBarcodePreview: React.FC<SimpleBarcodePreviewProps> = memo(({
     };
 
     render();
-  }, [value, displayValue, type, barColor, backgroundColor, showText, fontSize, height, barWidth, margin, scale]);
+  }, [value, displayValue, type, barColor, backgroundColor, showText, fontSize, height, barWidth, margin, scale, textBold, textItalic, textPosition, textRotation]);
 
   if (error) {
     return <div className={styles.previewContainer}><span className={styles.errorLabel}>!</span></div>;

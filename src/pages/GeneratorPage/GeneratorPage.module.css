@@ -1,4 +1,5 @@
 .layout {
+  --generator-panel-height: clamp(42rem, calc(100vh - 4rem), 60rem);
   display: grid;
   grid-template-columns: clamp(380px, 30vw, 480px) minmax(0, 1fr);
   gap: 1.5rem;
@@ -13,25 +14,36 @@
 .controlsPanel {
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 
 .controlsPanel,
 .previewPanel {
-  height: 100%;
+  height: var(--generator-panel-height);
   min-width: 0;
   min-height: 0;
+}
+
+.controlsPanel .controlsPanelContent {
+  flex: 1 1 auto;
+  min-height: 0;
+  height: auto;
+  overflow: hidden;
 }
 
 .previewPanel {
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 
-.previewPanelContent {
+.previewPanel .previewPanelContent {
+  flex: 1 1 auto;
   display: grid;
   grid-template-rows: auto auto minmax(0, 1fr);
   min-height: 0;
-  height: 100%;
+  height: auto;
+  overflow: hidden;
 }
 
 .toolbar {
@@ -52,7 +64,6 @@
 }
 
 .previewBox {
-  flex: 1;
   margin-top: 1.5rem;
   display: grid;
   place-items: center;
@@ -69,7 +80,6 @@
   box-shadow: var(--md-sys-elevation-level1);
 }
 
-/* Subtle grid for the preview box */
 .previewBox::before {
   content: "";
   position: absolute;
@@ -79,14 +89,30 @@
   opacity: 0.2;
 }
 
+.generatorPreview {
+  box-sizing: border-box;
+  padding: 0 0.25rem 0.875rem;
+}
+
 @media (max-width: 1100px) {
   .layout {
     grid-template-columns: 1fr;
     gap: 2rem;
+    --generator-panel-height: auto;
   }
 
   .controlsPanel,
   .previewPanel {
     height: auto;
+  }
+
+  .previewBox {
+    min-height: 40rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .previewBox {
+    padding: 1rem;
   }
 }

@@ -13,7 +13,7 @@ export function useBarcodeSet() {
         if (utils.validateBarcodeSetItems(parsed)) {
           // Repair existing items that might have empty values from previous versions
           return parsed.map(item => ({
-            ...item,
+            ...utils.normalizeBarcodeSetItem(item),
             value: item.value.trim() || '12345678'
           }))
         }
@@ -63,11 +63,18 @@ export function useBarcodeSet() {
   }, [])
 
   const replaceItems = useCallback((newItems: BarcodeSetItem[]) => {
-    setItems(newItems.length > 0 ? newItems : [utils.createDefaultBarcodeSetItem()])
+    setItems(
+      newItems.length > 0
+        ? newItems.map(utils.normalizeBarcodeSetItem)
+        : [utils.createDefaultBarcodeSetItem()],
+    )
   }, [])
 
   const appendItems = useCallback((newItems: BarcodeSetItem[]) => {
-    setItems((prev) => [...prev, ...utils.reassignIds(newItems)])
+    setItems((prev) => [
+      ...prev,
+      ...utils.reassignIds(newItems.map(utils.normalizeBarcodeSetItem)),
+    ])
   }, [])
 
   const resetSaved = useCallback(() => {

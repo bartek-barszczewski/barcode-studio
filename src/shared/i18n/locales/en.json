@@ -114,7 +114,11 @@
       "barWidth": "Bar width",
       "fontSize": "Text size",
       "scale": "Scale",
-      "text": "Text under barcode"
+      "text": "Text under barcode",
+      "textStyle": "Text style",
+      "textPosition": "Text position",
+      "textRotation": "Text rotation",
+      "transparentBackground": "Transparent"
     },
     "placeholders": {
       "type": "Choose barcode type",
@@ -123,6 +127,18 @@
     "textOptions": {
       "show": "Show under barcode",
       "hide": "Do not show"
+    },
+    "textEditor": {
+      "title": "Text styling",
+      "description": "Adjust label emphasis, placement, and angle.",
+      "bold": "Bold text",
+      "italic": "Italic text",
+      "positions": {
+        "top": "Top",
+        "left": "Left",
+        "right": "Right",
+        "bottom": "Bottom"
+      }
     },
     "actions": {
       "generate": "Generate",

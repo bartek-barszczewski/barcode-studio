@@ -3,6 +3,15 @@ import bwipjs from 'bwip-js'
 import JsBarcode from 'jsbarcode'
 import QRCode from 'qrcode'
 import type { BarcodeFormState, BarcodeType } from '../types/barcode'
+import {
+  getBarcodeTextLayout,
+  getBarcodeTextMetrics,
+  getBarcodeTextValue,
+  getRenderScale,
+  shouldRenderCustomText,
+  supportsNativeTextLayout,
+  TEXT_FONT_FAMILY,
+} from './barcodeText'
 
 const SVG_NAMESPACE = 'http://www.w3.org/2000/svg'
 const HEX_COLOR_PATTERN =
@@ -28,11 +37,7 @@ const BWIP_JS_FORMATS: Partial<Record<BarcodeType, string>> = {
 }
 
 const BWIP_MAX_TEXT_SIZE = 25
-const TEXT_WIDTH_RATIO = 0.92
-const ESTIMATED_TEXT_CHAR_WIDTH = 0.58
-
-const getRenderScale = (scale: number) =>
-  Number.isFinite(scale) && scale > 0 ? scale : 1
+const TRANSPARENT_SVG_COLOR = '#FFFFFF00'
 
 const formatSvgNumber = (value: number) =>
   Number.parseFloat(value.toFixed(3)).toString()
@@ -60,10 +65,7 @@ const assertSvgColor = (color: string, fieldName: string) => {
 }
 
 const injectTextToSvg = (svg: string, input: BarcodeFormState): string => {
-  if (!input.showText) return svg
-
-  const textToDisplay = input.displayValue || input.value
-  if (!textToDisplay) return svg
+  if (!shouldRenderCustomText(input)) return svg
 
   const viewBoxMatch = svg.match(/viewBox="([^"]+)"/)
   if (!viewBoxMatch) return svg
@@ -72,54 +74,44 @@ const injectTextToSvg = (svg: string, input: BarcodeFormState): string => {
   if (parts.length !== 4) return svg
 
   const [minX, minY, width, height] = parts.map(parseFloat)
-  const scale = getRenderScale(input.scale)
   const renderedWidth = parseSvgNumberAttribute(svg, 'width') ?? width
   const renderedHeight = parseSvgNumberAttribute(svg, 'height') ?? height
   const unitsPerPixelX = width / renderedWidth
   const unitsPerPixelY = height / renderedHeight
-  
-  const maxTextWidth = width * TEXT_WIDTH_RATIO
-  const desiredFontSize = input.fontSize * scale * unitsPerPixelY
-  const estimatedTextWidth =
-    textToDisplay.length * desiredFontSize * ESTIMATED_TEXT_CHAR_WIDTH
-
-  let newWidth = width
-  let newMinX = minX
-
-  if (estimatedTextWidth > maxTextWidth) {
-    newWidth = estimatedTextWidth / TEXT_WIDTH_RATIO
-    newMinX = minX - (newWidth - width) / 2
-  }
-
-  const fittedFontSize = desiredFontSize
-  const spacing = 8 * scale * unitsPerPixelY
-  const extraHeight = fittedFontSize * 1.25 + spacing
-  
-  const extraRenderedHeight = extraHeight / unitsPerPixelY
-  const extraRenderedWidth = (newWidth - width) / unitsPerPixelX
-  
-  const newHeight = height + extraHeight
-  const newViewBox = [newMinX, minY, newWidth, newHeight]
+  const metrics = getBarcodeTextMetrics(input, unitsPerPixelX, unitsPerPixelY)
+  const layout = getBarcodeTextLayout(
+    { minX, minY, width, height },
+    metrics,
+  )
+  const newMinX = Math.min(minX, layout.minX)
+  const newMinY = Math.min(minY, layout.minY)
+  const newMaxX = Math.max(minX + width, layout.maxX)
+  const newMaxY = Math.max(minY + height, layout.maxY)
+  const newWidth = newMaxX - newMinX
+  const newHeight = newMaxY - newMinY
+  const newViewBox = [newMinX, newMinY, newWidth, newHeight]
     .map(formatSvgNumber)
     .join(' ')
-    
-  const textX = minX + width / 2
-  const textY = minY + height + spacing + fittedFontSize
-  const textElement = `<text x="${formatSvgNumber(textX)}" y="${formatSvgNumber(textY)}" fill="${input.barColor}" font-family="Arial, sans-serif" font-size="${formatSvgNumber(fittedFontSize)}" text-anchor="middle">${escapeSvgText(textToDisplay)}</text>`
+  const newRenderedWidth = renderedWidth * (newWidth / width)
+  const newRenderedHeight = renderedHeight * (newHeight / height)
+  const rotationAttribute = metrics.rotation === 0
+    ? ''
+    : ` transform="rotate(${formatSvgNumber(metrics.rotation)} ${formatSvgNumber(layout.x)} ${formatSvgNumber(layout.y)})"`
+  const textElement = `<text x="${formatSvgNumber(layout.x)}" y="${formatSvgNumber(layout.y)}" fill="${input.barColor}" font-family="${TEXT_FONT_FAMILY}" font-size="${formatSvgNumber(metrics.fontSize)}" font-style="${metrics.fontStyle}" font-weight="${metrics.fontWeight}" text-anchor="middle" dominant-baseline="middle"${rotationAttribute}>${escapeSvgText(getBarcodeTextValue(input))}</text>`
 
   let updatedSvg = svg.replace(/viewBox="[^"]+"/, `viewBox="${newViewBox}"`)
-
-  updatedSvg = updatedSvg.replace(
-    /(<svg[^>]+height=")(\d+\.?\d*)/,
-    (_, p1, p2) =>
-      p1 + formatSvgNumber(Number.parseFloat(p2) + extraRenderedHeight),
-  )
 
   if (updatedSvg.match(/<svg[^>]+width="/)) {
     updatedSvg = updatedSvg.replace(
       /(<svg[^>]+width=")(\d+\.?\d*)/,
-      (_, p1, p2) =>
-        p1 + formatSvgNumber(Number.parseFloat(p2) + extraRenderedWidth),
+      (_, p1) => p1 + formatSvgNumber(newRenderedWidth),
+    )
+  }
+
+  if (updatedSvg.match(/<svg[^>]+height="/)) {
+    updatedSvg = updatedSvg.replace(
+      /(<svg[^>]+height=")(\d+\.?\d*)/,
+      (_, p1) => p1 + formatSvgNumber(newRenderedHeight),
     )
   }
 
@@ -219,6 +211,7 @@ const renderBwipBarcode = (input: BarcodeFormState): string => {
       supportsBuiltInText &&
       input.showText &&
       !input.displayValue &&
+      supportsNativeTextLayout(input) &&
       bwipTextSize > 0 &&
       bwipTextSize < BWIP_MAX_TEXT_SIZE
 
@@ -319,20 +312,28 @@ const normalizeSvgAttributes = (svg: string): string => {
   return normalized
 }
 
+const getEffectiveBackgroundColor = (input: BarcodeFormState) =>
+  input.transparentBackground ? TRANSPARENT_SVG_COLOR : input.backgroundColor
+
 export const renderBarcodeToSvgString = async (
   input: BarcodeFormState,
 ): Promise<string> => {
   assertSvgColor(input.barColor, 'Kolor kodu')
   assertSvgColor(input.backgroundColor, 'Tło')
 
+  const normalizedInput: BarcodeFormState = {
+    ...input,
+    backgroundColor: getEffectiveBackgroundColor(input),
+  }
+
   let result: string
 
-  if (input.type === 'QR') {
-    result = await renderQrCode(input)
-  } else if (JS_BARCODE_FORMATS[input.type]) {
-    result = renderLinearBarcode(input)
-  } else if (BWIP_JS_FORMATS[input.type]) {
-    result = renderBwipBarcode(input)
+  if (normalizedInput.type === 'QR') {
+    result = await renderQrCode(normalizedInput)
+  } else if (JS_BARCODE_FORMATS[normalizedInput.type]) {
+    result = renderLinearBarcode(normalizedInput)
+  } else if (BWIP_JS_FORMATS[normalizedInput.type]) {
+    result = renderBwipBarcode(normalizedInput)
   } else {
     throw new Error('Nieobsługiwany typ kodu kreskowego.')
   }

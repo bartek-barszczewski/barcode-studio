@@ -19,6 +19,10 @@ interface XlsxWorkbookViewerProps {
     backgroundColor: string;
     showText: boolean;
     displayValue?: string;
+    textBold?: boolean;
+    textItalic?: boolean;
+    textPosition?: 'top' | 'bottom' | 'left' | 'right';
+    textRotation?: number;
   };
 }
 
