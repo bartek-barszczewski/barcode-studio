@@ -67,7 +67,9 @@
       "UPCA": "UPC-A",
       "UPCE": "UPC-E",
       "CODE39": "Code 39",
+      "CODE39EXT": "Code 39 Extended",
       "CODE93": "Code 93",
+      "CODE93EXT": "Code 93 Extended",
       "CODABAR": "Codabar",
       "ITF": "Interleaved 2 of 5 (ITF)",
       "DATAMATRIX": "Data Matrix",
@@ -141,7 +143,7 @@
       }
     },
     "actions": {
-      "generate": "Generate",
+      "generate": "Generate XLSX",
       "generating": "Generating...",
       "capture": "Capture code",
       "downloadSvg": "Download SVG",
@@ -201,7 +203,11 @@
       "description": "Visual settings for generated codes."
     },
     "actions": {
-      "deselect": "Deselect"
+      "deselect": "Deselect",
+      "printCards": "Print cards"
+    },
+    "print": {
+      "preparing": "Preparing cards for print..."
     },
     "placement": {
       "label": "Position relative to text",
@@ -230,13 +236,17 @@
       "placeholder": "Load an .xlsx file to see the preview."
     },
     "success": {
-      "generated": "Successfully generated {{count}} codes."
+      "generated": "Successfully generated {{count}} codes.",
+      "printReady": "Prepared {{count}} cards for print."
     },
     "errors": {
       "onlyXlsx": "Only .xlsx files are accepted.",
       "loadFailed": "Error while loading the file.",
       "generateFailed": "Error while generating the file.",
       "unknown": "Unknown error.",
+      "noPrintData": "No printable rows were found in the first two columns.",
+      "invalidPrintData": "Print cards requires valid values in columns A and B for every printed row. Invalid cells: {{cells}}.",
+      "printWindowBlocked": "The print preview window was blocked by the browser. Allow pop-ups and try again.",
       "occupiedCellShort": "Cell occupied",
       "sheetMissingInFile": "Could not find the sheet in the file.",
       "sheetNotFound": "Sheet \"{{sheetName}}\" was not found.",
@@ -302,6 +312,12 @@
           "step2": "2. Click the column that contains the data (e.g., EAN numbers).",
           "step3": "3. Click an empty column where the codes should appear.",
           "step4": "4. Click 'Generate' – the app will insert barcodes directly into the cells, using text from the sheet as labels."
+        },
+        "printCards": {
+          "title": "Print cards option:",
+          "step1": "1. Use 'Print cards' when the first two columns contain the values that should be printed on each card.",
+          "step2": "2. Each printed row creates one card with two barcodes, using column A as the primary value and column B as the secondary value.",
+          "step3": "3. The barcode area is fixed to 85.60 x 53.98 mm, helper text sits outside the cut area, and bar width is always locked to 1 in this mode."
         }
       },
       "docx": {
@@ -342,16 +358,32 @@
             "desc": "The most universal standard. Supports all ASCII characters (letters, numbers, symbols). Ideal for logistics and internal labels."
           },
           "EAN13": {
-            "name": "EAN-13 / EAN-8",
-            "desc": "Retail standard. Requires digits only. EAN-13 (12-13 digits), EAN-8 (7-8 digits). The last digit is a checksum."
+            "name": "EAN-13",
+            "desc": "Retail standard for product packaging. Requires digits only. You can provide 12 or 13 digits; the last digit is the checksum."
+          },
+          "EAN8": {
+            "name": "EAN-8",
+            "desc": "Compact retail variant for smaller packages. Requires digits only and uses 7 or 8 digits, with the last digit acting as the checksum."
+          },
+          "UPCA": {
+            "name": "UPC-A",
+            "desc": "North American retail standard. Numeric only, typically 11 or 12 digits, and commonly found on consumer packaging."
+          },
+          "UPCE": {
+            "name": "UPC-E",
+            "desc": "Compressed UPC variant for small labels. Numeric only, typically 6 to 8 digits, while preserving UPC retail compatibility."
           },
           "QR": {
-            "name": "QR Code / Data Matrix",
-            "desc": "2D codes. Can store huge amounts of data, including URLs and long texts. Highly damage-resistant."
+            "name": "QR Code",
+            "desc": "2D code optimized for fast scanning. Handles URLs, long text, and mixed data well, making it a strong general-purpose choice."
           },
           "CODE39": {
             "name": "Code 39",
             "desc": "Supports uppercase letters, digits, and a few special characters (- . $ / + % space). Frequently used in the automotive industry."
+          },
+          "CODE39EXT": {
+            "name": "Code 39 Extended",
+            "desc": "Extended variant of Code 39. Supports the full ASCII set, including lowercase letters and additional symbols, at the cost of a longer symbol."
           },
           "ITF": {
             "name": "ITF (Interleaved 2 of 5)",
@@ -361,9 +393,9 @@
             "name": "Code 93",
             "desc": "Increased density compared to Code 39. Supports the full ASCII character set."
           },
-          "UPC": {
-            "name": "UPC-A / UPC-E",
-            "desc": "US standards. UPC-A (11-12 digits), UPC-E (6-8 digits). Primarily used in retail in the USA and Canada."
+          "CODE93EXT": {
+            "name": "Code 93 Extended",
+            "desc": "Extended Code 93 variant for full ASCII data. More compact than Code 39 Extended for mixed text and symbol payloads."
           },
           "CODABAR": {
             "name": "Codabar",

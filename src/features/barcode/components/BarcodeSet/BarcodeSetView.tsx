@@ -73,7 +73,10 @@ export function BarcodeSetView() {
       if (items.length > prevItemsLengthRef.current || !currentExists) {
         const lastItem = items[items.length - 1]
         if (lastItem) {
-          setSelectedItemId(lastItem.id)
+          // Avoid synchronous setState in effect
+          void Promise.resolve().then(() => {
+            setSelectedItemId(lastItem.id)
+          })
         }
       }
     }
@@ -131,12 +134,9 @@ export function BarcodeSetView() {
   const handleNavigate = useCallback((direction: 'up' | 'down') => {
     if (items.length <= 1 || selectedIndex === -1) return
 
-    let nextIndex = selectedIndex
-    if (direction === 'up') {
-      nextIndex = (selectedIndex - 1 + items.length) % items.length
-    } else {
-      nextIndex = (selectedIndex + 1) % items.length
-    }
+    const nextIndex = direction === 'up'
+      ? (selectedIndex - 1 + items.length) % items.length
+      : (selectedIndex + 1) % items.length
 
     const nextItem = items[nextIndex]
     if (nextItem) {

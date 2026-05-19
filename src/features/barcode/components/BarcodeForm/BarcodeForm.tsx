@@ -45,7 +45,11 @@ const TEXT_POSITION_OPTIONS: Array<{
 ]
 
 export type BarcodeFormProps = {
+  className?: string
   formState: BarcodeFormState
+  hideDisplayValueField?: boolean
+  hideTypeField?: boolean
+  hideValueField?: boolean
   scrollable?: boolean
   showPreviewFrame?: boolean
   updateField: <Key extends keyof BarcodeFormState>(
@@ -56,7 +60,11 @@ export type BarcodeFormProps = {
 }
 
 export function BarcodeForm({
+  className,
   formState,
+  hideDisplayValueField = false,
+  hideTypeField = false,
+  hideValueField = false,
   scrollable = true,
   showPreviewFrame,
   updateField,
@@ -79,33 +87,45 @@ export function BarcodeForm({
   }))
 
   return (
-    <div className={clsx(styles.form, !scrollable && styles.formInheritScroll)}>
-      <Field label={t('generator.fields.type')} htmlFor="barcode-type">
-        <SearchableSelect
-          id="barcode-type"
-          options={barcodeTypeOptions}
-          onChange={(value) => updateField('type', value as BarcodeType)}
-          placeholder={t('generator.placeholders.type')}
-          value={formState.type}
-        />
-      </Field>
+    <div
+      className={clsx(
+        styles.form,
+        !scrollable && styles.formInheritScroll,
+        className,
+      )}
+    >
+      {!hideTypeField && (
+        <Field label={t('generator.fields.type')} htmlFor="barcode-type">
+          <SearchableSelect
+            id="barcode-type"
+            options={barcodeTypeOptions}
+            onChange={(value) => updateField('type', value as BarcodeType)}
+            placeholder={t('generator.placeholders.type')}
+            value={formState.type}
+          />
+        </Field>
+      )}
 
-      <Field label={t('generator.fields.value')} htmlFor="barcode-value">
-        <Textarea
-          id="barcode-value"
-          placeholder={t('generator.placeholders.value')}
-          onChange={(event) => updateField('value', event.target.value)}
-          value={formState.value}
-        />
-      </Field>
+      {!hideValueField && (
+        <Field label={t('generator.fields.value')} htmlFor="barcode-value">
+          <Textarea
+            id="barcode-value"
+            placeholder={t('generator.placeholders.value')}
+            onChange={(event) => updateField('value', event.target.value)}
+            value={formState.value}
+          />
+        </Field>
+      )}
 
-      <Field label={t('generator.fields.displayValue')} htmlFor="barcode-display-value">
-        <TextInput
-          id="barcode-display-value"
-          onChange={(event) => updateField('displayValue', event.target.value)}
-          value={formState.displayValue || ''}
-        />
-      </Field>
+      {!hideDisplayValueField && (
+        <Field label={t('generator.fields.displayValue')} htmlFor="barcode-display-value">
+          <TextInput
+            id="barcode-display-value"
+            onChange={(event) => updateField('displayValue', event.target.value)}
+            value={formState.displayValue || ''}
+          />
+        </Field>
+      )}
 
       <div className={styles.toggles}>
         {updateShowPreviewFrame && (

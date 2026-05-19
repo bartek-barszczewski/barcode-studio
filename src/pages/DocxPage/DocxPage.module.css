@@ -43,6 +43,26 @@
   min-height: 0;
 }
 
+.controls {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-height: 0;
+}
+
+.field {
+  display: grid;
+  gap: 0.375rem;
+}
+
+.label {
+  color: var(--md-sys-color-on-surface-variant);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.1px;
+}
+
 /* Aggressively large sizes for Upload Panel controls */
 .uploadPanel :global(div[class*="SearchableSelect_input"]),
 .uploadPanel :global(div[class*="SearchableSelect_control"]) {
@@ -129,6 +149,88 @@
   display: flex;
   flex-direction: column;
   min-height: 0;
+  overflow: hidden;
+}
+
+.docxBarcodeForm {
+  flex: 1;
+  min-height: 0;
+  gap: 0.75rem;
+  padding-right: 0.2rem;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  scrollbar-color: var(--md-sys-color-outline-variant) transparent;
+}
+
+.docxBarcodeForm::-webkit-scrollbar {
+  width: 0.375rem;
+}
+
+.docxBarcodeForm::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.docxBarcodeForm::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: var(--md-sys-color-outline-variant);
+}
+
+.docxBarcodeForm::-webkit-scrollbar-thumb:hover {
+  background: var(--md-sys-color-outline);
+}
+
+.docxBarcodeForm :global(div[class*="Slider_sliderContainer"]) {
+  gap: 0.35rem;
+}
+
+.docxBarcodeForm :global(input[class*="Slider_slider"]) {
+  height: 1.5rem;
+}
+
+.docxBarcodeForm :global(div[class*="Slider_header"]) {
+  gap: 0.5rem;
+}
+
+.docxBarcodeForm :global(span[class*="Slider_valueDisplay"]) {
+  min-width: 2.5rem;
+  padding: 0.2rem 0.5rem;
+  font-size: 0.6875rem;
+}
+
+.docxBarcodeForm :global(label[class*="BarcodeForm_checkboxToggle"]) {
+  gap: 0.5rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.docxBarcodeForm :global(span[class*="BarcodeForm_checkboxControl"]) {
+  width: 1rem;
+  height: 1rem;
+}
+
+.docxBarcodeForm :global(div[class*="BarcodeForm_toggles"]) {
+  gap: 0.5rem 0.85rem;
+  padding: 0;
+}
+
+.docxBarcodeForm :global(section[class*="BarcodeForm_textEditorCard"]) {
+  gap: 0.65rem;
+  padding-top: 0.75rem;
+}
+
+.docxBarcodeForm :global(p[class*="BarcodeForm_textEditorDescription"]) {
+  font-size: 0.7rem;
+}
+
+.docxBarcodeForm :global(div[class*="BarcodeForm_textEditorGrid"]) {
+  gap: 0.75rem;
+}
+
+.docxBarcodeForm :global(button[class*="BarcodeForm_iconToggle"]) {
+  width: 2rem;
+  height: 2rem;
 }
 
 /* Aggressive compaction for DocxPage panels */

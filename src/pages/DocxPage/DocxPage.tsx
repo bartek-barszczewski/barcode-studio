@@ -4,7 +4,7 @@ import { useBlocker } from 'react-router-dom';
 import { FileText, CheckCircle2, Printer } from 'lucide-react';
 import { saveAs } from 'file-saver';
 import clsx from 'clsx';
-import type { BarcodeType } from '../../features/barcode/types/barcode';
+import type { BarcodeFormState, BarcodeType } from '../../features/barcode/types/barcode';
 import type { DocxPreview } from '../../features/docx/types/docx';
 import styles from './DocxPage.module.css';
 import { Dropzone } from '../../shared/ui/Dropzone/Dropzone';
@@ -16,10 +16,27 @@ import { printDocxPreview } from '../../features/docx/utils/printDocxPreview';
 import { SearchableSelect } from '../../shared/ui/SearchableSelect/SearchableSelect';
 import { BARCODE_TYPE_OPTIONS } from '../../features/barcode/constants/barcodeTypes';
 import { Button } from '../../shared/ui/Button/Button';
-import { Field } from '../../shared/ui/Field/Field';
-import { TextInput } from '../../shared/ui/TextInput/TextInput';
-import { SelectInput } from '../../shared/ui/SelectInput/SelectInput';
-import { toNumber } from '../../shared/utils/number';
+import { BarcodeForm } from '../../features/barcode/components/BarcodeForm/BarcodeForm';
+
+const DOCX_FORM_DEFAULTS: BarcodeFormState = {
+  type: 'CODE128',
+  value: '',
+  displayValue: '',
+  rotation: 0,
+  barColor: '#0A0F0D',
+  backgroundColor: '#FFFFFF',
+  transparentBackground: false,
+  height: 32,
+  margin: 8,
+  barWidth: 3,
+  fontSize: 20,
+  scale: 1,
+  showText: false,
+  textBold: false,
+  textItalic: false,
+  textPosition: 'bottom',
+  textRotation: 0,
+};
 
 export function DocxPage() {
   const { t } = useTranslation();
@@ -30,19 +47,7 @@ export function DocxPage() {
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
-  const [barcodeType, setBarcodeType] = useState<BarcodeType>('CODE128');
-  
-  const [barcodeStyle, setBarcodeStyle] = useState({
-    rotation: 0 as const,
-    barColor: '#0A0F0D',
-    backgroundColor: '#FFFFFF',
-    height: 32,
-    margin: 8,
-    barWidth: 3,
-    fontSize: 20,
-    scale: 1,
-    showText: false,
-  });
+  const [docxFormState, setDocxFormState] = useState<BarcodeFormState>(DOCX_FORM_DEFAULTS);
   const hasUnsavedChanges = originalFile !== null && !isGenerating;
   const previewPaperRef = useRef<HTMLDivElement | null>(null);
   const navigationBlocker = useBlocker(({ currentLocation, nextLocation }) => {
@@ -51,18 +56,43 @@ export function DocxPage() {
 
   const isSettingsValid = useMemo(() => {
     return (
-      barcodeStyle.height >= 4 &&
-      barcodeStyle.height <= 400 &&
-      barcodeStyle.barWidth >= 1 &&
-      barcodeStyle.barWidth <= 12 &&
-      barcodeStyle.scale >= 0.5 &&
-      barcodeStyle.scale <= 4 &&
-      barcodeStyle.fontSize >= 4 &&
-      barcodeStyle.fontSize <= 48 &&
-      barcodeStyle.margin >= 0 &&
-      barcodeStyle.margin <= 80
+      docxFormState.height >= 1 &&
+      docxFormState.height <= 512 &&
+      docxFormState.barWidth >= 1 &&
+      docxFormState.barWidth <= 6 &&
+      docxFormState.scale >= 0.5 &&
+      docxFormState.scale <= 2.5 &&
+      docxFormState.fontSize >= 8 &&
+      docxFormState.fontSize <= 128 &&
+      docxFormState.margin >= 0 &&
+      docxFormState.margin <= 128 &&
+      [0, 90, 180, 270].includes(docxFormState.rotation) &&
+      (docxFormState.textRotation ?? 0) >= 0 &&
+      (docxFormState.textRotation ?? 0) <= 360
     );
-  }, [barcodeStyle]);
+  }, [docxFormState]);
+
+  const barcodeType = docxFormState.type;
+  const docxBarcodeStyle = useMemo(
+    () => ({
+      rotation: docxFormState.rotation,
+      barColor: docxFormState.barColor,
+      backgroundColor: docxFormState.backgroundColor,
+      transparentBackground: docxFormState.transparentBackground,
+      height: docxFormState.height,
+      margin: docxFormState.margin,
+      barWidth: docxFormState.barWidth,
+      fontSize: docxFormState.fontSize,
+      scale: docxFormState.scale,
+      showText: docxFormState.showText,
+      textBold: docxFormState.textBold,
+      textItalic: docxFormState.textItalic,
+      textPosition: docxFormState.textPosition,
+      textRotation: docxFormState.textRotation,
+      displayValue: undefined,
+    }),
+    [docxFormState],
+  );
 
   useEffect(() => {
     if (!hasUnsavedChanges) {
@@ -113,7 +143,7 @@ export function DocxPage() {
       const blob = await writeDocxWithBarcodes({
         lines: preview.lines.map(l => l.text),
         barcodeType,
-        barcodeStyle,
+        barcodeStyle: docxBarcodeStyle,
       });
 
       const fileName = originalFile 
@@ -129,8 +159,11 @@ export function DocxPage() {
     }
   };
 
-  const updateStyleField = (key: keyof typeof barcodeStyle, value: unknown) => {
-    setBarcodeStyle((prev) => ({ ...prev, [key]: value }));
+  const updateField = <Key extends keyof BarcodeFormState>(
+    key: Key,
+    value: BarcodeFormState[Key],
+  ) => {
+    setDocxFormState((prev) => ({ ...prev, [key]: value }));
   };
 
   const handlePrint = async () => {
@@ -163,7 +196,7 @@ export function DocxPage() {
                           <SearchableSelect
                               options={BARCODE_TYPE_OPTIONS}
                               value={barcodeType}
-                              onChange={(value) => setBarcodeType(value as BarcodeType)}
+                              onChange={(value) => updateField('type', value as BarcodeType)}
                               disabled={isGenerating}
                           />
                       </div>
@@ -196,109 +229,15 @@ export function DocxPage() {
                   description={t("xlsx.appearance.description")}
               >
                   <div className={styles.settingsBody}>
-                      <div className={styles.settingsGrid}>
-                          <Field label={t("generator.fields.height")} htmlFor="docx-height">
-                              <TextInput
-                                  id="docx-height"
-                                  type="number"
-                                  min={4}
-                                  max={400}
-                                  step={2}
-                                  value={barcodeStyle.height}
-                                  onChange={(event) =>
-                                      updateStyleField("height", toNumber(event.target.value, barcodeStyle.height, 4, 400))
-                                  }
-                              />
-                          </Field>
-                          <Field label={t("generator.fields.barWidth")} htmlFor="docx-barwidth">
-                              <TextInput
-                                  id="docx-barwidth"
-                                  type="number"
-                                  min={1}
-                                  max={12}
-                                  step={1}
-                                  value={barcodeStyle.barWidth}
-                                  onChange={(event) =>
-                                      updateStyleField(
-                                          "barWidth",
-                                          toNumber(event.target.value, barcodeStyle.barWidth, 1, 12)
-                                      )
-                                  }
-                              />
-                          </Field>
-                          <Field label={t("generator.fields.scale")} htmlFor="docx-scale">
-                              <TextInput
-                                  id="docx-scale"
-                                  type="number"
-                                  min={0.5}
-                                  max={4}
-                                  step={0.25}
-                                  value={barcodeStyle.scale}
-                                  onChange={(event) =>
-                                      updateStyleField("scale", toNumber(event.target.value, barcodeStyle.scale, 0.5, 4))
-                                  }
-                              />
-                          </Field>
-                          <Field label={t("generator.fields.fontSize")} htmlFor="docx-fontsize">
-                              <TextInput
-                                  id="docx-fontsize"
-                                  type="number"
-                                  min={4}
-                                  max={128}
-                                  step={1}
-                                  value={barcodeStyle.fontSize}
-                                  onChange={(event) =>
-                                      updateStyleField(
-                                          "fontSize",
-                                          toNumber(event.target.value, barcodeStyle.fontSize, 4, 128)
-                                      )
-                                  }
-                              />
-                          </Field>
-
-                          <Field label={t("generator.fields.barColor")} htmlFor="docx-barcolor">
-                              <TextInput
-                                  id="docx-barcolor"
-                                  type="color"
-                                  value={barcodeStyle.barColor}
-                                  onChange={(event) => updateStyleField("barColor", event.target.value)}
-                              />
-                          </Field>
-
-                          <Field label={t("generator.fields.backgroundColor")} htmlFor="docx-bgcolor">
-                              <TextInput
-                                  id="docx-bgcolor"
-                                  type="color"
-                                  value={barcodeStyle.backgroundColor}
-                                  onChange={(event) => updateStyleField("backgroundColor", event.target.value)}
-                              />
-                          </Field>
-
-                          <Field label={t("generator.fields.margin")} htmlFor="docx-margin">
-                              <TextInput
-                                  id="docx-margin"
-                                  type="number"
-                                  min={0}
-                                  max={80}
-                                  step={4}
-                                  value={barcodeStyle.margin}
-                                  onChange={(event) =>
-                                      updateStyleField("margin", toNumber(event.target.value, barcodeStyle.margin, 0, 80))
-                                  }
-                              />
-                          </Field>
-
-                          <Field label={t("generator.fields.text")} htmlFor="docx-showtext">
-                              <SelectInput
-                                  id="docx-showtext"
-                                  value={barcodeStyle.showText ? "show" : "hide"}
-                                  onChange={(event) => updateStyleField("showText", event.target.value === "show")}
-                              >
-                                  <option value="show">{t("generator.textOptions.show")}</option>
-                                  <option value="hide">{t("generator.textOptions.hide")}</option>
-                              </SelectInput>
-                          </Field>
-                      </div>
+                      <BarcodeForm
+                          className={styles.docxBarcodeForm}
+                          formState={docxFormState}
+                          hideDisplayValueField
+                          hideTypeField
+                          hideValueField
+                          scrollable
+                          updateField={updateField}
+                      />
                       {!isSettingsValid && (
                           <div className={styles.error}>
                               {t("xlsx.errors.invalidAppearance")}
@@ -336,7 +275,7 @@ export function DocxPage() {
                       ref={previewPaperRef}
                       preview={preview}
                       barcodeType={barcodeType}
-                      barcodeStyle={barcodeStyle}
+                      barcodeStyle={docxBarcodeStyle}
                   />
               </Panel>
           </div>

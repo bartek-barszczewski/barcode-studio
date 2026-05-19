@@ -67,7 +67,9 @@
       "UPCA": "UPC-A",
       "UPCE": "UPC-E",
       "CODE39": "Code 39",
+      "CODE39EXT": "Code 39 Extended",
       "CODE93": "Code 93",
+      "CODE93EXT": "Code 93 Extended",
       "CODABAR": "Codabar",
       "ITF": "Interleaved 2 of 5 (ITF)",
       "DATAMATRIX": "Data Matrix",
@@ -125,7 +127,7 @@
       "hide": "No mostrar"
     },
     "actions": {
-      "generate": "Generar",
+      "generate": "Generar XLSX",
       "generating": "Generando...",
       "capture": "Capturar código",
       "downloadSvg": "Descargar SVG",
@@ -337,6 +339,10 @@
             "name": "Code 39",
             "desc": "Admite letras mayúsculas, dígitos y algunos caracteres especiales (- . $ / + % espacio). Se utiliza con frecuencia en la industria automotriz."
           },
+          "CODE39EXT": {
+            "name": "Code 39 Extended",
+            "desc": "Variante extendida de Code 39. Admite el conjunto ASCII completo, incluidas letras minúsculas y símbolos adicionales, a costa de un símbolo más largo."
+          },
           "ITF": {
             "name": "ITF (Interleaved 2 of 5)",
             "desc": "Solo dígitos, debe ser un número par. Un código numérico muy denso."
@@ -344,6 +350,10 @@
           "CODE93": {
             "name": "Code 93",
             "desc": "Mayor densidad en comparación con Code 39. Admite el conjunto completo de caracteres ASCII."
+          },
+          "CODE93EXT": {
+            "name": "Code 93 Extended",
+            "desc": "Variante extendida de Code 93 para datos ASCII completos. Más compacta que Code 39 Extended para cargas mixtas de texto y símbolos."
           },
           "UPC": {
             "name": "UPC-A / UPC-E",

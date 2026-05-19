@@ -112,7 +112,6 @@ export function GeneratorPage() {
           <BarcodePreview
             className={styles.generatorPreview}
             error={previewState.error}
-            rotation={previewSettings.rotation}
             showPreviewFrame={showPreviewFrame}
             svg={previewState.svg}
             typeLabel={t(`barcode.types.${previewSettings.type}`)}

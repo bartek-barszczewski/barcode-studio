@@ -1,12 +1,10 @@
 import { useTranslation } from 'react-i18next'
 import { AlertCircle, CheckCircle2, CircleDashed } from 'lucide-react'
 import clsx from 'clsx'
-import type { BarcodeRotation } from '../../types/barcode'
 import styles from './BarcodePreview.module.css'
 
 type BarcodePreviewProps = {
   svg: string | null
-  rotation: BarcodeRotation
   showPreviewFrame?: boolean
   error?: string | null
   typeLabel?: string
@@ -17,7 +15,6 @@ type BarcodePreviewProps = {
 
 export function BarcodePreview({
   svg,
-  rotation,
   showPreviewFrame = true,
   error = null,
   typeLabel = 'Code 128',
@@ -49,7 +46,6 @@ export function BarcodePreview({
     const artwork = (
       <div
         className={clsx(styles.artwork, showPreviewFrame && styles.withFrame)}
-        style={{ transform: `rotate(${rotation}deg)` }}
       >
         <div
           aria-label={t('barcodePreview.ariaLabel')}

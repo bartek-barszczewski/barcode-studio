@@ -16,6 +16,7 @@ import {
   Italic,
   Type,
   UploadCloud,
+  Printer,
 } from 'lucide-react';
 import { saveAs } from 'file-saver';
 import type { BarcodeType } from '../../features/barcode/types/barcode';
@@ -29,6 +30,8 @@ import { SearchableSelect } from '../../shared/ui/SearchableSelect/SearchableSel
 import { BARCODE_TYPE_OPTIONS } from '../../features/barcode/constants/barcodeTypes';
 import { validateBarcodeValue } from '../../features/barcode/validation/barcodeValidation';
 import { createOutputFileName, writeWorkbookWithBarcodes } from '../../features/xlsx/utils/writeWorkbookWithBarcodes';
+import { preparePrintCards } from '../../features/xlsx/utils/preparePrintData';
+import { openPrintCardsDocument } from '../../features/xlsx/utils/openPrintCardsDocument';
 import { Button } from '../../shared/ui/Button/Button';
 import { Field } from '../../shared/ui/Field/Field';
 import { TextInput } from '../../shared/ui/TextInput/TextInput';
@@ -42,7 +45,9 @@ import clsx from 'clsx';
 const MAX_BARCODE_SCALE = 2.5;
 const MAX_BARCODE_HEIGHT = 512;
 const MAX_BARCODE_MARGIN = 128;
-const MAX_BARCODE_BAR_WIDTH = 6;
+const MAX_BARCODE_BAR_WIDTH = 4;
+const MIN_BARCODE_BAR_WIDTH = 0.75;
+const BARCODE_BAR_WIDTH_STEP = 0.25;
 const MAX_BARCODE_FONT_SIZE = 128;
 const MAX_TEXT_ROTATION = 360;
 const TEXT_ROTATION_STEP = 5;
@@ -145,6 +150,7 @@ export function XlsxPage() {
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [isPreparingPrint, setIsPreparingPrint] = useState(false);
   const [progress, setProgress] = useState<{ current: number; total: number } | null>(null);
   const [barcodeType, setBarcodeType] = useState<BarcodeType>('CODE128');
   const [placement, setPlacement] = useState<XlsxPlacement>('right');
@@ -155,7 +161,7 @@ export function XlsxPage() {
     transparentBackground: false,
     height: 64,
     margin: 8,
-    barWidth: 2,
+    barWidth: 1,
     fontSize: 16,
     scale: 1,
     showText: true,
@@ -165,7 +171,8 @@ export function XlsxPage() {
     textRotation: 0,
   });
 
-  const hasUnsavedChanges = originalFile !== null && !isGenerating;
+  const isBusy = isGenerating || isPreparingPrint;
+  const hasUnsavedChanges = originalFile !== null && !isBusy;
   const navigationBlocker = useBlocker(({ currentLocation, nextLocation }) => {
     return hasUnsavedChanges && currentLocation.pathname !== nextLocation.pathname;
   });
@@ -174,8 +181,8 @@ export function XlsxPage() {
     return (
       barcodeStyle.height >= 1 &&
       barcodeStyle.height <= 512 &&
-      barcodeStyle.barWidth >= 1 &&
-      barcodeStyle.barWidth <= 6 &&
+      barcodeStyle.barWidth >= MIN_BARCODE_BAR_WIDTH &&
+      barcodeStyle.barWidth <= MAX_BARCODE_BAR_WIDTH &&
       barcodeStyle.scale >= 0.5 &&
       barcodeStyle.scale <= 2.5 &&
       barcodeStyle.fontSize >= 8 &&
@@ -225,7 +232,7 @@ export function XlsxPage() {
   };
 
   const handleReplaceFileClick = () => {
-    if (isGenerating || !replaceFileInputRef.current) return;
+    if (isBusy || !replaceFileInputRef.current) return;
 
     replaceFileInputRef.current.value = '';
     replaceFileInputRef.current.click();
@@ -483,6 +490,36 @@ export function XlsxPage() {
     }
   };
 
+  const handlePrintCards = async () => {
+    if (!originalFile || !workbook) {
+      return;
+    }
+
+    setIsPreparingPrint(true);
+      setError(null);
+      setSuccessMessage(null);
+
+    try {
+      const cards = await preparePrintCards(
+        originalFile,
+        workbook.activeSheetName,
+        barcodeType,
+        barcodeStyle,
+      );
+      await openPrintCardsDocument(cards, `${originalFile.name.replace(/\.xlsx$/i, '')} - Print cards`);
+      setSuccessMessage(
+        t('xlsx.success.printReady', {
+          count: cards.length,
+          defaultValue: 'Prepared {{count}} cards for print.',
+        }),
+      );
+    } catch (err) {
+      setError(err instanceof Error ? err.message : t('xlsx.errors.unknown'));
+    } finally {
+      setIsPreparingPrint(false);
+    }
+  };
+
   const updateStyleField = (key: keyof typeof barcodeStyle, value: unknown) => {
     setBarcodeStyle((prev) => ({ ...prev, [key]: value }));
   };
@@ -511,7 +548,7 @@ export function XlsxPage() {
                 type="file"
                 accept=".xlsx"
                 onChange={handleReplaceFileChange}
-                disabled={isGenerating}
+                disabled={isBusy}
                 hidden
               />
               <div className={styles.field}>
@@ -523,7 +560,7 @@ export function XlsxPage() {
                   }))}
                   value={barcodeType}
                   onChange={(value) => setBarcodeType(value as BarcodeType)}
-                  disabled={isGenerating}
+                  disabled={isBusy}
                 />
               </div>
 
@@ -554,7 +591,7 @@ export function XlsxPage() {
                     className={styles.checkboxInput}
                     onChange={(event) => updateStyleField('showText', event.target.checked)}
                     type="checkbox"
-                    disabled={isGenerating}
+                    disabled={isGenerating || isPreparingPrint}
                   />
                   <span aria-hidden="true" className={styles.checkboxControl}>
                     <span className={styles.checkboxMark} />
@@ -570,7 +607,7 @@ export function XlsxPage() {
                       updateStyleField('transparentBackground', event.target.checked)
                     }
                     type="checkbox"
-                    disabled={isGenerating}
+                    disabled={isGenerating || isPreparingPrint}
                   />
                   <span aria-hidden="true" className={styles.checkboxControl}>
                     <span className={styles.checkboxMark} />
@@ -603,7 +640,7 @@ export function XlsxPage() {
                         aria-label={t('generator.textEditor.bold')}
                         aria-pressed={textBold}
                         className={clsx(styles.iconToggle, textBold && styles.iconToggleActive)}
-                        disabled={!barcodeStyle.showText || isGenerating}
+                        disabled={!barcodeStyle.showText || isGenerating || isPreparingPrint}
                         onClick={() => updateStyleField('textBold', !textBold)}
                         title={t('generator.textEditor.bold')}
                         type="button"
@@ -618,7 +655,7 @@ export function XlsxPage() {
                           styles.iconToggle,
                           textItalic && styles.iconToggleActive,
                         )}
-                        disabled={!barcodeStyle.showText || isGenerating}
+                        disabled={!barcodeStyle.showText || isGenerating || isPreparingPrint}
                         onClick={() => updateStyleField('textItalic', !textItalic)}
                         title={t('generator.textEditor.italic')}
                         type="button"
@@ -642,7 +679,9 @@ export function XlsxPage() {
                             styles.iconToggle,
                             textPosition === value && styles.iconToggleActive,
                           )}
-                          disabled={!barcodeStyle.showText || isGenerating}
+                          disabled={
+                            !barcodeStyle.showText || isGenerating || isPreparingPrint
+                          }
                           onClick={() => updateStyleField('textPosition', value)}
                           title={t(labelKey)}
                           type="button"
@@ -655,7 +694,7 @@ export function XlsxPage() {
 
                   <div className={styles.rotationBlock}>
                     <Slider
-                      disabled={!barcodeStyle.showText || isGenerating}
+                      disabled={!barcodeStyle.showText || isGenerating || isPreparingPrint}
                       id="xlsx-text-rotation"
                       label={t('generator.fields.textRotation')}
                       max={MAX_TEXT_ROTATION}
@@ -682,7 +721,7 @@ export function XlsxPage() {
                       updateStyleField('rotation', Number.parseInt(event.target.value, 10))
                     }
                     value={barcodeStyle.rotation}
-                    disabled={isGenerating}
+                    disabled={isGenerating || isPreparingPrint}
                   >
                     <option value="0">0°</option>
                     <option value="90">90°</option>
@@ -705,7 +744,7 @@ export function XlsxPage() {
                   step={0.25}
                   suffix="x"
                   value={barcodeStyle.scale}
-                  disabled={isGenerating}
+                  disabled={isGenerating || isPreparingPrint}
                 />
               </div>
 
@@ -716,7 +755,7 @@ export function XlsxPage() {
                     onChange={(event) => updateStyleField('barColor', event.target.value)}
                     type="color"
                     value={barcodeStyle.barColor}
-                    disabled={isGenerating}
+                    disabled={isGenerating || isPreparingPrint}
                   />
                 </Field>
 
@@ -726,7 +765,7 @@ export function XlsxPage() {
                     onChange={(event) => updateStyleField('backgroundColor', event.target.value)}
                     type="color"
                     value={barcodeStyle.backgroundColor}
-                    disabled={isGenerating}
+                    disabled={isGenerating || isPreparingPrint}
                   />
                 </Field>
               </div>
@@ -746,7 +785,7 @@ export function XlsxPage() {
                   step={1}
                   suffix="px"
                   value={barcodeStyle.height}
-                  disabled={isGenerating}
+                  disabled={isGenerating || isPreparingPrint}
                 />
 
                 <Slider
@@ -763,7 +802,7 @@ export function XlsxPage() {
                   step={1}
                   suffix="px"
                   value={barcodeStyle.margin}
-                  disabled={isGenerating}
+                  disabled={isGenerating || isPreparingPrint}
                 />
               </div>
 
@@ -772,21 +811,21 @@ export function XlsxPage() {
                   id="xlsx-bar-width"
                   label={t('generator.fields.barWidth')}
                   max={MAX_BARCODE_BAR_WIDTH}
-                  min={1}
+                  min={MIN_BARCODE_BAR_WIDTH}
                   onChange={(event) =>
                     updateStyleField(
                       'barWidth',
                       toNumber(
                         event.target.value,
                         barcodeStyle.barWidth,
-                        1,
+                        MIN_BARCODE_BAR_WIDTH,
                         MAX_BARCODE_BAR_WIDTH,
                       ),
                     )
                   }
-                  step={1}
+                  step={BARCODE_BAR_WIDTH_STEP}
                   value={barcodeStyle.barWidth}
-                  disabled={isGenerating}
+                  disabled={isGenerating || isPreparingPrint}
                 />
 
                 <Slider
@@ -808,7 +847,7 @@ export function XlsxPage() {
                   step={1}
                   suffix="px"
                   value={barcodeStyle.fontSize}
-                  disabled={isGenerating}
+                  disabled={isGenerating || isPreparingPrint}
                 />
               </div>
 
@@ -825,7 +864,7 @@ export function XlsxPage() {
                       title={t(labelKey)}
                       aria-label={t(labelKey)}
                       onClick={() => setPlacement(value)}
-                      disabled={isGenerating}
+                      disabled={isGenerating || isPreparingPrint}
                     >
                       <Icon size={16} />
                     </button>
@@ -840,7 +879,7 @@ export function XlsxPage() {
                       title={t(labelKey)}
                       aria-label={t(labelKey)}
                       onClick={() => setPlacement(value)}
-                      disabled={isGenerating}
+                      disabled={isGenerating || isPreparingPrint}
                     >
                       <Icon size={16} />
                     </button>
@@ -858,7 +897,7 @@ export function XlsxPage() {
                       title={t(labelKey)}
                       aria-label={t(labelKey)}
                       onClick={() => setPlacement(value)}
-                      disabled={isGenerating}
+                      disabled={isGenerating || isPreparingPrint}
                     >
                       <Icon size={16} />
                     </button>
@@ -873,7 +912,7 @@ export function XlsxPage() {
                       title={t(labelKey)}
                       aria-label={t(labelKey)}
                       onClick={() => setPlacement(value)}
-                      disabled={isGenerating}
+                      disabled={isGenerating || isPreparingPrint}
                     >
                       <Icon size={16} />
                     </button>
@@ -890,28 +929,42 @@ export function XlsxPage() {
                 <Button
                   variant="accent"
                   onClick={handleReplaceFileClick}
-                  disabled={isGenerating}
+                  disabled={isGenerating || isPreparingPrint}
                   fullWidth
                   className={styles.changeFileButton}
                 >
                   <UploadCloud size={18} />
                   {t('xlsx.dropzone.changeFile')}
                 </Button>
-                <Button
-                  variant="primary"
-                  onClick={handleGenerate}
-                  fullWidth
-                  disabled={!isValidToGenerate || isGenerating}
-                  progress={
-                    isGenerating && progress
-                      ? (progress.current / progress.total) * 100
-                      : undefined
-                  }
-                >
-                  {isGenerating
-                    ? `${Math.round(((progress?.current ?? 0) / (progress?.total ?? 1)) * 100)}%`
-                    : t('generator.actions.generate')}
-                </Button>
+                <div className={styles.actionsRow}>
+                  <Button
+                    variant="primary"
+                    onClick={handleGenerate}
+                    fullWidth
+                    disabled={!isValidToGenerate || isGenerating || isPreparingPrint}
+                    progress={
+                      isGenerating && progress
+                        ? (progress.current / progress.total) * 100
+                        : undefined
+                    }
+                  >
+                    {isGenerating
+                      ? `${Math.round(((progress?.current ?? 0) / (progress?.total ?? 1)) * 100)}%`
+                      : t('generator.actions.generate')}
+                  </Button>
+                  <Button
+                    variant="secondary"
+                    onClick={handlePrintCards}
+                    fullWidth
+                    disabled={isGenerating || isPreparingPrint}
+                    progress={isPreparingPrint ? 100 : undefined}
+                  >
+                    <Printer size={18} />
+                    {isPreparingPrint
+                      ? t('xlsx.print.preparing')
+                      : t('xlsx.actions.printCards')}
+                  </Button>
+                </div>
               </>
             )}
           </Panel>
@@ -952,7 +1005,7 @@ export function XlsxPage() {
                   originalFile ? t('xlsx.dropzone.changeFile') : t('xlsx.dropzone.dropOrClick')
                 }
                 fileIcon={<FileSpreadsheet />}
-                disabled={isGenerating}
+                disabled={isGenerating || isPreparingPrint}
                 iconClusterClassName={styles.xlsxDropzoneIconCluster}
                 titleClassName={styles.xlsxDropzoneTitle}
                 descriptionClassName={styles.xlsxDropzoneDescription}
@@ -961,7 +1014,6 @@ export function XlsxPage() {
           </Panel>
         </div>
       </div>
-
       {navigationBlocker.state === 'blocked' && (
         <div
           className={styles.leaveDialogBackdrop}

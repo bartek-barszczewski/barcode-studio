@@ -21,7 +21,9 @@ const BWIP_JS_FORMATS: Partial<Record<BarcodeType, string>> = {
   UPCA: 'upca',
   UPCE: 'upce',
   CODE39: 'code39',
+  CODE39EXT: 'code39ext',
   CODE93: 'code93',
+  CODE93EXT: 'code93ext',
   CODABAR: 'rationalizedCodabar',
   ITF: 'interleaved2of5',
   DATAMATRIX: 'datamatrix',
@@ -31,6 +33,9 @@ const BWIP_JS_FORMATS: Partial<Record<BarcodeType, string>> = {
 };
 
 const BWIP_MAX_TEXT_SIZE = 25;
+
+const isFixedSquareMatrixCode = (type: BarcodeType) =>
+  type === 'DATAMATRIX' || type === 'AZTEC';
 
 const assertColor = (color: string, fieldName: string) => {
   if (!HEX_COLOR_PATTERN.test(color)) {
@@ -102,6 +107,38 @@ const renderQrCodeCanvas = async (input: BarcodeFormState): Promise<OffscreenCan
   return injectTextToCanvas(canvas, input, canvas.width, canvas.height);
 };
 
+const forceSquareMatrixCanvas = (
+  canvas: OffscreenCanvas,
+  input: BarcodeFormState,
+): OffscreenCanvas => {
+  const side = Math.max(1, canvas.height);
+
+  if (canvas.width === side && canvas.height === side) {
+    return canvas;
+  }
+
+  const squareCanvas = new OffscreenCanvas(side, side);
+  const context = squareCanvas.getContext('2d');
+
+  if (!context) {
+    throw new Error('Nie można utworzyć kontekstu 2d.');
+  }
+
+  if (!input.transparentBackground) {
+    context.fillStyle = input.backgroundColor;
+    context.fillRect(0, 0, side, side);
+  }
+
+  const drawScale = side / Math.max(canvas.width, canvas.height);
+  const drawWidth = canvas.width * drawScale;
+  const drawHeight = canvas.height * drawScale;
+  const offsetX = (side - drawWidth) / 2;
+  const offsetY = (side - drawHeight) / 2;
+
+  context.drawImage(canvas, offsetX, offsetY, drawWidth, drawHeight);
+  return squareCanvas;
+};
+
 const renderBwipBarcodeCanvas = (input: BarcodeFormState): OffscreenCanvas => {
   const bcid = BWIP_JS_FORMATS[input.type];
   if (!bcid) {
@@ -168,11 +205,15 @@ const renderBwipBarcodeCanvas = (input: BarcodeFormState): OffscreenCanvas => {
     throw new Error(friendlyMessage || 'Błąd generowania kodu.', { cause: error });
   }
 
-  if (useBuiltInText) {
-    return canvas;
+  const renderedCanvas = useBuiltInText
+    ? canvas
+    : injectTextToCanvas(canvas, input, canvas.width, canvas.height);
+
+  if (isFixedSquareMatrixCode(input.type)) {
+    return forceSquareMatrixCanvas(renderedCanvas, input);
   }
 
-  return injectTextToCanvas(canvas, input, canvas.width, canvas.height);
+  return renderedCanvas;
 };
 
 export const renderBarcodeToOffscreenCanvas = async (

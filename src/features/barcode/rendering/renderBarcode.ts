@@ -27,7 +27,9 @@ const BWIP_JS_FORMATS: Partial<Record<BarcodeType, string>> = {
   UPCA: 'upca',
   UPCE: 'upce',
   CODE39: 'code39',
+  CODE39EXT: 'code39ext',
   CODE93: 'code93',
+  CODE93EXT: 'code93ext',
   CODABAR: 'rationalizedCodabar',
   ITF: 'interleaved2of5',
   DATAMATRIX: 'datamatrix',
@@ -39,6 +41,9 @@ const BWIP_JS_FORMATS: Partial<Record<BarcodeType, string>> = {
 const BWIP_MAX_TEXT_SIZE = 25
 const TRANSPARENT_SVG_COLOR = '#FFFFFF00'
 
+const isFixedSquareMatrixCode = (type: BarcodeType) =>
+  type === 'DATAMATRIX' || type === 'AZTEC'
+
 const formatSvgNumber = (value: number) =>
   Number.parseFloat(value.toFixed(3)).toString()
 
@@ -48,6 +53,21 @@ const parseSvgNumberAttribute = (svg: string, attribute: 'width' | 'height') => 
 
   const value = Number.parseFloat(match[1])
   return Number.isFinite(value) && value > 0 ? value : null
+}
+
+const parseSvgViewBox = (svg: string): [number, number, number, number] | null => {
+  const viewBoxMatch = svg.match(/viewBox="([^"]+)"/)
+  if (!viewBoxMatch) return null
+
+  const values = viewBoxMatch[1].split(/\s+/).map(Number.parseFloat)
+  if (
+    values.length !== 4 ||
+    values.some((value) => !Number.isFinite(value))
+  ) {
+    return null
+  }
+
+  return values as [number, number, number, number]
 }
 
 const escapeSvgText = (value: string) =>
@@ -312,6 +332,94 @@ const normalizeSvgAttributes = (svg: string): string => {
   return normalized
 }
 
+const forceSquareMatrixSvg = (svg: string): string => {
+  const normalizedSvg = normalizeSvgAttributes(svg)
+  const renderedHeight = parseSvgNumberAttribute(normalizedSvg, 'height')
+  const viewBox = parseSvgViewBox(normalizedSvg)
+
+  if (renderedHeight === null || !viewBox) {
+    return normalizedSvg
+  }
+
+  const side = formatSvgNumber(renderedHeight)
+  const [minX, minY, width, height] = viewBox
+  const targetSide = Math.max(width, height)
+  const offsetX = minX - (targetSide - width) / 2
+  const offsetY = minY - (targetSide - height) / 2
+  let squareSvg = normalizedSvg.replace(
+    /viewBox="[^"]+"/,
+    `viewBox="${[offsetX, offsetY, targetSide, targetSide].map(formatSvgNumber).join(' ')}"`,
+  )
+
+  if (squareSvg.match(/<svg[^>]+width="/)) {
+    squareSvg = squareSvg.replace(
+      /(<svg[^>]+width=")(\d+\.?\d*)/,
+      (_, p1) => p1 + side,
+    )
+  }
+
+  if (squareSvg.match(/<svg[^>]+height="/)) {
+    squareSvg = squareSvg.replace(
+      /(<svg[^>]+height=")(\d+\.?\d*)/,
+      (_, p1) => p1 + side,
+    )
+  }
+
+  return squareSvg
+}
+
+const applyRotationToSvg = (svg: string, rotation: number): string => {
+  if (rotation === 0) return svg
+
+  const viewBoxMatch = svg.match(/viewBox="([^"]+)"/)
+  if (!viewBoxMatch) return svg
+
+  const parts = viewBoxMatch[1].split(/\s+/)
+  if (parts.length !== 4) return svg
+
+  const [minX, minY, width, height] = parts.map(parseFloat)
+
+  let newViewBox: string
+  let transform: string
+
+  if (rotation === 90) {
+    newViewBox = `${formatSvgNumber(-minY - height)} ${formatSvgNumber(minX)} ${formatSvgNumber(height)} ${formatSvgNumber(width)}`
+    transform = 'rotate(90)'
+  } else if (rotation === 180) {
+    newViewBox = `${formatSvgNumber(-minX - width)} ${formatSvgNumber(-minY - height)} ${formatSvgNumber(width)} ${formatSvgNumber(height)}`
+    transform = 'rotate(180)'
+  } else if (rotation === 270) {
+    newViewBox = `${formatSvgNumber(minY)} ${formatSvgNumber(-minX - width)} ${formatSvgNumber(height)} ${formatSvgNumber(width)}`
+    transform = 'rotate(270)'
+  } else {
+    return svg
+  }
+
+  const contentStart = svg.indexOf('>') + 1
+  const contentEnd = svg.lastIndexOf('</svg>')
+  const header = svg.substring(0, contentStart)
+  const content = svg.substring(contentStart, contentEnd)
+  const footer = svg.substring(contentEnd)
+
+  let rotatedHeader = header.replace(
+    /viewBox="[^"]+"/,
+    `viewBox="${newViewBox}"`,
+  )
+
+  const oldWidth = parseSvgNumberAttribute(svg, 'width')
+  const oldHeight = parseSvgNumberAttribute(svg, 'height')
+
+  if (oldWidth !== null && oldHeight !== null) {
+    if (rotation === 90 || rotation === 270) {
+      rotatedHeader = rotatedHeader
+        .replace(/width="[0-9.]+"/, `width="${formatSvgNumber(oldHeight)}"`)
+        .replace(/height="[0-9.]+"/, `height="${formatSvgNumber(oldWidth)}"`)
+    }
+  }
+
+  return `${rotatedHeader}<g transform="${transform}">${content}</g>${footer}`
+}
+
 const getEffectiveBackgroundColor = (input: BarcodeFormState) =>
   input.transparentBackground ? TRANSPARENT_SVG_COLOR : input.backgroundColor
 
@@ -338,5 +446,8 @@ export const renderBarcodeToSvgString = async (
     throw new Error('Nieobsługiwany typ kodu kreskowego.')
   }
 
-  return normalizeSvgAttributes(result)
+  const normalizedResult = isFixedSquareMatrixCode(normalizedInput.type)
+    ? forceSquareMatrixSvg(result)
+    : normalizeSvgAttributes(result)
+  return applyRotationToSvg(normalizedResult, input.rotation)
 }

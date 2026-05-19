@@ -87,7 +87,6 @@ export const BarcodeSetCard = memo(function BarcodeSetCard({
       <div className={styles.cardPreviewContainer}>
         <BarcodePreview
           svg={svg}
-          rotation={item.options.rotation}
           error={previewError}
           showMetadata={false}
           showPreviewFrame={showPreviewFrame}
