@@ -304,10 +304,31 @@
         "body": "Un outil pour la gestion massive de codes-barres. Vous pouvez ajouter, supprimer et modifier plusieurs widgets simultanément, en donnant à chacun des données uniques et un texte d'étiquette personnalisé.",
         "features": {
           "title": "Fonctionnalités clés :",
-          "nav": "Navigation : Utilisez le menu à points sur la droite pour sauter rapidement entre les groupes de codes-barres (tous les 5 éléments).",
+          "nav": "Navigation : Utilisez la barre de points adaptative sur la droite pour sauter rapidement entre les groupes de codes-barres.",
           "edit": "Édition : Cliquez sur l'icône crayon pour ouvrir le panneau de réglages latéral pour un code spécifique et modifier les données, l'apparence ou le 'Texte personnalisé'.",
           "print": "Imprimer tout : Le bouton imprimante génère une grille A4 prête à l'impression contenant tous les codes.",
           "shortcut": "Raccourci clavier : Ctrl+P déclenche automatiquement la fonctionnalité d'impression de masse."
+        }
+      },
+      "sequence": {
+        "title": "Générateur de séquences",
+        "body": "Un outil puissant pour générer automatiquement des séquences de codes-barres numériques ou textuelles. Parfait pour créer des séries de codes sans fichiers externes.",
+        "features": {
+          "title": "Fonctionnalités clés :",
+          "range": "Gamme dynamique : Définissez les contraintes de début, de fin, de pas, de préfixe, de suffixe et de remplissage personnalisé.",
+          "textMode": "Contrôle du texte : Activez l'option 'Texte sous le code' pour masquer ou afficher les étiquettes lisibles par l'homme.",
+          "bulk": "Chargement en masse : Chargez la série générée directement dans l'éditeur de lots en un clic.",
+          "quickPrint": "Impression rapide : Restituez et imprimez des séquences à grand volume en morceaux en toute sécurité sans figer votre navigateur."
+        }
+      },
+      "appearance": {
+        "title": "Paramètres d'apparence et de thème",
+        "body": "Personnalisez l'apparence visuelle de l'application en fonction de vos préférences et de votre environnement de travail.",
+        "features": {
+          "title": "Options de personnalisation :",
+          "modes": "Thème clair / sombre : Basculez entre les modes clair et sombre à contraste élevé via la barre de navigation.",
+          "colors": "Palettes personnalisées : Sélectionnez n'importe quelle couleur principale ou d'arrière-plan personnalisée avec une mise à l'échelle réactive des conteneurs de surface MD3.",
+          "contrast": "Symétrie et lisibilité : les codes-barres générés sont strictement isolés sur des fonds blancs solides pour garantir la lisibilité par les caméras."
         }
       },
       "printing": {
@@ -317,7 +338,8 @@
       "troubleshooting": {
         "title": "Dépannage",
         "eanError": "Erreur EAN-13/8 : Ces codes ne nécessitent que des chiffres. Le dernier chiffre de contrôle sera calculé automatiquement si vous en fournissez un de moins que nécessaire.",
-        "invisibleCode": "Le code jest invisible ? Vérifiez si la couleur du code est la même que celle de l'arrière-plan."
+        "invisibleCode": "Le code est invisible ? Vérifiez si la couleur du code est la même que celle de l'arrière-plan.",
+        "visibilityLabel": "Visibilité"
       },
       "standards": {
         "title": "Normes et exigences",
@@ -387,6 +409,10 @@
         "a1": "Oui, tout le traitement se fait localement dans votre navigateur. Aucun fichier ou donnée n'est envoyé vers un serveur.",
         "q2": "Pourquoi ne puis-je pas télécharger un fichier .xls ?",
         "a2": "Nous ne supportons que le format moderne .xlsx. Les anciens fichiers .xls doivent d'abord être enregistrés sous .xlsx dans Excel."
+      },
+      "footer": {
+        "secure": "Traitement local sécurisé côté client",
+        "version": "Barcode Studio v{{version}} • {{year}}"
       }
     }
   },

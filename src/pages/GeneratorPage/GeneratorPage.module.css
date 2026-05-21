@@ -71,9 +71,9 @@
   min-height: 40rem;
   max-height: 40rem;
   min-width: 0;
-  border: 1px solid var(--md-sys-color-surface-variant);
+  border: 1px solid #bfc9c6; /* Strictly use standard light theme outline variant */
   border-radius: var(--radius-lg);
-  background: var(--md-sys-color-surface-container-lowest);
+  background: #ffffff !important; /* Force strictly light background */
   padding: 2rem;
   position: relative;
   overflow: hidden;
@@ -84,9 +84,9 @@
   content: "";
   position: absolute;
   inset: 0;
-  background-image: radial-gradient(var(--md-sys-color-outline-variant) 0.5px, transparent 0.5px);
+  background-image: radial-gradient(#899390 0.5px, transparent 0.5px); /* Strictly use light theme outline color */
   background-size: 24px 24px;
-  opacity: 0.2;
+  opacity: 0.15;
 }
 
 .generatorPreview {

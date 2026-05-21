@@ -204,9 +204,8 @@ const validatePrintRows = (rows: RawPrintRow[], barcodeType: BarcodeType) => {
   if (invalidCells.length > 0) {
     throw new Error(
       i18n.t('xlsx.errors.invalidPrintData', {
-        cells: invalidCells.join(', '),
         defaultValue:
-          'Print cards requires valid values in columns A and B for every printed row. Invalid cells: {{cells}}.',
+          'Print cards requires valid values in columns A and B for every printed row.',
       }),
     );
   }

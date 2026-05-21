@@ -60,6 +60,7 @@
   /* MD3 Shapes */
   --radius-none: 0px;
   --radius-xs: 4px;
+  --radius-xs: 4px;
   --radius-sm: 8px;
   --radius-md: 12px;
   --radius-lg: 16px;
@@ -67,4 +68,44 @@
   --radius-full: 9999px;
 
   --container: 1600px;
+}
+
+[data-theme="dark"] {
+  /* Dynamic values overridden by theme customizer if set, otherwise default dark values */
+  --md-sys-color-primary: #80d8cf;
+  --md-sys-color-on-primary: #003733;
+  --md-sys-color-primary-container: #00504b;
+  --md-sys-color-on-primary-container: #71f7ed;
+
+  --md-sys-color-secondary: #c9bfff;
+  --md-sys-color-on-secondary: #2f2176;
+  --md-sys-color-secondary-container: #463a8d;
+  --md-sys-color-on-secondary-container: #e4dfff;
+
+  --md-sys-color-tertiary: #ffb3b4;
+  --md-sys-color-on-tertiary: #680016;
+  --md-sys-color-tertiary-container: #920025;
+  --md-sys-color-on-tertiary-container: #ffdad9;
+
+  --md-sys-color-error: #ffb4ab;
+  --md-sys-color-on-error: #690005;
+  --md-sys-color-error-container: #93000a;
+  --md-sys-color-on-error-container: #ffdad6;
+
+  /* Surface / Background - Neutral Dark MD3 Tones */
+  --md-sys-color-background: #121313;
+  --md-sys-color-on-background: #e2e2e2;
+  --md-sys-color-surface: #1a1c1c;
+  --md-sys-color-on-surface: #e2e2e2;
+  --md-sys-color-surface-variant: #3f4947;
+  --md-sys-color-on-surface-variant: #bfc9c6;
+  --md-sys-color-outline: #899390;
+  --md-sys-color-outline-variant: #404947;
+  --md-sys-color-surface-container-lowest: #0b0c0c;
+  --md-sys-color-surface-container-low: #1a1c1c;
+  --md-sys-color-surface-container: #1e2020;
+  --md-sys-color-surface-container-high: #282a2a;
+  --md-sys-color-surface-container-highest: #333535;
+
+  --md-sys-color-shadow: rgba(0, 0, 0, 0.4);
 }

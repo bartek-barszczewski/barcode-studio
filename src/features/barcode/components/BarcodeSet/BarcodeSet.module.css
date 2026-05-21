@@ -388,11 +388,18 @@
   border-radius: var(--radius-full);
   border: 1px solid var(--md-sys-color-surface-variant);
   box-shadow: var(--md-sys-elevation-level1);
+  max-height: 85vh;
+  overflow-y: auto;
+  scrollbar-width: none; /* Hide scrollbar for Firefox */
+}
+
+.sideNav::-webkit-scrollbar {
+  display: none; /* Hide scrollbar for Chrome/Safari/Edge */
 }
 
 .navDot {
-  width: 12px;
-  height: 12px;
+  width: 0.75rem;
+  height: 0.75rem;
   border-radius: 50%;
   background: var(--md-sys-color-outline-variant, #e2e8f0);
   border: none;
@@ -406,8 +413,8 @@
   position: absolute;
   left: 0.5rem;
   top: 1rem;
-  width: 12px;
-  height: 12px;
+  width: 0.75rem;
+  height: 0.75rem;
   background: var(--md-sys-color-primary);
   border-radius: 50%;
   pointer-events: none;

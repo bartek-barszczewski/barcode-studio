@@ -83,14 +83,17 @@ export function BarcodeSetView() {
     prevItemsLengthRef.current = items.length
   }, [items, isDrawerOpen, selectedItemId])
 
-  // Calculate indicator position (only for every 5th dot)
-  const activeDotIndex = Math.floor(activeItemIndex / 5)
-  // dot height (14) + gap (20 aka 1.25rem) = 34px. 
-  // Initial top padding of sideNav is 1.5rem (24px).
-  // The indicator is 32px high, dot is 14px high. To center 32px indicator on 14px dot:
-  // indicatorTop = dotTop - (indicatorHeight - dotHeight) / 2 = dotTop - 9px.
-  const indicatorOffset = activeDotIndex * 34;
-  const indicatorTransform = `translateY(${indicatorOffset}px)`
+  // Dynamically calculate the navigation dot step interval to keep the total dots
+  // count within a beautiful, scroll-safe vertical limit (never exceeds 16 dots / 28rem).
+  const dotStep = items.length > 300 ? 50 : items.length > 150 ? 20 : items.length > 80 ? 10 : 5;
+
+  // Calculate indicator position (only for every dotStep-th dot)
+  const activeDotIndex = Math.floor(activeItemIndex / dotStep)
+  // Each dot height is 0.75rem (12px) and the gap is 1rem (16px).
+  // The distance between the tops of consecutive dots is dotHeight + gap = 1.75rem.
+  // Using rem-based transforms ensures perfect responsive scaling across zoom levels.
+  const indicatorOffset = activeDotIndex * 1.75;
+  const indicatorTransform = `translateY(${indicatorOffset}rem)`
 
   const scrollToItem = useCallback((index: number) => {
     // Manually set index immediately for visual responsiveness
@@ -105,8 +108,8 @@ export function BarcodeSetView() {
       return;
     }
 
-    const totalNavDots = Math.ceil(items.length / 5);
-    const currentDotIndex = index / 5;
+    const totalNavDots = Math.ceil(items.length / dotStep);
+    const currentDotIndex = index / dotStep;
     if (currentDotIndex === totalNavDots - 1) {
       window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
       return;
@@ -117,7 +120,7 @@ export function BarcodeSetView() {
     if (targetElement) {
       targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
-  }, [items.length]);
+  }, [items.length, dotStep]);
 
   const handleEdit = (id: string) => {
     setSelectedItemId(id)
@@ -294,10 +297,10 @@ export function BarcodeSetView() {
             style={{ transform: indicatorTransform }}
           />
           {items.map((item, index) => {
-            // Only show a dot for every 5th item (0, 5, 10...)
-            if (index % 5 !== 0) return null;
+            // Only show a dot for every dotStep-th item
+            if (index % dotStep !== 0) return null;
             
-            const isActive = activeItemIndex >= index && activeItemIndex < index + 5;
+            const isActive = activeItemIndex >= index && activeItemIndex < index + dotStep;
             
             return (
               <button
@@ -307,7 +310,7 @@ export function BarcodeSetView() {
                 aria-label={`Scroll to items starting at ${index + 1}`}
               >
                 <span className={styles.navDotTooltip}>
-                  #{index + 1} {items.length > index + 1 ? ` - #${Math.min(index + 5, items.length)}` : ''}
+                  #{index + 1} {items.length > index + 1 ? ` - #${Math.min(index + dotStep, items.length)}` : ''}
                 </span>
               </button>
             );

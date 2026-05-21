@@ -7,6 +7,7 @@
     "xlsx": "XLSX",
     "docx": "DOCX",
     "barcodeSet": "Zestaw kodów",
+    "sequence": "Sekwencja",
     "help": "Pomoc",
     "languageToggle": "Zmień język"
   },
@@ -179,6 +180,11 @@
       "cancel": "Anuluj",
       "confirm": "OK"
     },
+    "printLimitModal": {
+      "title": "Opcja drukowania kart niedostępna",
+      "body": "Funkcja 'Drukuj karty' jest dostępna tylko wtedy, gdy plik Excel zawiera dokładnie 1 lub 2 kolumny z danymi (kolumny A i B). Twój plik zawiera więcej niż 2 kolumny z danymi. Upewnij się, że tylko kolumny A i B są zapełnione, aby móc korzystać z tej funkcji.",
+      "close": "OK"
+    },
     "preview": {
       "title": "Podgląd arkusza",
       "titleWithSheet": "Podgląd: {{sheetName}}",
@@ -195,7 +201,7 @@
       "generateFailed": "Błąd podczas generowania pliku.",
       "unknown": "Nieznany błąd.",
       "noPrintData": "Nie znaleziono danych do druku w pierwszych dwóch kolumnach.",
-      "invalidPrintData": "Druk kart wymaga poprawnych wartości w kolumnach A i B dla każdego drukowanego wiersza. Nieprawidłowe komórki: {{cells}}.",
+      "invalidPrintData": "Druk kart wymaga poprawnych wartości w kolumnach A i B dla każdego drukowanego wiersza.",
       "printWindowBlocked": "Przeglądarka zablokowała okno podglądu wydruku. Zezwól na pop-upy i spróbuj ponownie.",
       "occupiedCellShort": "Komórka zajęta",
       "sheetMissingInFile": "Nie można znaleźć arkusza w pliku.",
@@ -284,10 +290,31 @@
         "body": "Narzędzie do masowego zarządzania kodami. Możesz dodawać, usuwać i edytować wiele widżetów jednocześnie, nadając każdemu z nich unikalne dane oraz własny tekst etykiety.",
         "features": {
           "title": "Kluczowe funkcje:",
-          "nav": "Nawigacja: Użyj kropkowego menu po prawej stronie, aby szybko przeskakiwać między grupami kodów (co 5 sztuk).",
+          "nav": "Nawigacja: Użyj adaptacyjnego menu kropkowego po prawej stronie, aby szybko przeskakiwać między grupami kodów.",
           "edit": "Edycja: Kliknij ikonę ołówka, aby otworzyć panel boczny i zmienić dane, wygląd lub 'Własny tekst' dla konkretnego kodu.",
           "print": "Drukuj wszystko: Przycisk drukarki generuje gotową do druku siatkę A4 ze wszystkimi kodami.",
           "shortcut": "Skrót klawiszowy: Ctrl+P automatycznie wywołuje drukowanie zestawu kodów."
+        }
+      },
+      "sequence": {
+        "title": "Generator Sekwencji",
+        "body": "Wydajne narzędzie do automatycznego generowania sekwencji kodów numerycznych lub tekstowych. Idealne do szybkiego tworzenia serii kodów bez zewnętrznych plików.",
+        "features": {
+          "title": "Kluczowe funkcje:",
+          "range": "Dynamiczny zakres: Ustaw start, koniec, krok, prefiks, sufiks oraz dopełnienie zerami.",
+          "textMode": "Kontrola tekstu: Włącz opcję 'Tekst pod kodem', aby zarządzać widocznością etykiet.",
+          "bulk": "Eksport do Edytora: Prześlij wygenerowaną serię bezpośrednio do Edytora Zestawów jednym kliknięciem.",
+          "quickPrint": "Szybki druk: Bezpiecznie renderuj i drukuj duże serie w paczkach, zapobiegając zawieszaniu przeglądarki."
+        }
+      },
+      "appearance": {
+        "title": "Ustawienia Motywu i Kolorów",
+        "body": "Dostosuj wygląd wizualny aplikacji do własnych preferencji oraz warunków pracy w swoim biurze.",
+        "features": {
+          "title": "Opcje personalizacji:",
+          "modes": "Motyw Jasny / Ciemny: Przełączaj tryby w dolnej części panelu bocznego (Navigation Rail).",
+          "colors": "Dowolne barwy: Wybierz własny kolor główny oraz tło z automatycznym cieniowaniem pojemników MD3.",
+          "contrast": "Gwarancja odczytu: Kody kreskowe są zawsze izolowane na białym tle, co zapewnia 100% czytelności skanerów."
         }
       },
       "printing": {
@@ -297,7 +324,8 @@
       "troubleshooting": {
         "title": "Rozwiązywanie Problemów",
         "eanError": "Błąd EAN-13/8: Te kody wymagają cyfr. Ostatnia cyfra kontrolna zostanie obliczona automatycznie, jeśli podasz o jedną za mało.",
-        "invisibleCode": "Kod jest niewidoczny? Sprawdź czy kolor kodu nie jest taki sam jak tło."
+        "invisibleCode": "Kod jest niewidoczny? Sprawdź czy kolor kodu nie jest taki sam jak tło.",
+        "visibilityLabel": "Widoczność"
       },
       "standards": {
         "title": "Standardy i Wymagania",
@@ -376,6 +404,10 @@
         "q2": "Dlaczego nie mogę wgrać pliku .xls?",
         "a2": "Wspieramy tylko nowoczesny format .xlsx. Starsze pliki .xls należy najpierw zapisać jako .xlsx w programie Excel."
       }
+    },
+    "footer": {
+      "secure": "Bezpieczne przetwarzanie lokalne",
+      "version": "Barcode Studio v{{version}} • {{year}}"
     }
   },
   "barcodeSet": {
@@ -434,52 +466,55 @@
     }
   },
   "home": {
-    "eyebrow": "Nowoczesne studio kodow dla szybkiej pracy",
-    "title": "Generuj, grupuj i eksportuj kody gotowe do produkcji.",
-    "description": "Barcode Studio laczy generator pojedynczy, zestawy kodow, przetwarzanie XLSX i DOCX w jednym prywatnym workflow dzialajacym lokalnie w przegladarce.",
-    "primaryAction": "Przejdz do Generatora",
-    "secondaryAction": "Zobacz Pomoc",
-    "sectionLabel": "Landing MD3",
-    "spotlightTitle": "Projektowane pod realna prace z dokumentami",
-    "spotlightDescription": "Szybki podglad, gotowy wydruk i lokalne przetwarzanie plikow bez wysylania danych na serwer.",
-    "browserFirstMetric": "Workflow lokalny w przegladarce",
+    "eyebrow": "Witaj w Barcode Studio!",
+    "title": "Twórz i drukuj profesjonalne kody z lekkością i uśmiechem.",
+    "description": "Cieszymy się, że tu jesteś! Oferujemy Ci jedno proste, bezpieczne i bardzo przyjazne narzędzie do projektowania pojedynczych kodów, generowania serii, automatycznych sekwencji oraz sprawnej pracy z plikami Excela i Worda. Wszystko dzieje się bezpiecznie bezpośrednio w Twojej przeglądarce.",
+    "primaryAction": "Zacznij tworzyć",
+    "secondaryAction": "Jak to działa?",
+    "sectionLabel": "Wygodne Studio",
+    "spotlightTitle": "Stworzone dla Twojej wygody",
+    "spotlightDescription": "Jedno spójne, przejrzyste miejsce, w którym bez trudu zrealizujesz każde zadanie.",
+    "browserFirstMetric": "Workflow lokalny w przeglądarce",
     "spotlightPoints": {
-      "generator": "Projektowanie pojedynczych kodow z eksportem SVG i PNG",
-      "set": "Masowa edycja z szybka nawigacja i ukladem do druku",
-      "xlsx": "Podglad arkusza i wstawianie kodow bezposrednio do komorek",
-      "docx": "Przetwarzanie DOCX i tworzenie nowych dokumentow z kodami"
+      "generator": "Projektowanie pojedynczych kodów i ich szybkie pobieranie",
+      "set": "Wygodna edycja masowa z szybkim podglądem do druku",
+      "sequence": "Automatyczne i błyskawiczne generowanie serii kodów",
+      "xlsx": "Wygodne wstawianie kodów prosto do komórek arkusza",
+      "docx": "Łatwe wczytywanie plików Word i zamiana tekstu na kody"
     },
     "slogans": {
-      "title": "Dlaczego warto",
+      "title": "Dlaczego polubisz to studio?",
       "items": [
-        "Jedna szybka przestrzen dla kazdego scenariusza barcode.",
-        "Projekt pod wydruk i produkcje, nie tylko podglad na ekranie.",
-        "Prywatnosc od poczatku, bo pliki zostaja w przegladarce.",
-        "Tempo pracy dla operatora, ktory potrzebuje czytelnosci i kontroli."
+        "Wszystko pod ręką – jedna przyjazna przestrzeń do pracy.",
+        "Dbamy o Twoją prywatność – żadne pliki nie opuszczają Twojego komputera.",
+        "Piękny i czytelny wygląd ułatwiający codzienne zadania.",
+        "Pełna wolność – brak opłat, limitów i zbędnych komplikacji."
       ]
     },
     "video": {
-      "title": "Miejsce na wideo",
-      "description": "Tutaj mozesz osadzic prezentacje YouTube albo szybki onboarding produktu.",
-      "placeholder": "Miejsce na osadzenie linku YouTube"
+      "title": "Zobacz, jakie to proste",
+      "description": "Krótkie wideo prezentujące najważniejsze funkcje i sposoby pracy.",
+      "placeholder": "Miejsce na osadzenie filmu instruktażowego"
     },
     "footer": {
-      "eyebrow": "Gotowe do pracy",
-      "title": "Przejdz z landingu prosto do wybranego workflow",
-      "description": "Wybierz tryb pracy pasujacy do zadania i trzymaj generowanie kodow, arkusze oraz dokumenty w jednej spojnej przestrzeni roboczej.",
-      "badge": "Lokalne przetwarzanie. Bez wysylki na serwer.",
-      "linksLabel": "Szybkie linki Home"
+      "eyebrow": "Do dzieła!",
+      "title": "Wybierz to, czego dziś potrzebujesz",
+      "description": "Kliknij wybrane narzędzie poniżej i stwórz kody, które idealnie pasują do Twoich pomysłów.",
+      "badge": "Przetwarzanie w 100% lokalne – bezpiecznie i bez rejestracji.",
+      "linksLabel": "Szybki start"
     },
     "featureCards": {
-      "title": "Glowne workflowy",
-      "generatorTitle": "Generator",
-      "generatorBody": "Skonfiguruj typ kodu, wymiary, kolory i eksport w jednym panelu.",
-      "setTitle": "Zestaw kodow",
-      "setBody": "Obsluguj wieksze partie kodow z szybka nawigacja i ukladem do druku.",
-      "xlsxTitle": "Przetwarzanie XLSX",
-      "xlsxBody": "Podgladaj arkusze, mapuj kolumny i zapisuj obrazy kodow w komorkach.",
-      "docxTitle": "Przetwarzanie DOCX",
-      "docxBody": "Czytaj tekst z plikow Word i generuj nowe dokumenty z kodami."
+      "title": "Praca bez wysiłku",
+      "generatorTitle": "Pojedynczy kod",
+      "generatorBody": "Zaprojektuj idealny kod, dopasuj kolory i pobierz jako plik graficzny.",
+      "setTitle": "Zestawy kodów",
+      "setBody": "Edytuj i układaj do druku większe partie kodów na raz.",
+      "sequenceTitle": "Szybka sekwencja",
+      "sequenceBody": "Generuj całe serie kodów o dowolnym kroku i szablonie za jednym kliknięciem.",
+      "xlsxTitle": "Arkusz Excela (XLSX)",
+      "xlsxBody": "Wczytaj swój arkusz i sprawnie uzupełnij go o gotowe grafiki kodów.",
+      "docxTitle": "Plik Worda (DOCX)",
+      "docxBody": "Zamieniaj teksty z dokumentów na kody bez przepisywania."
     }
   },
   "support": {
@@ -489,5 +524,32 @@
     "buyMeACoffee": "Jeśli aplikacja oszczędza Twój czas lub pomaga Ci w pracy, możesz symbolicznie postawić mi kawę. To dobrowolna forma wsparcia, która pomaga mi rozwijać projekt, dodawać nowe funkcje i utrzymywać narzędzie w dobrej formie.",
     "signal": "Każda kawa to sygnał, że Barcode Studio jest przydatne i warto je dalej rozwijać.",
     "thanks": "Dziękuję za każde wsparcie. ☕"
+  },
+  "sequence": {
+    "title": "Generator Sekwencji",
+    "description": "Generuj sekwencje kodów kreskowych lokalnie bez potrzeby importowania zewnętrznych plików.",
+    "form": {
+      "standard": "Standard kodu",
+      "prefix": "Prefiks",
+      "start": "Wartość początkowa",
+      "end": "Wartość końcowa",
+      "step": "Krok",
+      "padding": "Dopełnienie zerami (Padding)",
+      "suffix": "Sufiks",
+      "customLabel": "Nadpisanie etykiety",
+      "customLabelHelp": "Opcjonalnie. Użyj {value}, aby wstawić wygenerowaną wartość."
+    },
+    "preview": {
+      "title": "Podgląd na żywo",
+      "total": "Razem kodów do wygenerowania: {{count}}",
+      "invalid": "Konfiguracja zawiera błędy. Popraw dane wejściowe.",
+      "tooLarge": "Wartość początkowa nie może być większa niż końcowa.",
+      "zeroStep": "Krok musi być większy niż zero."
+    },
+    "actions": {
+      "generateToBulk": "Generuj do edytora hurtowego",
+      "quickPrint": "Szybki druk"
+    },
+    "printing": "Przygotowywanie wydruku sekwencji ({{current}}/{{total}})..."
   }
 }

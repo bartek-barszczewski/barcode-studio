@@ -124,7 +124,9 @@
   gap: 0.875rem;
 }
 
-.spotlightPanel {
+.spotlightPanel,
+.videoPanel,
+.featuresPanel {
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0.9)),
     var(--md-sys-color-surface-container);
@@ -467,3 +469,98 @@
 .buyMeCoffeeWrapper {
   margin-top: 10rem;
 }
+
+/* Premium Dark Mode Overrides for Home Page */
+:global([data-theme="dark"]) .spotlightPanel,
+:global([data-theme="dark"]) .videoPanel,
+:global([data-theme="dark"]) .featuresPanel {
+  background:
+    linear-gradient(180deg, rgba(30, 32, 32, 0.65), rgba(30, 32, 32, 0.85)),
+    var(--md-sys-color-surface-container);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+:global([data-theme="dark"]) .videoFrame {
+  border-color: rgba(255, 255, 255, 0.08);
+  background:
+    linear-gradient(135deg, rgba(113, 247, 237, 0.04), rgba(228, 223, 255, 0.04)),
+    var(--md-sys-color-surface-container-lowest);
+}
+
+:global([data-theme="dark"]) .metricCard {
+  border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+:global([data-theme="dark"]) .pointItem {
+  background: rgba(26, 28, 28, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+:global([data-theme="dark"]) .sloganCard {
+  background: rgba(26, 28, 28, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.2);
+}
+
+:global([data-theme="dark"]) .sloganCard[data-align='right'] {
+  background: rgba(94, 82, 167, 0.12);
+  border-color: rgba(150, 140, 220, 0.18);
+}
+
+:global([data-theme="dark"]) .sloganCard[data-align='left'] {
+  background: rgba(0, 106, 100, 0.12);
+  border-color: rgba(113, 247, 237, 0.18);
+}
+
+:global([data-theme="dark"]) .featureCard {
+  background: rgba(26, 28, 28, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+:global([data-theme="dark"]) .footer {
+  background:
+    linear-gradient(135deg, rgba(30, 32, 32, 0.65), rgba(30, 32, 32, 0.85)),
+    var(--md-sys-color-surface-container);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+:global([data-theme="dark"]) .footerEyebrow {
+  background: rgba(197, 189, 255, 0.15);
+  color: var(--md-sys-color-secondary);
+}
+
+:global([data-theme="dark"]) .footerLink {
+  background: rgba(26, 28, 28, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+:global([data-theme="dark"]) .footerLink:hover {
+  background: rgba(113, 247, 237, 0.15);
+  border-color: rgba(113, 247, 237, 0.3);
+}
+
+/* Soften background orbs in dark mode for maximum contrast and legibility */
+:global([data-theme="dark"]) .orbPrimary {
+  background:
+    radial-gradient(circle at 30% 30%, rgba(0, 106, 100, 0.4), transparent 60%),
+    linear-gradient(135deg, rgba(0, 106, 100, 0.1), rgba(94, 82, 167, 0.1));
+  opacity: 0.35;
+}
+
+:global([data-theme="dark"]) .orbSecondary {
+  background: linear-gradient(145deg, rgba(186, 26, 61, 0.3), rgba(0, 0, 0, 0));
+  opacity: 0.25;
+}
+
+:global([data-theme="dark"]) .orbTertiary {
+  background: linear-gradient(145deg, rgba(94, 82, 167, 0.35), rgba(0, 0, 0, 0));
+  opacity: 0.35;
+}
+
+:global([data-theme="dark"]) .orbRing {
+  border-color: rgba(113, 247, 237, 0.08);
+}
+
