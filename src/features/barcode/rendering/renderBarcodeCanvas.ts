@@ -111,13 +111,14 @@ const forceSquareMatrixCanvas = (
   canvas: OffscreenCanvas,
   input: BarcodeFormState,
 ): OffscreenCanvas => {
-  const side = Math.max(1, canvas.height);
+  const scale = getRenderScale(input.scale);
+  const targetSide = Math.max(1, Math.round(input.height)) * scale;
 
-  if (canvas.width === side && canvas.height === side) {
+  if (canvas.width === targetSide && canvas.height === targetSide) {
     return canvas;
   }
 
-  const squareCanvas = new OffscreenCanvas(side, side);
+  const squareCanvas = new OffscreenCanvas(targetSide, targetSide);
   const context = squareCanvas.getContext('2d');
 
   if (!context) {
@@ -126,14 +127,14 @@ const forceSquareMatrixCanvas = (
 
   if (!input.transparentBackground) {
     context.fillStyle = input.backgroundColor;
-    context.fillRect(0, 0, side, side);
+    context.fillRect(0, 0, targetSide, targetSide);
   }
 
-  const drawScale = side / Math.max(canvas.width, canvas.height);
+  const drawScale = targetSide / Math.max(canvas.width, canvas.height);
   const drawWidth = canvas.width * drawScale;
   const drawHeight = canvas.height * drawScale;
-  const offsetX = (side - drawWidth) / 2;
-  const offsetY = (side - drawHeight) / 2;
+  const offsetX = (targetSide - drawWidth) / 2;
+  const offsetY = (targetSide - drawHeight) / 2;
 
   context.drawImage(canvas, offsetX, offsetY, drawWidth, drawHeight);
   return squareCanvas;
@@ -176,12 +177,15 @@ const renderBwipBarcodeCanvas = (input: BarcodeFormState): OffscreenCanvas => {
     bcid,
     text: textToRender,
     scale: bwipScale,
-    height: bwipHeight,
     barcolor: input.barColor.replace('#', ''),
     backgroundcolor: input.backgroundColor.replace('#', ''),
     includetext: useBuiltInText,
     guardwhitespace: false,
   };
+
+  if (!isFixedSquareMatrixCode(input.type)) {
+    options.height = bwipHeight;
+  }
 
   if (useBuiltInText) {
     options.textsize = bwipTextSize;

@@ -256,11 +256,14 @@ const renderBwipBarcode = (input: BarcodeFormState): string => {
       bcid,
       text: textToRender,
       scale: bwipScale,
-      height: bwipHeight,
       barcolor: input.barColor.replace('#', ''),
       backgroundcolor: input.backgroundColor.replace('#', ''),
       includetext: useBuiltInText,
       guardwhitespace: false,
+    }
+
+    if (!isFixedSquareMatrixCode(input.type)) {
+      options.height = bwipHeight
     }
 
     // Add padding to make room for built-in text
@@ -332,7 +335,7 @@ const normalizeSvgAttributes = (svg: string): string => {
   return normalized
 }
 
-const forceSquareMatrixSvg = (svg: string): string => {
+const forceSquareMatrixSvg = (svg: string, targetSize?: number): string => {
   const normalizedSvg = normalizeSvgAttributes(svg)
   const renderedHeight = parseSvgNumberAttribute(normalizedSvg, 'height')
   const viewBox = parseSvgViewBox(normalizedSvg)
@@ -341,7 +344,8 @@ const forceSquareMatrixSvg = (svg: string): string => {
     return normalizedSvg
   }
 
-  const side = formatSvgNumber(renderedHeight)
+  const side = targetSize !== undefined ? targetSize : renderedHeight
+  const sideStr = formatSvgNumber(side)
   const [minX, minY, width, height] = viewBox
   const targetSide = Math.max(width, height)
   const offsetX = minX - (targetSide - width) / 2
@@ -354,14 +358,24 @@ const forceSquareMatrixSvg = (svg: string): string => {
   if (squareSvg.match(/<svg[^>]+width="/)) {
     squareSvg = squareSvg.replace(
       /(<svg[^>]+width=")(\d+\.?\d*)/,
-      (_, p1) => p1 + side,
+      (_, p1) => p1 + sideStr,
+    )
+  } else {
+    squareSvg = squareSvg.replace(
+      '<svg',
+      `<svg width="${sideStr}"`,
     )
   }
 
   if (squareSvg.match(/<svg[^>]+height="/)) {
     squareSvg = squareSvg.replace(
       /(<svg[^>]+height=")(\d+\.?\d*)/,
-      (_, p1) => p1 + side,
+      (_, p1) => p1 + sideStr,
+    )
+  } else {
+    squareSvg = squareSvg.replace(
+      '<svg',
+      `<svg height="${sideStr}"`,
     )
   }
 
@@ -447,7 +461,7 @@ export const renderBarcodeToSvgString = async (
   }
 
   const normalizedResult = isFixedSquareMatrixCode(normalizedInput.type)
-    ? forceSquareMatrixSvg(result)
+    ? forceSquareMatrixSvg(result, normalizedInput.height * getRenderScale(normalizedInput.scale))
     : normalizeSvgAttributes(result)
   return applyRotationToSvg(normalizedResult, input.rotation)
 }
