@@ -7,6 +7,7 @@
     "xlsx": "XLSX",
     "docx": "DOCX",
     "barcodeSet": "Set di codici",
+    "sequence": "Sequenza",
     "help": "Aiuto",
     "languageToggle": "Cambia lingua"
   },
@@ -23,6 +24,7 @@
     "spotlightPoints": {
       "generator": "Design di codici a barre singoli con esportazione SVG e PNG",
       "set": "Editing massivo con navigazione rapida e layout di stampa",
+      "sequence": "Genera sequenze numeriche e alfanumeriche",
       "xlsx": "Anteprima di fogli di calcolo con inserimento di codici a barre nelle celle",
       "docx": "Elaborazione DOCX che trasforma il testo in codici renderizzati"
     },
@@ -53,6 +55,8 @@
       "generatorBody": "Regola il tipo di codice a barre, le dimensioni, i colori e il formato di esportazione in un unico pannello.",
       "setTitle": "Set di codici",
       "setBody": "Gestisci lotti più grandi con schede persistenti e layout pronti per la stampa.",
+      "sequenceTitle": "Generatore di sequenze",
+      "sequenceBody": "Crea sequenze di codici a barre con prefissi e suffissi personalizzati.",
       "xlsxTitle": "Elaborazione XLSX",
       "xlsxBody": "Anteprima di fogli di calcolo, mappatura delle colonne sorgente e riscrittura delle immagini dei codici a barre.",
       "docxTitle": "Elaborazione DOCX",
@@ -304,10 +308,31 @@
         "body": "Uno strumento per la gestione massiva dei codici a barre. Puoi aggiungere, rimuovere e modificare più widget contemporaneamente, assegnando a ciascuno dati univoci e un testo dell'etichetta personalizzato.",
         "features": {
           "title": "Caratteristiche principali:",
-          "nav": "Navigazione: usa il menu a punti sulla destra per saltare rapidamente tra i gruppi di codici a barre (ogni 5 elementi).",
+          "nav": "Navigazione: usa la barra dei punti adattiva sulla destra per saltare rapidamente tra i gruppi di codici a barre.",
           "edit": "Modifica: clicca sull'icona della matita per aprire il pannello delle impostazioni laterale per un codice specifico e modificare dati, aspetto o 'Testo personalizzato'.",
           "print": "Stampa tutto: il pulsante della stampante genera una griglia A4 pronta per la stampa con tutti i codici.",
           "shortcut": "Scorciatoia da tastiera: Ctrl+P attiva automaticamente la funzionalità di stampa massiva."
+        }
+      },
+      "sequence": {
+        "title": "Generatore di sequenze",
+        "body": "Un potente strumento per generare automaticamente sequenze di codici a barre numerici o testuali. Perfetto per creare serie di codici senza file esterni.",
+        "features": {
+          "title": "Caratteristiche principali:",
+          "range": "Intervallo dinamico: imposta i vincoli di inizio, fine, passo, prefisso, suffisso e riempimento personalizzato.",
+          "textMode": "Controllo del testo: attiva l'opzione 'Testo sotto il codice' per nascondere o mostrare le etichette leggibili dall'uomo.",
+          "bulk": "Caricamento di massa: carica la serie generata direttamente nell'Editor di massa con un solo clic.",
+          "quickPrint": "Stampa rapida: esegui il rendering e stampa sequenze ad alto volume in blocchi in modo sicuro senza bloccare il browser."
+        }
+      },
+      "appearance": {
+        "title": "Impostazioni aspetto e tema",
+        "body": "Personalizza l'aspetto visivo dell'applicazione in base alle tue preferenze e all'ambiente del tuo spazio di lavoro.",
+        "features": {
+          "title": "Opzioni di personalizzazione:",
+          "modes": "Tema chiaro / scuro: passa dalla modalità chiara a quella scura ad alto contrasto tramite la barra di navigazione.",
+          "colors": "Tavolozze personalizzate: seleziona qualsiasi colore primario o di sfondo personalizzato con il ridimensionamento adattivo dei contenitori di superficie MD3.",
+          "contrast": "Simmetria e leggibilità: i codici a barre generati sono rigorosamente isolati su sfondi bianchi uniformi per garantire la leggibilità della fotocamera."
         }
       },
       "printing": {
@@ -317,7 +342,8 @@
       "troubleshooting": {
         "title": "Risoluzione dei problemi",
         "eanError": "Errore EAN-13/8: questi codici richiedono solo cifre. L'ultima cifra di controllo verrà calcolata automaticamente se ne fornisci una in meno di quella richiesta.",
-        "invisibleCode": "Il codice è invisibile? Controlla se il colore del codice è lo stesso dello sfondo."
+        "invisibleCode": "Il codice è invisibile? Controlla se il colore del codice è lo stesso dello sfondo.",
+        "visibilityLabel": "Visibilità"
       },
       "standards": {
         "title": "Standard e requisiti",
@@ -387,6 +413,10 @@
         "a1": "Sì, tutta l'elaborazione avviene localmente nel tuo browser. Nessun file o dato viene inviato a un server.",
         "q2": "Perché non posso caricare un file .xls?",
         "a2": "Supportiamo solo il formato moderno .xlsx. I vecchi file .xls devono prima essere salvati come .xlsx in Excel."
+      },
+      "footer": {
+        "secure": "Elaborazione lato client locale sicura",
+        "version": "Barcode Studio v{{version}} • {{year}}"
       }
     }
   },
@@ -452,5 +482,32 @@
     "buyMeACoffee": "Se l'app ti fa risparmiare tempo o ti aiuta nel tuo lavoro, puoi offrirmi simbolicamente un caffè. È una forma di supporto volontario che mi aiuta a sviluppare il progetto, aggiungere nuove funzionalità e mantenere lo strumento in buono stato.",
     "signal": "Ogni caffè è un segnale che Barcode Studio è utile e vale la pena continuare a svilupparlo.",
     "thanks": "Grazie per ogni piccolo supporto. ☕"
+  },
+  "sequence": {
+    "title": "Generatore di sequenze",
+    "description": "Genera sequenze di codici a barre numeriche e alfanumeriche localmente senza importare file.",
+    "form": {
+      "standard": "Standard del codice",
+      "prefix": "Prefisso",
+      "start": "Valore iniziale",
+      "end": "Valore finale",
+      "step": "Passo",
+      "padding": "Riempimento con zeri (Padding)",
+      "suffix": "Suffisso",
+      "customLabel": "Sovrascrivi etichetta personalizzata",
+      "customLabelHelp": "Opzionale. Usa {value} per la stringa della sequenza."
+    },
+    "preview": {
+      "title": "Anteprima dal vivo",
+      "total": "Totale codici da generare: {{count}}",
+      "invalid": "La configurazione non è valida. Si prega di correggere i dati inseriti.",
+      "tooLarge": "Il valore iniziale non può superare il valore finale.",
+      "zeroStep": "Il valore del passo deve essere maggiore di zero."
+    },
+    "actions": {
+      "generateToBulk": "Genera nell'editor di massa",
+      "quickPrint": "Stampa rapida"
+    },
+    "printing": "Rendering dell'anteprima di stampa della sequenza ({{current}}/{{total}})..."
   }
 }

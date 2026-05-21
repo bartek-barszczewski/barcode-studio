@@ -191,3 +191,25 @@
     font-size: 1.25rem;
   }
 }
+
+/* Premium Dark Mode for Support the Project Panel */
+:global([data-theme="dark"]) .container {
+  background:
+    linear-gradient(180deg, rgba(30, 32, 32, 0.65), rgba(30, 32, 32, 0.85)),
+    var(--md-sys-color-surface-container);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+:global([data-theme="dark"]) .qrLink {
+  background: #ffffff;
+  border-color: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+}
+
+:global([data-theme="dark"]) .shape::before,
+:global([data-theme="dark"]) .shape::after {
+  opacity: 0.12;
+}
+

@@ -4,6 +4,7 @@ import {
   ArrowRight,
   FileSpreadsheet,
   FileText,
+  Hash,
   Info,
   Library,
   ScanBarcode,
@@ -17,6 +18,7 @@ import styles from './HomePage.module.css'
 const featureIconMap = {
   generatorTitle: ScanBarcode,
   setTitle: Library,
+  sequenceTitle: Hash,
   xlsxTitle: FileSpreadsheet,
   docxTitle: FileText,
 } as const
@@ -24,12 +26,13 @@ const featureIconMap = {
 const featureCardKeys = [
   'generatorTitle',
   'setTitle',
+  'sequenceTitle',
   'xlsxTitle',
   'docxTitle',
 ] as const
 
-const spotlightPointKeys = ['generator', 'set', 'xlsx', 'docx'] as const
-const footerLinkKeys = ['generator', 'barcodeSet', 'xlsx', 'docx', 'help'] as const
+const spotlightPointKeys = ['generator', 'set', 'sequence', 'xlsx', 'docx'] as const
+const footerLinkKeys = ['generator', 'barcodeSet', 'sequence', 'xlsx', 'docx', 'help'] as const
 
 export function HomePage() {
   const { t } = useTranslation()
@@ -69,7 +72,7 @@ export function HomePage() {
         >
           <div className={styles.spotlightMetrics}>
             <div className={styles.metricCard}>
-              <span className={styles.metricValue}>4</span>
+              <span className={styles.metricValue}>{featureCardKeys.length}</span>
               <span className={styles.metricLabel}>
                 {t('home.featureCards.title')}
               </span>

@@ -151,6 +151,7 @@ export function XlsxPage() {
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [isPreparingPrint, setIsPreparingPrint] = useState(false);
+  const [isPrintLimitModalOpen, setIsPrintLimitModalOpen] = useState(false);
   const [progress, setProgress] = useState<{ current: number; total: number } | null>(null);
   const [barcodeType, setBarcodeType] = useState<BarcodeType>('CODE128');
   const [placement, setPlacement] = useState<XlsxPlacement>('right');
@@ -173,6 +174,9 @@ export function XlsxPage() {
 
   const isBusy = isGenerating || isPreparingPrint;
   const hasUnsavedChanges = originalFile !== null && !isBusy;
+  const isPrintCardsDisabled = useMemo(() => {
+    return Boolean(workbook && workbook.detectedSourceColumnIndexes.length > 2);
+  }, [workbook]);
   const navigationBlocker = useBlocker(({ currentLocation, nextLocation }) => {
     return hasUnsavedChanges && currentLocation.pathname !== nextLocation.pathname;
   });
@@ -954,9 +958,10 @@ export function XlsxPage() {
                   </Button>
                   <Button
                     variant="secondary"
-                    onClick={handlePrintCards}
+                    onClick={isPrintCardsDisabled ? () => setIsPrintLimitModalOpen(true) : handlePrintCards}
                     fullWidth
                     disabled={isGenerating || isPreparingPrint}
+                    className={clsx(isPrintCardsDisabled && !isGenerating && !isPreparingPrint && styles.visuallyDisabled)}
                     progress={isPreparingPrint ? 100 : undefined}
                   >
                     <Printer size={18} />
@@ -1043,6 +1048,36 @@ export function XlsxPage() {
               </Button>
               <Button variant="primary" onClick={() => navigationBlocker.proceed()}>
                 {t('xlsx.leaveGuard.confirm')}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+      {isPrintLimitModalOpen && (
+        <div
+          className={styles.leaveDialogBackdrop}
+          role="presentation"
+          onClick={() => setIsPrintLimitModalOpen(false)}
+        >
+          <div
+            className={styles.leaveDialog}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="xlsx-print-limit-dialog-title"
+            aria-describedby="xlsx-print-limit-dialog-description"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className={styles.leaveDialogBody}>
+              <h2 id="xlsx-print-limit-dialog-title" className={styles.leaveDialogTitle}>
+                {t('xlsx.printLimitModal.title')}
+              </h2>
+              <p id="xlsx-print-limit-dialog-description" className={styles.leaveDialogDescription}>
+                {t('xlsx.printLimitModal.body')}
+              </p>
+            </div>
+            <div className={styles.leaveDialogActions}>
+              <Button variant="primary" onClick={() => setIsPrintLimitModalOpen(false)}>
+                {t('xlsx.printLimitModal.close')}
               </Button>
             </div>
           </div>

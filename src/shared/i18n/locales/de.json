@@ -7,6 +7,7 @@
     "xlsx": "XLSX",
     "docx": "DOCX",
     "barcodeSet": "Barcode-Set",
+    "sequence": "Sequenz",
     "help": "Hilfe",
     "languageToggle": "Sprache ändern"
   },
@@ -23,6 +24,7 @@
     "spotlightPoints": {
       "generator": "Einzelerstellung von Barcodes mit SVG- und PNG-Export",
       "set": "Massenbearbeitung mit Schnellnavigation und Drucklayout",
+      "sequence": "Generieren Sie nummerierte und alphanumerische Sequenzen",
       "xlsx": "Tabellenkalkulationsvorschau mit Barcode-Einfügung in Zellen",
       "docx": "DOCX-Verarbeitung, die Text wahlweise in Codes umwandelt"
     },
@@ -53,6 +55,8 @@
       "generatorBody": "Passen Sie Barcode-Typ, Dimensionen, Farben und Exportformat in einem Panel an.",
       "setTitle": "Barcode-Set",
       "setBody": "Verwalten Sie größere Chargen mit persistenten Karten und druckfertigen Layouts.",
+      "sequenceTitle": "Sequenz-Generator",
+      "sequenceBody": "Erstellen Sie Barcode-Sequenzen mit benutzerdefinierten Präfixen und Suffixen.",
       "xlsxTitle": "XLSX-Verarbeitung",
       "xlsxBody": "Vorschau von Tabellenkalkulationen, Zuweisung von Quellspalten und Zurückschreiben von Barcode-Bildern.",
       "docxTitle": "DOCX-Verarbeitung",
@@ -304,10 +308,31 @@
         "body": "Ein Werkzeug zur Massenverwaltung von Barcodes. Sie können mehrere Widgets gleichzeitig hinzufügen, entfernen und bearbeiten, wobei jedes seine eigenen Daten und einen benutzerdefinierten Etikettentext erhält.",
         "features": {
           "title": "Hauptmerkmale:",
-          "nav": "Navigation: Verwenden Sie das Punktmenü auf der rechten Seite, um schnell zwischen Barcode-Gruppen (alle 5 Elemente) zu springen.",
+          "nav": "Navigation: Verwenden Sie das adaptive Punktmenü auf der rechten Seite, um schnell zwischen Barcode-Gruppen zu springen.",
           "edit": "Bearbeiten: Klicken Sie auf das Stiftsymbol, um das seitliche Einstellungsfenster für einen bestimmten Barcode zu öffnen und Daten, Aussehen oder 'Eigener Text' zu ändern.",
           "print": "Alle drucken: Die Drucker-Schaltfläche generiert ein druckfertiges A4-Gitter mit allen Barcodes.",
           "shortcut": "Tastenkombination: Strg+P löst automatisch die Massendruckfunktion aus."
+        }
+      },
+      "sequence": {
+        "title": "Sequenz-Generator",
+        "body": "Ein leistungsstarkes Werkzeug zur automatischen Generierung von numerischen oder textbasierten Barcode-Sequenzen. Perfekt für die Erstellung von Code-Reihen ohne externe Dateien.",
+        "features": {
+          "title": "Hauptmerkmale:",
+          "range": "Dynamischer Bereich: Legen Sie Start, Ende, Schrittweite, Präfix, Suffix und benutzerdefinierte Auffüllung fest.",
+          "textMode": "Textsteuerung: Aktivieren Sie die Option 'Text unter Barcode', um die lesbare Beschriftung ein- oder auszublenden.",
+          "bulk": "Massenladen: Laden Sie die generierte Reihe mit einem Klick direkt in den Bulk-Editor.",
+          "quickPrint": "Schnelldruck: Rendern und drucken Sie große Sequenzen sicher in Segmenten, ohne dass Ihr Browser einfriert."
+        }
+      },
+      "appearance": {
+        "title": "Design- & Farbeinstellungen",
+        "body": "Passen Sie das Erscheinungsbild der Anwendung an Ihre Vorlieben und Ihre Arbeitsumgebung an.",
+        "features": {
+          "title": "Anpassungsoptionen:",
+          "modes": "Helles / Dunkles Thema: Wechseln Sie über die Navigationsleiste zwischen hellem und kontrastreichem dunklem Modus.",
+          "colors": "Eigene Farbpaletten: Wählen Sie eine beliebige Primär- oder Hintergrundfarbe mit reaktionsschneller Skalierung der MD3-Oberflächen.",
+          "contrast": "Symmetrie & Lesbarkeit: Generierte Barcodes werden streng auf rein weißem Hintergrund isoliert, um die optimale Lesbarkeit für Kameras und Scanner zu garantieren."
         }
       },
       "printing": {
@@ -317,7 +342,8 @@
       "troubleshooting": {
         "title": "Fehlerbehebung",
         "eanError": "EAN-13/8-Fehler: Diese Codes erfordern nur Ziffern. Die letzte Prüfziffer wird automatisch berechnet, wenn Sie eine weniger als erforderlich angeben.",
-        "invisibleCode": "Code ist unsichtbar? Prüfen Sie, ob die Code-Farbe mit dem Hintergrund identisch ist."
+        "invisibleCode": "Code ist unsichtbar? Prüfen Sie, ob die Code-Farbe mit dem Hintergrund identisch ist.",
+        "visibilityLabel": "Sichtbarkeit"
       },
       "standards": {
         "title": "Standards und Anforderungen",
@@ -387,6 +413,10 @@
         "a1": "Ja, die gesamte Verarbeitung erfolgt lokal in Ihrem Browser. Es werden keine Dateien oder Daten an einen Server gesendet.",
         "q2": "Warum kann ich keine .xls-Datei hochladen?",
         "a2": "Wir unterstützen nur das moderne .xlsx-Format. Ältere .xls-Dateien müssen zuerst in Excel als .xlsx gespeichert werden."
+      },
+      "footer": {
+        "secure": "Sichere lokale clientseitige Verarbeitung",
+        "version": "Barcode Studio v{{version}} • {{year}}"
       }
     }
   },
@@ -452,5 +482,32 @@
     "buyMeACoffee": "Wenn die App Ihnen Zeit spart oder Ihnen bei Ihrer Arbeit hilft, können Sie mir symbolisch einen Kaffee ausgeben. Es ist eine freiwillige Form der Unterstützung, die mir hilft, das Projekt weiterzuentwickeln, neue Funktionen hinzuzufügen und das Tool in gutem Zustand zu halten.",
     "signal": "Jeder Kaffee ist ein Zeichen dafür, dass Barcode Studio nützlich ist und es wert ist, weiterentwickelt zu werden.",
     "thanks": "Vielen Dank für jede Unterstützung. ☕"
+  },
+  "sequence": {
+    "title": "Sequenzgenerator",
+    "description": "Numerische und alphanumerische Barcode-Sequenzen lokal generieren, ohne Dateien zu importieren.",
+    "form": {
+      "standard": "Barcode-Standard",
+      "prefix": "Präfix",
+      "start": "Startwert",
+      "end": "Endwert",
+      "step": "Schritt",
+      "padding": "Nullen auffüllen (Padding)",
+      "suffix": "Suffix",
+      "customLabel": "Eigene Etikettenüberschreibung",
+      "customLabelHelp": "Optional. Verwenden Sie {value} für die Sequenz-Zeichenkette."
+    },
+    "preview": {
+      "title": "Live-Vorschau",
+      "total": "Gesamtzahl der zu generierenden Codes: {{count}}",
+      "invalid": "Die Konfiguration ist ungültig. Bitte überprüfen Sie Ihre Eingaben.",
+      "tooLarge": "Der Startwert darf den Endwert nicht überschreiten.",
+      "zeroStep": "Die Schrittweite muss größer als Null sein."
+    },
+    "actions": {
+      "generateToBulk": "Im Massen-Editor generieren",
+      "quickPrint": "Schnelldruck"
+    },
+    "printing": "Druckvorschau für Sequenz wird gerendert ({{current}}/{{total}})..."
   }
 }

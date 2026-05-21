@@ -5,6 +5,7 @@ import { HelpPage } from '../pages/HelpPage/HelpPage'
 import { XlsxPage } from '../pages/XlsxPage/XlsxPage'
 import { BarcodeSetPage } from '../pages/BarcodeSetPage/BarcodeSetPage'
 import { HomePage } from '../pages/HomePage/HomePage'
+import { SequencePage } from '../pages/SequencePage/SequencePage'
 import { AppLayout } from './AppLayout'
 
 export const router = createBrowserRouter([
@@ -39,6 +40,10 @@ export const router = createBrowserRouter([
       {
         path: 'help',
         element: <HelpPage />,
+      },
+      {
+        path: 'sequence',
+        element: <SequencePage />,
       },
     ],
   },

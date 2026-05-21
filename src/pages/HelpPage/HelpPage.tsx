@@ -8,7 +8,9 @@ import {
   HelpCircle,
   Info,
   CheckCircle2,
-  Layers
+  Layers,
+  Hash,
+  Palette
 } from 'lucide-react';
 import styles from './HelpPage.module.css';
 import { Panel } from '../../shared/ui/Panel/Panel';
@@ -35,6 +37,26 @@ export function HelpPage() {
             <p>{t('help.sections.generator.body')}</p>
           </section>
 
+          {/* Sequence Generator Section */}
+          <section className={styles.card}>
+            <div className={styles.cardHeader}>
+              <div className={styles.iconWrapper}>
+                <Hash size={24} />
+              </div>
+              <h3>{t('help.sections.sequence.title')}</h3>
+            </div>
+            <div className={styles.workflow}>
+              <p>{t('help.sections.sequence.body')}</p>
+              <strong>{t('help.sections.sequence.features.title')}</strong>
+              <ul>
+                <li>{t('help.sections.sequence.features.range')}</li>
+                <li>{t('help.sections.sequence.features.textMode')}</li>
+                <li>{t('help.sections.sequence.features.bulk')}</li>
+                <li>{t('help.sections.sequence.features.quickPrint')}</li>
+              </ul>
+            </div>
+          </section>
+
           {/* Barcode Set Section */}
           <section className={styles.card}>
             <div className={styles.cardHeader}>
@@ -51,6 +73,25 @@ export function HelpPage() {
                 <li>{t('help.sections.barcodeSet.features.edit')}</li>
                 <li>{t('help.sections.barcodeSet.features.print')}</li>
                 <li>{t('help.sections.barcodeSet.features.shortcut')}</li>
+              </ul>
+            </div>
+          </section>
+
+          {/* Appearance & Themes Section */}
+          <section className={styles.card}>
+            <div className={styles.cardHeader}>
+              <div className={styles.iconWrapper}>
+                <Palette size={24} />
+              </div>
+              <h3>{t('help.sections.appearance.title')}</h3>
+            </div>
+            <div className={styles.workflow}>
+              <p>{t('help.sections.appearance.body')}</p>
+              <strong>{t('help.sections.appearance.features.title')}</strong>
+              <ul>
+                <li>{t('help.sections.appearance.features.modes')}</li>
+                <li>{t('help.sections.appearance.features.colors')}</li>
+                <li>{t('help.sections.appearance.features.contrast')}</li>
               </ul>
             </div>
           </section>
@@ -121,7 +162,7 @@ export function HelpPage() {
             </div>
             <ul className={styles.plainList}>
               <li><strong>EAN:</strong> {t('help.sections.troubleshooting.eanError')}</li>
-              <li><strong>Widoczność:</strong> {t('help.sections.troubleshooting.invisibleCode')}</li>
+              <li><strong>{t('help.sections.troubleshooting.visibilityLabel')}:</strong> {t('help.sections.troubleshooting.invisibleCode')}</li>
             </ul>
           </section>
 
@@ -172,11 +213,11 @@ export function HelpPage() {
           <div className={styles.footer}>
             <div className={styles.badge}>
               <CheckCircle2 size={14} />
-              <span>Bezpieczne przetwarzanie lokalne</span>
+              <span>{t('help.footer.secure')}</span>
             </div>
             <div className={styles.version}>
               <Info size={14} />
-              <span>Barcode Studio v1.0.0 • 2026</span>
+              <span>{t('help.footer.version', { version: '1.0.0', year: '2026' })}</span>
             </div>
           </div>
         </div>

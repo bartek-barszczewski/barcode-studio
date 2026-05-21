@@ -7,6 +7,7 @@
     "xlsx": "XLSX",
     "docx": "DOCX",
     "barcodeSet": "Conjunto de códigos",
+    "sequence": "Secuencia",
     "help": "Ayuda",
     "languageToggle": "Cambiar idioma"
   },
@@ -23,6 +24,7 @@
     "spotlightPoints": {
       "generator": "Diseño de código de barras individual con exportación SVG y PNG",
       "set": "Edición masiva con navegación rápida y diseño de impresión",
+      "sequence": "Genere secuencias numéricas y alfanuméricas",
       "xlsx": "Vista previa de hojas de cálculo con inserción de códigos de barras en celdas",
       "docx": "Procesamiento DOCX que convierte texto en códigos renderizados"
     },
@@ -53,6 +55,8 @@
       "generatorBody": "Ajuste el tipo de código de barras, las dimensiones, los colores y el formato de exportación en un solo panel.",
       "setTitle": "Conjunto de códigos",
       "setBody": "Gestione lotes más grandes con tarjetas persistentes y diseños listos para imprimir.",
+      "sequenceTitle": "Generador de secuencias",
+      "sequenceBody": "Cree secuencias de códigos de barras con prefijos y sufijos personalizados.",
       "xlsxTitle": "Procesamiento XLSX",
       "xlsxBody": "Vista previa de hojas de cálculo, mapeo de columnas de origen y escritura de imágenes de códigos de barras.",
       "docxTitle": "Procesamiento DOCX",
@@ -304,10 +308,31 @@
         "body": "Una herramienta para la gestión masiva de códigos de barras. Puede agregar, eliminar y editar múltiples widgets simultáneamente, asignando a cada uno datos únicos y un texto de etiqueta personalizado.",
         "features": {
           "title": "Características clave:",
-          "nav": "Navegación: Use el menú de puntos a la derecha para saltar rápidamente entre grupos de códigos de barras (cada 5 elementos).",
+          "nav": "Navegación: Use la barra de puntos adaptativa a la derecha para saltar rápidamente entre grupos de códigos de barras.",
           "edit": "Edición: Haga clic en el icono del lápiz para abrir el panel de configuración lateral de un código específico y cambiar datos, apariencia o 'Texto personalizado'.",
           "print": "Imprimir todo: El botón de la impresora genera una cuadrícula A4 lista para imprimir con todos los códigos.",
           "shortcut": "Atajo de teclado: Ctrl+P activa automáticamente la funcionalidad de impresión masiva."
+        }
+      },
+      "sequence": {
+        "title": "Generador de secuencias",
+        "body": "Una potente herramienta para generar automáticamente secuencias numéricas o de texto de códigos de barras. Perfecta para crear series de códigos sin necesidad de archivos externos.",
+        "features": {
+          "title": "Características clave:",
+          "range": "Rango dinámico: Establezca restricciones de inicio, fin, paso, prefijo, sufijo y relleno personalizado.",
+          "textMode": "Control de texto: Active la opción 'Texto debajo del código' para ocultar o mostrar etiquetas legibles por humanos.",
+          "bulk": "Carga masiva: Cargue la serie generada directamente en el Editor masivo con un solo clic.",
+          "quickPrint": "Impresión rápida: Renderice e imprima secuencias de gran volumen en fragmentos de forma segura sin congelar su navegador."
+        }
+      },
+      "appearance": {
+        "title": "Configuración de apariencia y temas",
+        "body": "Personalice la apariencia visual de la aplicación para adaptarla a sus preferencias y al entorno de su espacio de trabajo.",
+        "features": {
+          "title": "Opciones de personalización:",
+          "modes": "Tema claro / oscuro: Alterne entre los modos claro y oscuro de alto contraste a través de la barra de navegación.",
+          "colors": "Paletas personalizadas: Seleccione cualquier color primario o de fondo personalizado con escalado adaptable de contenedores de superficie MD3.",
+          "contrast": "Simetría y legibilidad: los códigos de barras generados se aíslan estrictamente en fondos blancos sólidos para garantizar la legibilidad de la cámara."
         }
       },
       "printing": {
@@ -317,7 +342,8 @@
       "troubleshooting": {
         "title": "Solución de problemas",
         "eanError": "Error de EAN-13/8: Estos códigos requieren solo dígitos. El último dígito de control se calculará automáticamente si proporciona uno menos de los requeridos.",
-        "invisibleCode": "¿El código es invisible? Compruebe si el color del código es el mismo que el del fondo."
+        "invisibleCode": "¿El código es invisible? Compruebe si el color del código es el mismo que el del fondo.",
+        "visibilityLabel": "Visibilidad"
       },
       "standards": {
         "title": "Estándares y requisitos",
@@ -387,6 +413,10 @@
         "a1": "Sí, todo el procesamiento ocurre localmente en su navegador. Ningún archivo o dato se envía a un servidor.",
         "q2": "¿Por qué no puedo cargar un archivo .xls?",
         "a2": "Solo admitimos el formato moderno .xlsx. Los archivos .xls más antiguos deben guardarse primero como .xlsx en Excel."
+      },
+      "footer": {
+        "secure": "Procesamiento local seguro del lado del cliente",
+        "version": "Barcode Studio v{{version}} • {{year}}"
       }
     }
   },
@@ -452,5 +482,32 @@
     "buyMeACoffee": "Si la aplicación le ahorra tiempo o le ayuda con su trabajo, puede invitarme a un café simbólicamente. Es una forma de apoyo voluntaria que me ayuda a desarrollar el proyecto, añadir nuevas funciones y mantener la herramienta en buenas condiciones.",
     "signal": "Cada café es una señal de que Barcode Studio es útil y vale la pena seguir desarrollándolo.",
     "thanks": "Gracias por todo el apoyo. ☕"
+  },
+  "sequence": {
+    "title": "Generador de secuencias",
+    "description": "Genere secuencias de códigos de barras numéricas y alfanuméricas localmente sin importar archivos.",
+    "form": {
+      "standard": "Estándar de código",
+      "prefix": "Prefijo",
+      "start": "Valor inicial",
+      "end": "Valor final",
+      "step": "Paso",
+      "padding": "Relleno con ceros (Padding)",
+      "suffix": "Sufijo",
+      "customLabel": "Sobrescribir etiqueta personalizada",
+      "customLabelHelp": "Opcional. Use {value} para la cadena de secuencia."
+    },
+    "preview": {
+      "title": "Vista previa en vivo",
+      "total": "Total de códigos a generar: {{count}}",
+      "invalid": "La configuración no es válida. Por favor, corrija los datos de entrada.",
+      "tooLarge": "El valor inicial no puede superar al valor final.",
+      "zeroStep": "El valor del paso debe ser mayor que cero."
+    },
+    "actions": {
+      "generateToBulk": "Generar al editor masivo",
+      "quickPrint": "Impresión rápida"
+    },
+    "printing": "Renderizando vista previa de impresión de secuencia ({{current}}/{{total}})..."
   }
 }

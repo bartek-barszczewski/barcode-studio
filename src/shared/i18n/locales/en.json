@@ -7,56 +7,60 @@
     "xlsx": "XLSX",
     "docx": "DOCX",
     "barcodeSet": "Barcode Set",
+    "sequence": "Sequence",
     "help": "Help",
     "languageToggle": "Change language"
   },
   "home": {
-    "eyebrow": "Barcode workspace for fast operators",
-    "title": "Generate, batch, and export production-ready barcodes.",
-    "description": "Barcode Studio keeps every workflow in the browser: single labels, bulk barcode sets, XLSX writeback, and DOCX output without sending your files anywhere.",
-    "primaryAction": "Open Generator",
-    "secondaryAction": "See Help",
-    "sectionLabel": "MD3 landing",
-    "spotlightTitle": "Built for real document flow",
-    "spotlightDescription": "One workspace for quick previews, print-ready output, and private local file processing.",
-    "browserFirstMetric": "Browser-first workflow",
+    "eyebrow": "Welcome to Barcode Studio!",
+    "title": "Create and print professional barcodes with ease and a smile.",
+    "description": "We are so glad you're here! We offer you a simple, secure, and very friendly workspace to design single labels, generate bulk sets, create smart sequences, and seamlessly process Excel and Word files. Everything runs safely right in your browser.",
+    "primaryAction": "Start Creating",
+    "secondaryAction": "How it works?",
+    "sectionLabel": "Friendly Studio",
+    "spotlightTitle": "Designed for your comfort",
+    "spotlightDescription": "One cozy, clear space where you can easily handle any barcode task without any hassle.",
+    "browserFirstMetric": "Local browser processing",
     "spotlightPoints": {
-      "generator": "Single barcode design with SVG and PNG export",
-      "set": "Bulk editing with quick navigation and print layout",
-      "xlsx": "Spreadsheet preview with barcode insertion into cells",
-      "docx": "DOCX processing that turns text into rendered codes"
+      "generator": "Design single labels and download them instantly",
+      "set": "Cozy bulk editing with quick print-ready layouts",
+      "sequence": "Generate sequential series automatically in seconds",
+      "xlsx": "Insert barcodes directly into spreadsheet cells",
+      "docx": "Process Word documents and convert text to codes easily"
     },
     "slogans": {
-      "title": "Why teams adopt it",
+      "title": "Why you'll love this workspace",
       "items": [
-        "One fast screen for every barcode scenario.",
-        "Built for print quality, not just on-screen previews.",
-        "Private by design because files stay in the browser.",
-        "Ready for operators who need throughput, clarity, and control."
+        "Everything in one place – simple, friendly, and easy to use.",
+        "Your privacy first – your files never leave your computer.",
+        "Beautiful and clear design to make your tasks feel light.",
+        "Complete freedom – no accounts, no limits, no extra fuss."
       ]
     },
     "video": {
-      "title": "Video slot",
-      "description": "Reserved space for your YouTube walkthrough or product demo.",
-      "placeholder": "Embed your YouTube link here"
+      "title": "See how easy it is",
+      "description": "A quick video tour showing key features and how to get started.",
+      "placeholder": "Your quick introduction video placeholder"
     },
     "footer": {
-      "eyebrow": "Ready to work",
-      "title": "Move straight from landing to action",
-      "description": "Choose the workflow that fits your task and keep barcode, spreadsheet, and document operations inside one consistent workspace.",
-      "badge": "Local processing. No server upload.",
-      "linksLabel": "Home quick links"
+      "eyebrow": "Let's go!",
+      "title": "Choose what you need today",
+      "description": "Click any tool below to start creating barcodes that perfectly fit your project.",
+      "badge": "100% local processing – safe, private, and no signup required.",
+      "linksLabel": "Quick start"
     },
     "featureCards": {
-      "title": "Core workflows",
-      "generatorTitle": "Single Generator",
-      "generatorBody": "Tune barcode type, dimensions, colors, and export format in one panel.",
-      "setTitle": "Barcode Set",
-      "setBody": "Manage larger batches with persistent cards and print-ready layouts.",
-      "xlsxTitle": "XLSX Processing",
-      "xlsxBody": "Preview spreadsheets, map source columns, and write barcode images back.",
-      "docxTitle": "DOCX Processing",
-      "docxBody": "Read text from Word files and generate new documents with barcodes."
+      "title": "Effortless workflows",
+      "generatorTitle": "Single Code",
+      "generatorBody": "Design your code, customize colors, and download instantly.",
+      "setTitle": "Barcode Sets",
+      "setBody": "Manage and lay out larger groups of barcodes for bulk printing.",
+      "sequenceTitle": "Quick Sequence",
+      "sequenceBody": "Generate beautiful sequential series with custom padding and prefix rules.",
+      "xlsxTitle": "Excel Sheets (XLSX)",
+      "xlsxBody": "Load your sheet and insert barcode graphics directly into cell coordinates.",
+      "docxTitle": "Word Files (DOCX)",
+      "docxBody": "Read raw text fields from Word documents and render codes in seconds."
     }
   },
   "barcode": {
@@ -229,6 +233,11 @@
       "cancel": "Cancel",
       "confirm": "OK"
     },
+    "printLimitModal": {
+      "title": "Print Cards Option Unavailable",
+      "body": "The 'Print cards' feature is only available when the Excel file contains exactly 1 or 2 columns with data (columns A and B). Your file has more than 2 columns with data. Please ensure only columns A and B are populated to use this feature.",
+      "close": "OK"
+    },
     "preview": {
       "title": "Sheet preview",
       "titleWithSheet": "Preview: {{sheetName}}",
@@ -245,7 +254,7 @@
       "generateFailed": "Error while generating the file.",
       "unknown": "Unknown error.",
       "noPrintData": "No printable rows were found in the first two columns.",
-      "invalidPrintData": "Print cards requires valid values in columns A and B for every printed row. Invalid cells: {{cells}}.",
+      "invalidPrintData": "Print cards requires valid values in columns A and B for every printed row.",
       "printWindowBlocked": "The print preview window was blocked by the browser. Allow pop-ups and try again.",
       "occupiedCellShort": "Cell occupied",
       "sheetMissingInFile": "Could not find the sheet in the file.",
@@ -334,10 +343,31 @@
         "body": "A tool for bulk barcode management. You can add, remove, and edit multiple widgets simultaneously, giving each unique data and a custom label text.",
         "features": {
           "title": "Key features:",
-          "nav": "Navigation: Use the dot menu on the right to quickly jump between barcode groups (every 5 items).",
+          "nav": "Navigation: Use the adaptive dot rail on the right to quickly jump between barcode groups.",
           "edit": "Editing: Click the pencil icon to open the side panel and change data, appearance, or 'Custom text' for a specific code.",
           "print": "Print All: The printer button generates a print-ready A4 grid featuring all barcodes.",
           "shortcut": "Keyboard Shortcut: Ctrl+P automatically triggers the bulk print functionality."
+        }
+      },
+      "sequence": {
+        "title": "Sequence Generator",
+        "body": "A powerful tool to automatically generate numeric or text barcode sequences. Perfect for creating series of codes without external files.",
+        "features": {
+          "title": "Key features:",
+          "range": "Dynamic Range: Set start, end, step, prefix, suffix, and custom padding constraints.",
+          "textMode": "Text Control: Toggle the 'Text under barcode' option to hide or render human-readable labels.",
+          "bulk": "Bulk Loading: Load the generated series directly into the Bulk Editor with one click.",
+          "quickPrint": "Quick Print: Render and print high-volume sequences in chunks safely without freezing your browser."
+        }
+      },
+      "appearance": {
+        "title": "Appearance & Theme Settings",
+        "body": "Customize the visual appearance of the application to match your preferences and workspace environment.",
+        "features": {
+          "title": "Customization options:",
+          "modes": "Light / Dark Theme: Toggle between light and high-contrast dark modes via the Navigation Rail.",
+          "colors": "Custom Palettes: Select any custom primary or background color with responsive surface container scaling.",
+          "contrast": "Symmetry & Scannability: generated barcodes are strictly locked on solid white backgrounds to guarantee camera readability."
         }
       },
       "printing": {
@@ -347,7 +377,8 @@
       "troubleshooting": {
         "title": "Troubleshooting",
         "eanError": "EAN-13/8 Error: These codes require digits only. The last check digit will be calculated automatically if you provide one less than required.",
-        "invisibleCode": "Code is invisible? Check if the code color is the same as the background."
+        "invisibleCode": "Code is invisible? Check if the code color is the same as the background.",
+        "visibilityLabel": "Visibility"
       },
       "standards": {
         "title": "Standards and Requirements",
@@ -426,6 +457,10 @@
         "q2": "Why can't I upload a .xls file?",
         "a2": "We only support the modern .xlsx format. Older .xls files must first be saved as .xlsx in Excel."
       }
+    },
+    "footer": {
+      "secure": "Secure local client-side processing",
+      "version": "Barcode Studio v{{version}} • {{year}}"
     }
   },
   "barcodeSet": {
@@ -490,5 +525,32 @@
     "buyMeACoffee": "If the app saves you time or helps you with your work, you can symbolically buy me a coffee. It is a voluntary form of support that helps me develop the project, add new features, and keep the tool in good shape.",
     "signal": "Every coffee is a signal that Barcode Studio is useful and worth developing further.",
     "thanks": "Thank you for every bit of support. ☕"
+  },
+  "sequence": {
+    "title": "Sequence Generator",
+    "description": "Generate numeric and alphanumeric barcode sequences locally without importing files.",
+    "form": {
+      "standard": "Barcode Standard",
+      "prefix": "Prefix",
+      "start": "Start Value",
+      "end": "End Value",
+      "step": "Step",
+      "padding": "Padding (Zero-fill)",
+      "suffix": "Suffix",
+      "customLabel": "Custom Label Overwrite",
+      "customLabelHelp": "Optional. Use {value} for the sequence string."
+    },
+    "preview": {
+      "title": "Live Preview",
+      "total": "Total codes to generate: {{count}}",
+      "invalid": "Configuration is invalid. Please correct inputs.",
+      "tooLarge": "Start value cannot exceed End value.",
+      "zeroStep": "Step value must be greater than zero."
+    },
+    "actions": {
+      "generateToBulk": "Generate to Bulk Editor",
+      "quickPrint": "Quick Print"
+    },
+    "printing": "Rendering sequence print preview ({{current}}/{{total}})..."
   }
 }
